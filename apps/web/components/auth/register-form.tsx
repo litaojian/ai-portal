@@ -4,9 +4,9 @@ import { useState, useTransition } from 'react';
 import { Button, Card, Form, Input, Typography, Alert } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-// NOTE: We will need a register server action in the future.
-// import { register } from '@/actions/auth';
+import { register } from '@/actions/register';
 import { RegisterSchema } from '@/lib/schemas';
+import * as z from 'zod';
 
 const { Title } = Typography;
 
@@ -16,25 +16,15 @@ export const RegisterForm = () => {
   const [isPending, startTransition] = useTransition();
   const [form] = Form.useForm();
 
-  const onFinish = (values: unknown) => {
+  const onFinish = (values: z.infer<typeof RegisterSchema>) => {
     setError('');
     setSuccess('');
 
-    const validatedFields = RegisterSchema.safeParse(values);
-    if (!validatedFields.success) {
-      setError('Invalid fields');
-      return;
-    }
-
     startTransition(() => {
-      // NOTE: Replace with actual register server action call
-      console.log(validatedFields.data);
-      // Example of how it would look:
-      // register(validatedFields.data).then((data) => {
-      //   setError(data.error);
-      //   setSuccess(data.success);
-      // });
-      setSuccess('注册功能待实现! (查看控制台输出)');
+      register(values).then((data) => {
+        setError(data.error);
+        setSuccess(data.success);
+      });
     });
   };
 

@@ -1,26 +1,36 @@
-# UI 库迁移任务：Shadcn/ui -> Ant Design v6
+# Gemini 助手规则
 
-**状态:** 已完成
+1.  使用中文沟通
+2.  开始生成代码前要和我确认方案
+3.  修改代码后要检查语法是否正确
+4.  你无需启动开发环境，每次需启动时通知我来操作
 
-## 详细计划与进度
+---
 
-### 1. 环境清理
+# AI Portal 待办任务列表
 
-- [x] 卸载 Shadcn/ui 及其关联依赖 (`lucide-react`, `@radix-ui/*` 等)
-- [x] 删除 `apps/web/components/ui` 目录
-- [x] 删除 `apps/web/lib/utils.ts` 文件
-- [x] 删除 `apps/web/components.json` 文件
-- [x] 重置 `apps/web/tailwind.config.ts` 为基础配置
-- [x] 清理 `apps/web/app/globals.css` 中由 Shadcn/ui 添加的样式
+## Epic 2: 应用门户
 
-### 2. 安装与配置 Ant Design
+-   [ ] **导航视图**: 为登录用户创建一个仪表盘或导航栏，用于展示其有权访问的应用。
+-   [ ] **应用访问**: 实现从门户到具体应用的无缝跳转。
 
-- [x] 安装 `antd` 和 `@ant-design/cssinjs`
-- [x] 创建 `apps/web/app/AntdRegistry.tsx` 用于服务端样式注入
-- [x] 更新 `apps/web/app/layout.tsx` 以使用 `AntdRegistry`
+## Epic 3: 管理员后台
 
-### 3. 重构页面组件
+-   [ ] **后台访问**: 创建一个独立的、受角色保护的管理后台页面/布局。
+-   [ ] **用户列表**: 在后台实现一个表格，用于展示所有注册用户。
+-   [ ] **用户搜索与分页**: 为用户列表添加搜索和分页功能。
 
-- [x] 使用 Antd 组件重写 `apps/web/components/auth/login-form.tsx`
-- [x] 使用 Antd 组件重写 `apps/web/components/auth/register-form.tsx`
-- [x] 更新 `apps/web/app/page.tsx` 中的按钮为 Antd 组件
+## Epic 4: 权限与角色管理 (RBAC)
+
+-   [ ] **数据模型扩展**: 在 `schema.prisma` 中添加 `Role` 模型，并建立用户与角色的关联。
+-   [ ] **角色分配**: 在后台的用户管理界面，为管理员提供分配用户角色的功能。
+-   [ ] **权限控制**:
+    -   [ ] 更新 `middleware.ts` 以检查用户角色，只允许特定角色的用户访问管理后台。
+    -   [ ] （未来）实现更精细化的权限点管理。
+
+## Epic 5: 用户活动日志
+
+-   [ ] **数据模型扩展**: 在 `schema.prisma` 中添加 `Log` 模型，用于记录用户活动。
+-   [ ] **日志记录**: 创建一个服务或函数，在关键操作（如登录、注册、角色变更）发生时，向 `Log` 表中写入记录。
+-   [ ] **日志查看**: 在后台创建一个页面，用于展示活动日志。
+-   [ ] **日志筛选**: 为日志查看页面添加按用户或事件类型筛选的功能。

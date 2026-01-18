@@ -2,9 +2,17 @@
 'use server';
 
 import * as z from 'zod';
-import { signIn } from '@/auth';
 import { LoginSchema } from '@/lib/schemas';
-import { AuthError } from 'next-auth';
+import bcryptjs from 'bcryptjs';
+import { authOptions } from '@/auth';
+
+const demoUser = {
+  id: '1',
+  email: 'user@example.com',
+  // This should be the same hashed password as in your authOptions
+  password: '$2a$10$wGr/O/a3.FwSUd3.c.hDve.aJ.8P.v.2s.3.j1f.S.x/U6w.g4j.K', 
+  name: 'Demo User',
+};
 
 export async function login(values: z.infer<typeof LoginSchema>) {
   const validatedFields = LoginSchema.safeParse(values);
@@ -15,22 +23,15 @@ export async function login(values: z.infer<typeof LoginSchema>) {
 
   const { email, password } = validatedFields.data;
 
-  try {
-    await signIn('credentials', {
-      email,
-      password,
-      redirectTo: '/', // Redirect to home page on successful login
-    });
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return { error: '邮箱或密码错误!' };
-        default:
-          return { error: '发生未知错误!' };
-      }
-    }
-    throw error; // Rethrow other errors
+  // Manual credential check
+  if (email !== demoUser.email) {
+    return { error: '邮箱或密码错误!' };
+  }
+
+  const isPasswordCorrect = await bcryptjs.compare(password, demoUser.password);
+
+  if (!isPasswordCorrect) {
+    return { error: '邮箱或密码错误!' };
   }
 
   return { success: '登录成功!' };

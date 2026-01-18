@@ -1,32 +1,34 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button, Card, Form, Input, Typography, Alert } from 'antd';
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-import { login } from '@/actions/auth';
+import { signIn } from 'next-auth/react';
 import { LoginSchema } from '@/lib/schemas';
+import * as z from 'zod';
 
 const { Title } = Typography;
 
 export const LoginForm = () => {
+  const router = useRouter();
   const [error, setError] = useState<string | undefined>('');
   const [isPending, startTransition] = useTransition();
   const [form] = Form.useForm();
 
-  const onFinish = (values: unknown) => {
+  const onFinish = (values: z.infer<typeof LoginSchema>) => {
     setError('');
-    const validatedFields = LoginSchema.safeParse(values);
-    if (!validatedFields.success) {
-      // This is a fallback, antd's own validation should prevent this.
-      setError('Invalid fields');
-      return;
-    }
-
+    
     startTransition(() => {
-      login(validatedFields.data).then((data) => {
-        if (data?.error) {
-          setError(data.error);
+      signIn('credentials', {
+        ...values,
+        redirect: false, // We handle redirect manually
+      }).then((callback) => {
+        if (callback?.error) {
+          setError('邮箱或密码错误!');
+        } else if (callback?.ok) {
+          window.location.href = '/';
         }
       });
     });
