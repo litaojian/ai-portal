@@ -43,6 +43,21 @@ export type VerificationToken = $Result.DefaultSelection<Prisma.$VerificationTok
  * 
  */
 export type Project = $Result.DefaultSelection<Prisma.$ProjectPayload>
+/**
+ * Model Application
+ * 
+ */
+export type Application = $Result.DefaultSelection<Prisma.$ApplicationPayload>
+/**
+ * Model OidcClient
+ * 
+ */
+export type OidcClient = $Result.DefaultSelection<Prisma.$OidcClientPayload>
+/**
+ * Model OidcPayload
+ * 
+ */
+export type OidcPayload = $Result.DefaultSelection<Prisma.$OidcPayloadPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -226,6 +241,36 @@ export class PrismaClient<
     * ```
     */
   get project(): Prisma.ProjectDelegate<ExtArgs>;
+
+  /**
+   * `prisma.application`: Exposes CRUD operations for the **Application** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Applications
+    * const applications = await prisma.application.findMany()
+    * ```
+    */
+  get application(): Prisma.ApplicationDelegate<ExtArgs>;
+
+  /**
+   * `prisma.oidcClient`: Exposes CRUD operations for the **OidcClient** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OidcClients
+    * const oidcClients = await prisma.oidcClient.findMany()
+    * ```
+    */
+  get oidcClient(): Prisma.OidcClientDelegate<ExtArgs>;
+
+  /**
+   * `prisma.oidcPayload`: Exposes CRUD operations for the **OidcPayload** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OidcPayloads
+    * const oidcPayloads = await prisma.oidcPayload.findMany()
+    * ```
+    */
+  get oidcPayload(): Prisma.OidcPayloadDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -672,7 +717,10 @@ export namespace Prisma {
     Account: 'Account',
     Session: 'Session',
     VerificationToken: 'VerificationToken',
-    Project: 'Project'
+    Project: 'Project',
+    Application: 'Application',
+    OidcClient: 'OidcClient',
+    OidcPayload: 'OidcPayload'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -688,7 +736,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "menu" | "account" | "session" | "verificationToken" | "project"
+      modelProps: "user" | "menu" | "account" | "session" | "verificationToken" | "project" | "application" | "oidcClient" | "oidcPayload"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1109,6 +1157,216 @@ export namespace Prisma {
           count: {
             args: Prisma.ProjectCountArgs<ExtArgs>
             result: $Utils.Optional<ProjectCountAggregateOutputType> | number
+          }
+        }
+      }
+      Application: {
+        payload: Prisma.$ApplicationPayload<ExtArgs>
+        fields: Prisma.ApplicationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ApplicationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ApplicationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPayload>
+          }
+          findFirst: {
+            args: Prisma.ApplicationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ApplicationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPayload>
+          }
+          findMany: {
+            args: Prisma.ApplicationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPayload>[]
+          }
+          create: {
+            args: Prisma.ApplicationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPayload>
+          }
+          createMany: {
+            args: Prisma.ApplicationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ApplicationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPayload>[]
+          }
+          delete: {
+            args: Prisma.ApplicationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPayload>
+          }
+          update: {
+            args: Prisma.ApplicationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPayload>
+          }
+          deleteMany: {
+            args: Prisma.ApplicationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ApplicationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ApplicationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApplicationPayload>
+          }
+          aggregate: {
+            args: Prisma.ApplicationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateApplication>
+          }
+          groupBy: {
+            args: Prisma.ApplicationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ApplicationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ApplicationCountArgs<ExtArgs>
+            result: $Utils.Optional<ApplicationCountAggregateOutputType> | number
+          }
+        }
+      }
+      OidcClient: {
+        payload: Prisma.$OidcClientPayload<ExtArgs>
+        fields: Prisma.OidcClientFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OidcClientFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcClientPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OidcClientFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcClientPayload>
+          }
+          findFirst: {
+            args: Prisma.OidcClientFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcClientPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OidcClientFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcClientPayload>
+          }
+          findMany: {
+            args: Prisma.OidcClientFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcClientPayload>[]
+          }
+          create: {
+            args: Prisma.OidcClientCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcClientPayload>
+          }
+          createMany: {
+            args: Prisma.OidcClientCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OidcClientCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcClientPayload>[]
+          }
+          delete: {
+            args: Prisma.OidcClientDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcClientPayload>
+          }
+          update: {
+            args: Prisma.OidcClientUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcClientPayload>
+          }
+          deleteMany: {
+            args: Prisma.OidcClientDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OidcClientUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.OidcClientUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcClientPayload>
+          }
+          aggregate: {
+            args: Prisma.OidcClientAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOidcClient>
+          }
+          groupBy: {
+            args: Prisma.OidcClientGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OidcClientGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OidcClientCountArgs<ExtArgs>
+            result: $Utils.Optional<OidcClientCountAggregateOutputType> | number
+          }
+        }
+      }
+      OidcPayload: {
+        payload: Prisma.$OidcPayloadPayload<ExtArgs>
+        fields: Prisma.OidcPayloadFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OidcPayloadFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcPayloadPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OidcPayloadFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcPayloadPayload>
+          }
+          findFirst: {
+            args: Prisma.OidcPayloadFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcPayloadPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OidcPayloadFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcPayloadPayload>
+          }
+          findMany: {
+            args: Prisma.OidcPayloadFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcPayloadPayload>[]
+          }
+          create: {
+            args: Prisma.OidcPayloadCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcPayloadPayload>
+          }
+          createMany: {
+            args: Prisma.OidcPayloadCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OidcPayloadCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcPayloadPayload>[]
+          }
+          delete: {
+            args: Prisma.OidcPayloadDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcPayloadPayload>
+          }
+          update: {
+            args: Prisma.OidcPayloadUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcPayloadPayload>
+          }
+          deleteMany: {
+            args: Prisma.OidcPayloadDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OidcPayloadUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.OidcPayloadUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OidcPayloadPayload>
+          }
+          aggregate: {
+            args: Prisma.OidcPayloadAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOidcPayload>
+          }
+          groupBy: {
+            args: Prisma.OidcPayloadGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OidcPayloadGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OidcPayloadCountArgs<ExtArgs>
+            result: $Utils.Optional<OidcPayloadCountAggregateOutputType> | number
           }
         }
       }
@@ -7218,6 +7476,3019 @@ export namespace Prisma {
 
 
   /**
+   * Model Application
+   */
+
+  export type AggregateApplication = {
+    _count: ApplicationCountAggregateOutputType | null
+    _min: ApplicationMinAggregateOutputType | null
+    _max: ApplicationMaxAggregateOutputType | null
+  }
+
+  export type ApplicationMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    icon: string | null
+    url: string | null
+    type: string | null
+    status: string | null
+    version: string | null
+    developer: string | null
+    category: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ApplicationMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    icon: string | null
+    url: string | null
+    type: string | null
+    status: string | null
+    version: string | null
+    developer: string | null
+    category: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ApplicationCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    icon: number
+    url: number
+    type: number
+    status: number
+    version: number
+    developer: number
+    category: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ApplicationMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    icon?: true
+    url?: true
+    type?: true
+    status?: true
+    version?: true
+    developer?: true
+    category?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ApplicationMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    icon?: true
+    url?: true
+    type?: true
+    status?: true
+    version?: true
+    developer?: true
+    category?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ApplicationCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    icon?: true
+    url?: true
+    type?: true
+    status?: true
+    version?: true
+    developer?: true
+    category?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ApplicationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Application to aggregate.
+     */
+    where?: ApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Applications to fetch.
+     */
+    orderBy?: ApplicationOrderByWithRelationInput | ApplicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Applications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Applications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Applications
+    **/
+    _count?: true | ApplicationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ApplicationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ApplicationMaxAggregateInputType
+  }
+
+  export type GetApplicationAggregateType<T extends ApplicationAggregateArgs> = {
+        [P in keyof T & keyof AggregateApplication]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateApplication[P]>
+      : GetScalarType<T[P], AggregateApplication[P]>
+  }
+
+
+
+
+  export type ApplicationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApplicationWhereInput
+    orderBy?: ApplicationOrderByWithAggregationInput | ApplicationOrderByWithAggregationInput[]
+    by: ApplicationScalarFieldEnum[] | ApplicationScalarFieldEnum
+    having?: ApplicationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ApplicationCountAggregateInputType | true
+    _min?: ApplicationMinAggregateInputType
+    _max?: ApplicationMaxAggregateInputType
+  }
+
+  export type ApplicationGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    icon: string | null
+    url: string | null
+    type: string
+    status: string
+    version: string | null
+    developer: string | null
+    category: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ApplicationCountAggregateOutputType | null
+    _min: ApplicationMinAggregateOutputType | null
+    _max: ApplicationMaxAggregateOutputType | null
+  }
+
+  type GetApplicationGroupByPayload<T extends ApplicationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ApplicationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ApplicationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ApplicationGroupByOutputType[P]>
+            : GetScalarType<T[P], ApplicationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ApplicationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    icon?: boolean
+    url?: boolean
+    type?: boolean
+    status?: boolean
+    version?: boolean
+    developer?: boolean
+    category?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    oidcClient?: boolean | Application$oidcClientArgs<ExtArgs>
+  }, ExtArgs["result"]["application"]>
+
+  export type ApplicationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    icon?: boolean
+    url?: boolean
+    type?: boolean
+    status?: boolean
+    version?: boolean
+    developer?: boolean
+    category?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["application"]>
+
+  export type ApplicationSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    icon?: boolean
+    url?: boolean
+    type?: boolean
+    status?: boolean
+    version?: boolean
+    developer?: boolean
+    category?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    oidcClient?: boolean | Application$oidcClientArgs<ExtArgs>
+  }
+  export type ApplicationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $ApplicationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Application"
+    objects: {
+      oidcClient: Prisma.$OidcClientPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      icon: string | null
+      url: string | null
+      type: string
+      status: string
+      version: string | null
+      developer: string | null
+      category: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["application"]>
+    composites: {}
+  }
+
+  type ApplicationGetPayload<S extends boolean | null | undefined | ApplicationDefaultArgs> = $Result.GetResult<Prisma.$ApplicationPayload, S>
+
+  type ApplicationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ApplicationFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ApplicationCountAggregateInputType | true
+    }
+
+  export interface ApplicationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Application'], meta: { name: 'Application' } }
+    /**
+     * Find zero or one Application that matches the filter.
+     * @param {ApplicationFindUniqueArgs} args - Arguments to find a Application
+     * @example
+     * // Get one Application
+     * const application = await prisma.application.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ApplicationFindUniqueArgs>(args: SelectSubset<T, ApplicationFindUniqueArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Application that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ApplicationFindUniqueOrThrowArgs} args - Arguments to find a Application
+     * @example
+     * // Get one Application
+     * const application = await prisma.application.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ApplicationFindUniqueOrThrowArgs>(args: SelectSubset<T, ApplicationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Application that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationFindFirstArgs} args - Arguments to find a Application
+     * @example
+     * // Get one Application
+     * const application = await prisma.application.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ApplicationFindFirstArgs>(args?: SelectSubset<T, ApplicationFindFirstArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Application that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationFindFirstOrThrowArgs} args - Arguments to find a Application
+     * @example
+     * // Get one Application
+     * const application = await prisma.application.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ApplicationFindFirstOrThrowArgs>(args?: SelectSubset<T, ApplicationFindFirstOrThrowArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Applications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Applications
+     * const applications = await prisma.application.findMany()
+     * 
+     * // Get first 10 Applications
+     * const applications = await prisma.application.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const applicationWithIdOnly = await prisma.application.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ApplicationFindManyArgs>(args?: SelectSubset<T, ApplicationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Application.
+     * @param {ApplicationCreateArgs} args - Arguments to create a Application.
+     * @example
+     * // Create one Application
+     * const Application = await prisma.application.create({
+     *   data: {
+     *     // ... data to create a Application
+     *   }
+     * })
+     * 
+     */
+    create<T extends ApplicationCreateArgs>(args: SelectSubset<T, ApplicationCreateArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Applications.
+     * @param {ApplicationCreateManyArgs} args - Arguments to create many Applications.
+     * @example
+     * // Create many Applications
+     * const application = await prisma.application.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ApplicationCreateManyArgs>(args?: SelectSubset<T, ApplicationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Applications and returns the data saved in the database.
+     * @param {ApplicationCreateManyAndReturnArgs} args - Arguments to create many Applications.
+     * @example
+     * // Create many Applications
+     * const application = await prisma.application.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Applications and only return the `id`
+     * const applicationWithIdOnly = await prisma.application.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ApplicationCreateManyAndReturnArgs>(args?: SelectSubset<T, ApplicationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Application.
+     * @param {ApplicationDeleteArgs} args - Arguments to delete one Application.
+     * @example
+     * // Delete one Application
+     * const Application = await prisma.application.delete({
+     *   where: {
+     *     // ... filter to delete one Application
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ApplicationDeleteArgs>(args: SelectSubset<T, ApplicationDeleteArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Application.
+     * @param {ApplicationUpdateArgs} args - Arguments to update one Application.
+     * @example
+     * // Update one Application
+     * const application = await prisma.application.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ApplicationUpdateArgs>(args: SelectSubset<T, ApplicationUpdateArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Applications.
+     * @param {ApplicationDeleteManyArgs} args - Arguments to filter Applications to delete.
+     * @example
+     * // Delete a few Applications
+     * const { count } = await prisma.application.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ApplicationDeleteManyArgs>(args?: SelectSubset<T, ApplicationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Applications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Applications
+     * const application = await prisma.application.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ApplicationUpdateManyArgs>(args: SelectSubset<T, ApplicationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Application.
+     * @param {ApplicationUpsertArgs} args - Arguments to update or create a Application.
+     * @example
+     * // Update or create a Application
+     * const application = await prisma.application.upsert({
+     *   create: {
+     *     // ... data to create a Application
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Application we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ApplicationUpsertArgs>(args: SelectSubset<T, ApplicationUpsertArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Applications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationCountArgs} args - Arguments to filter Applications to count.
+     * @example
+     * // Count the number of Applications
+     * const count = await prisma.application.count({
+     *   where: {
+     *     // ... the filter for the Applications we want to count
+     *   }
+     * })
+    **/
+    count<T extends ApplicationCountArgs>(
+      args?: Subset<T, ApplicationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ApplicationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Application.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ApplicationAggregateArgs>(args: Subset<T, ApplicationAggregateArgs>): Prisma.PrismaPromise<GetApplicationAggregateType<T>>
+
+    /**
+     * Group by Application.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApplicationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ApplicationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ApplicationGroupByArgs['orderBy'] }
+        : { orderBy?: ApplicationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ApplicationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetApplicationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Application model
+   */
+  readonly fields: ApplicationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Application.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ApplicationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    oidcClient<T extends Application$oidcClientArgs<ExtArgs> = {}>(args?: Subset<T, Application$oidcClientArgs<ExtArgs>>): Prisma__OidcClientClient<$Result.GetResult<Prisma.$OidcClientPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Application model
+   */ 
+  interface ApplicationFieldRefs {
+    readonly id: FieldRef<"Application", 'String'>
+    readonly name: FieldRef<"Application", 'String'>
+    readonly description: FieldRef<"Application", 'String'>
+    readonly icon: FieldRef<"Application", 'String'>
+    readonly url: FieldRef<"Application", 'String'>
+    readonly type: FieldRef<"Application", 'String'>
+    readonly status: FieldRef<"Application", 'String'>
+    readonly version: FieldRef<"Application", 'String'>
+    readonly developer: FieldRef<"Application", 'String'>
+    readonly category: FieldRef<"Application", 'String'>
+    readonly createdAt: FieldRef<"Application", 'DateTime'>
+    readonly updatedAt: FieldRef<"Application", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Application findUnique
+   */
+  export type ApplicationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Application
+     */
+    select?: ApplicationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicationInclude<ExtArgs> | null
+    /**
+     * Filter, which Application to fetch.
+     */
+    where: ApplicationWhereUniqueInput
+  }
+
+  /**
+   * Application findUniqueOrThrow
+   */
+  export type ApplicationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Application
+     */
+    select?: ApplicationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicationInclude<ExtArgs> | null
+    /**
+     * Filter, which Application to fetch.
+     */
+    where: ApplicationWhereUniqueInput
+  }
+
+  /**
+   * Application findFirst
+   */
+  export type ApplicationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Application
+     */
+    select?: ApplicationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicationInclude<ExtArgs> | null
+    /**
+     * Filter, which Application to fetch.
+     */
+    where?: ApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Applications to fetch.
+     */
+    orderBy?: ApplicationOrderByWithRelationInput | ApplicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Applications.
+     */
+    cursor?: ApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Applications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Applications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Applications.
+     */
+    distinct?: ApplicationScalarFieldEnum | ApplicationScalarFieldEnum[]
+  }
+
+  /**
+   * Application findFirstOrThrow
+   */
+  export type ApplicationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Application
+     */
+    select?: ApplicationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicationInclude<ExtArgs> | null
+    /**
+     * Filter, which Application to fetch.
+     */
+    where?: ApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Applications to fetch.
+     */
+    orderBy?: ApplicationOrderByWithRelationInput | ApplicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Applications.
+     */
+    cursor?: ApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Applications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Applications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Applications.
+     */
+    distinct?: ApplicationScalarFieldEnum | ApplicationScalarFieldEnum[]
+  }
+
+  /**
+   * Application findMany
+   */
+  export type ApplicationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Application
+     */
+    select?: ApplicationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicationInclude<ExtArgs> | null
+    /**
+     * Filter, which Applications to fetch.
+     */
+    where?: ApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Applications to fetch.
+     */
+    orderBy?: ApplicationOrderByWithRelationInput | ApplicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Applications.
+     */
+    cursor?: ApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Applications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Applications.
+     */
+    skip?: number
+    distinct?: ApplicationScalarFieldEnum | ApplicationScalarFieldEnum[]
+  }
+
+  /**
+   * Application create
+   */
+  export type ApplicationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Application
+     */
+    select?: ApplicationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Application.
+     */
+    data: XOR<ApplicationCreateInput, ApplicationUncheckedCreateInput>
+  }
+
+  /**
+   * Application createMany
+   */
+  export type ApplicationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Applications.
+     */
+    data: ApplicationCreateManyInput | ApplicationCreateManyInput[]
+  }
+
+  /**
+   * Application createManyAndReturn
+   */
+  export type ApplicationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Application
+     */
+    select?: ApplicationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Applications.
+     */
+    data: ApplicationCreateManyInput | ApplicationCreateManyInput[]
+  }
+
+  /**
+   * Application update
+   */
+  export type ApplicationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Application
+     */
+    select?: ApplicationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Application.
+     */
+    data: XOR<ApplicationUpdateInput, ApplicationUncheckedUpdateInput>
+    /**
+     * Choose, which Application to update.
+     */
+    where: ApplicationWhereUniqueInput
+  }
+
+  /**
+   * Application updateMany
+   */
+  export type ApplicationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Applications.
+     */
+    data: XOR<ApplicationUpdateManyMutationInput, ApplicationUncheckedUpdateManyInput>
+    /**
+     * Filter which Applications to update
+     */
+    where?: ApplicationWhereInput
+  }
+
+  /**
+   * Application upsert
+   */
+  export type ApplicationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Application
+     */
+    select?: ApplicationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Application to update in case it exists.
+     */
+    where: ApplicationWhereUniqueInput
+    /**
+     * In case the Application found by the `where` argument doesn't exist, create a new Application with this data.
+     */
+    create: XOR<ApplicationCreateInput, ApplicationUncheckedCreateInput>
+    /**
+     * In case the Application was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ApplicationUpdateInput, ApplicationUncheckedUpdateInput>
+  }
+
+  /**
+   * Application delete
+   */
+  export type ApplicationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Application
+     */
+    select?: ApplicationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicationInclude<ExtArgs> | null
+    /**
+     * Filter which Application to delete.
+     */
+    where: ApplicationWhereUniqueInput
+  }
+
+  /**
+   * Application deleteMany
+   */
+  export type ApplicationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Applications to delete
+     */
+    where?: ApplicationWhereInput
+  }
+
+  /**
+   * Application.oidcClient
+   */
+  export type Application$oidcClientArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcClient
+     */
+    select?: OidcClientSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OidcClientInclude<ExtArgs> | null
+    where?: OidcClientWhereInput
+  }
+
+  /**
+   * Application without action
+   */
+  export type ApplicationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Application
+     */
+    select?: ApplicationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model OidcClient
+   */
+
+  export type AggregateOidcClient = {
+    _count: OidcClientCountAggregateOutputType | null
+    _min: OidcClientMinAggregateOutputType | null
+    _max: OidcClientMaxAggregateOutputType | null
+  }
+
+  export type OidcClientMinAggregateOutputType = {
+    id: string | null
+    applicationId: string | null
+    clientId: string | null
+    clientSecret: string | null
+    clientName: string | null
+    clientUri: string | null
+    logoUri: string | null
+    redirectUris: string | null
+    grantTypes: string | null
+    responseTypes: string | null
+    scope: string | null
+    tokenEndpointAuthMethod: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type OidcClientMaxAggregateOutputType = {
+    id: string | null
+    applicationId: string | null
+    clientId: string | null
+    clientSecret: string | null
+    clientName: string | null
+    clientUri: string | null
+    logoUri: string | null
+    redirectUris: string | null
+    grantTypes: string | null
+    responseTypes: string | null
+    scope: string | null
+    tokenEndpointAuthMethod: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type OidcClientCountAggregateOutputType = {
+    id: number
+    applicationId: number
+    clientId: number
+    clientSecret: number
+    clientName: number
+    clientUri: number
+    logoUri: number
+    redirectUris: number
+    grantTypes: number
+    responseTypes: number
+    scope: number
+    tokenEndpointAuthMethod: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type OidcClientMinAggregateInputType = {
+    id?: true
+    applicationId?: true
+    clientId?: true
+    clientSecret?: true
+    clientName?: true
+    clientUri?: true
+    logoUri?: true
+    redirectUris?: true
+    grantTypes?: true
+    responseTypes?: true
+    scope?: true
+    tokenEndpointAuthMethod?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type OidcClientMaxAggregateInputType = {
+    id?: true
+    applicationId?: true
+    clientId?: true
+    clientSecret?: true
+    clientName?: true
+    clientUri?: true
+    logoUri?: true
+    redirectUris?: true
+    grantTypes?: true
+    responseTypes?: true
+    scope?: true
+    tokenEndpointAuthMethod?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type OidcClientCountAggregateInputType = {
+    id?: true
+    applicationId?: true
+    clientId?: true
+    clientSecret?: true
+    clientName?: true
+    clientUri?: true
+    logoUri?: true
+    redirectUris?: true
+    grantTypes?: true
+    responseTypes?: true
+    scope?: true
+    tokenEndpointAuthMethod?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type OidcClientAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OidcClient to aggregate.
+     */
+    where?: OidcClientWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OidcClients to fetch.
+     */
+    orderBy?: OidcClientOrderByWithRelationInput | OidcClientOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OidcClientWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OidcClients from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OidcClients.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OidcClients
+    **/
+    _count?: true | OidcClientCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OidcClientMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OidcClientMaxAggregateInputType
+  }
+
+  export type GetOidcClientAggregateType<T extends OidcClientAggregateArgs> = {
+        [P in keyof T & keyof AggregateOidcClient]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOidcClient[P]>
+      : GetScalarType<T[P], AggregateOidcClient[P]>
+  }
+
+
+
+
+  export type OidcClientGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OidcClientWhereInput
+    orderBy?: OidcClientOrderByWithAggregationInput | OidcClientOrderByWithAggregationInput[]
+    by: OidcClientScalarFieldEnum[] | OidcClientScalarFieldEnum
+    having?: OidcClientScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OidcClientCountAggregateInputType | true
+    _min?: OidcClientMinAggregateInputType
+    _max?: OidcClientMaxAggregateInputType
+  }
+
+  export type OidcClientGroupByOutputType = {
+    id: string
+    applicationId: string | null
+    clientId: string
+    clientSecret: string | null
+    clientName: string | null
+    clientUri: string | null
+    logoUri: string | null
+    redirectUris: string
+    grantTypes: string
+    responseTypes: string
+    scope: string
+    tokenEndpointAuthMethod: string
+    createdAt: Date
+    updatedAt: Date
+    _count: OidcClientCountAggregateOutputType | null
+    _min: OidcClientMinAggregateOutputType | null
+    _max: OidcClientMaxAggregateOutputType | null
+  }
+
+  type GetOidcClientGroupByPayload<T extends OidcClientGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OidcClientGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OidcClientGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OidcClientGroupByOutputType[P]>
+            : GetScalarType<T[P], OidcClientGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OidcClientSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    applicationId?: boolean
+    clientId?: boolean
+    clientSecret?: boolean
+    clientName?: boolean
+    clientUri?: boolean
+    logoUri?: boolean
+    redirectUris?: boolean
+    grantTypes?: boolean
+    responseTypes?: boolean
+    scope?: boolean
+    tokenEndpointAuthMethod?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    application?: boolean | OidcClient$applicationArgs<ExtArgs>
+  }, ExtArgs["result"]["oidcClient"]>
+
+  export type OidcClientSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    applicationId?: boolean
+    clientId?: boolean
+    clientSecret?: boolean
+    clientName?: boolean
+    clientUri?: boolean
+    logoUri?: boolean
+    redirectUris?: boolean
+    grantTypes?: boolean
+    responseTypes?: boolean
+    scope?: boolean
+    tokenEndpointAuthMethod?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    application?: boolean | OidcClient$applicationArgs<ExtArgs>
+  }, ExtArgs["result"]["oidcClient"]>
+
+  export type OidcClientSelectScalar = {
+    id?: boolean
+    applicationId?: boolean
+    clientId?: boolean
+    clientSecret?: boolean
+    clientName?: boolean
+    clientUri?: boolean
+    logoUri?: boolean
+    redirectUris?: boolean
+    grantTypes?: boolean
+    responseTypes?: boolean
+    scope?: boolean
+    tokenEndpointAuthMethod?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type OidcClientInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    application?: boolean | OidcClient$applicationArgs<ExtArgs>
+  }
+  export type OidcClientIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    application?: boolean | OidcClient$applicationArgs<ExtArgs>
+  }
+
+  export type $OidcClientPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OidcClient"
+    objects: {
+      application: Prisma.$ApplicationPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      applicationId: string | null
+      clientId: string
+      clientSecret: string | null
+      clientName: string | null
+      clientUri: string | null
+      logoUri: string | null
+      redirectUris: string
+      grantTypes: string
+      responseTypes: string
+      scope: string
+      tokenEndpointAuthMethod: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["oidcClient"]>
+    composites: {}
+  }
+
+  type OidcClientGetPayload<S extends boolean | null | undefined | OidcClientDefaultArgs> = $Result.GetResult<Prisma.$OidcClientPayload, S>
+
+  type OidcClientCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<OidcClientFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: OidcClientCountAggregateInputType | true
+    }
+
+  export interface OidcClientDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OidcClient'], meta: { name: 'OidcClient' } }
+    /**
+     * Find zero or one OidcClient that matches the filter.
+     * @param {OidcClientFindUniqueArgs} args - Arguments to find a OidcClient
+     * @example
+     * // Get one OidcClient
+     * const oidcClient = await prisma.oidcClient.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OidcClientFindUniqueArgs>(args: SelectSubset<T, OidcClientFindUniqueArgs<ExtArgs>>): Prisma__OidcClientClient<$Result.GetResult<Prisma.$OidcClientPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one OidcClient that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {OidcClientFindUniqueOrThrowArgs} args - Arguments to find a OidcClient
+     * @example
+     * // Get one OidcClient
+     * const oidcClient = await prisma.oidcClient.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OidcClientFindUniqueOrThrowArgs>(args: SelectSubset<T, OidcClientFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OidcClientClient<$Result.GetResult<Prisma.$OidcClientPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first OidcClient that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OidcClientFindFirstArgs} args - Arguments to find a OidcClient
+     * @example
+     * // Get one OidcClient
+     * const oidcClient = await prisma.oidcClient.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OidcClientFindFirstArgs>(args?: SelectSubset<T, OidcClientFindFirstArgs<ExtArgs>>): Prisma__OidcClientClient<$Result.GetResult<Prisma.$OidcClientPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first OidcClient that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OidcClientFindFirstOrThrowArgs} args - Arguments to find a OidcClient
+     * @example
+     * // Get one OidcClient
+     * const oidcClient = await prisma.oidcClient.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OidcClientFindFirstOrThrowArgs>(args?: SelectSubset<T, OidcClientFindFirstOrThrowArgs<ExtArgs>>): Prisma__OidcClientClient<$Result.GetResult<Prisma.$OidcClientPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more OidcClients that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OidcClientFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OidcClients
+     * const oidcClients = await prisma.oidcClient.findMany()
+     * 
+     * // Get first 10 OidcClients
+     * const oidcClients = await prisma.oidcClient.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const oidcClientWithIdOnly = await prisma.oidcClient.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OidcClientFindManyArgs>(args?: SelectSubset<T, OidcClientFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OidcClientPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a OidcClient.
+     * @param {OidcClientCreateArgs} args - Arguments to create a OidcClient.
+     * @example
+     * // Create one OidcClient
+     * const OidcClient = await prisma.oidcClient.create({
+     *   data: {
+     *     // ... data to create a OidcClient
+     *   }
+     * })
+     * 
+     */
+    create<T extends OidcClientCreateArgs>(args: SelectSubset<T, OidcClientCreateArgs<ExtArgs>>): Prisma__OidcClientClient<$Result.GetResult<Prisma.$OidcClientPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many OidcClients.
+     * @param {OidcClientCreateManyArgs} args - Arguments to create many OidcClients.
+     * @example
+     * // Create many OidcClients
+     * const oidcClient = await prisma.oidcClient.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OidcClientCreateManyArgs>(args?: SelectSubset<T, OidcClientCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many OidcClients and returns the data saved in the database.
+     * @param {OidcClientCreateManyAndReturnArgs} args - Arguments to create many OidcClients.
+     * @example
+     * // Create many OidcClients
+     * const oidcClient = await prisma.oidcClient.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many OidcClients and only return the `id`
+     * const oidcClientWithIdOnly = await prisma.oidcClient.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OidcClientCreateManyAndReturnArgs>(args?: SelectSubset<T, OidcClientCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OidcClientPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a OidcClient.
+     * @param {OidcClientDeleteArgs} args - Arguments to delete one OidcClient.
+     * @example
+     * // Delete one OidcClient
+     * const OidcClient = await prisma.oidcClient.delete({
+     *   where: {
+     *     // ... filter to delete one OidcClient
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OidcClientDeleteArgs>(args: SelectSubset<T, OidcClientDeleteArgs<ExtArgs>>): Prisma__OidcClientClient<$Result.GetResult<Prisma.$OidcClientPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one OidcClient.
+     * @param {OidcClientUpdateArgs} args - Arguments to update one OidcClient.
+     * @example
+     * // Update one OidcClient
+     * const oidcClient = await prisma.oidcClient.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OidcClientUpdateArgs>(args: SelectSubset<T, OidcClientUpdateArgs<ExtArgs>>): Prisma__OidcClientClient<$Result.GetResult<Prisma.$OidcClientPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more OidcClients.
+     * @param {OidcClientDeleteManyArgs} args - Arguments to filter OidcClients to delete.
+     * @example
+     * // Delete a few OidcClients
+     * const { count } = await prisma.oidcClient.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OidcClientDeleteManyArgs>(args?: SelectSubset<T, OidcClientDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OidcClients.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OidcClientUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OidcClients
+     * const oidcClient = await prisma.oidcClient.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OidcClientUpdateManyArgs>(args: SelectSubset<T, OidcClientUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one OidcClient.
+     * @param {OidcClientUpsertArgs} args - Arguments to update or create a OidcClient.
+     * @example
+     * // Update or create a OidcClient
+     * const oidcClient = await prisma.oidcClient.upsert({
+     *   create: {
+     *     // ... data to create a OidcClient
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OidcClient we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OidcClientUpsertArgs>(args: SelectSubset<T, OidcClientUpsertArgs<ExtArgs>>): Prisma__OidcClientClient<$Result.GetResult<Prisma.$OidcClientPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of OidcClients.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OidcClientCountArgs} args - Arguments to filter OidcClients to count.
+     * @example
+     * // Count the number of OidcClients
+     * const count = await prisma.oidcClient.count({
+     *   where: {
+     *     // ... the filter for the OidcClients we want to count
+     *   }
+     * })
+    **/
+    count<T extends OidcClientCountArgs>(
+      args?: Subset<T, OidcClientCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OidcClientCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OidcClient.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OidcClientAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OidcClientAggregateArgs>(args: Subset<T, OidcClientAggregateArgs>): Prisma.PrismaPromise<GetOidcClientAggregateType<T>>
+
+    /**
+     * Group by OidcClient.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OidcClientGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OidcClientGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OidcClientGroupByArgs['orderBy'] }
+        : { orderBy?: OidcClientGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OidcClientGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOidcClientGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OidcClient model
+   */
+  readonly fields: OidcClientFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OidcClient.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OidcClientClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    application<T extends OidcClient$applicationArgs<ExtArgs> = {}>(args?: Subset<T, OidcClient$applicationArgs<ExtArgs>>): Prisma__ApplicationClient<$Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OidcClient model
+   */ 
+  interface OidcClientFieldRefs {
+    readonly id: FieldRef<"OidcClient", 'String'>
+    readonly applicationId: FieldRef<"OidcClient", 'String'>
+    readonly clientId: FieldRef<"OidcClient", 'String'>
+    readonly clientSecret: FieldRef<"OidcClient", 'String'>
+    readonly clientName: FieldRef<"OidcClient", 'String'>
+    readonly clientUri: FieldRef<"OidcClient", 'String'>
+    readonly logoUri: FieldRef<"OidcClient", 'String'>
+    readonly redirectUris: FieldRef<"OidcClient", 'String'>
+    readonly grantTypes: FieldRef<"OidcClient", 'String'>
+    readonly responseTypes: FieldRef<"OidcClient", 'String'>
+    readonly scope: FieldRef<"OidcClient", 'String'>
+    readonly tokenEndpointAuthMethod: FieldRef<"OidcClient", 'String'>
+    readonly createdAt: FieldRef<"OidcClient", 'DateTime'>
+    readonly updatedAt: FieldRef<"OidcClient", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OidcClient findUnique
+   */
+  export type OidcClientFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcClient
+     */
+    select?: OidcClientSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OidcClientInclude<ExtArgs> | null
+    /**
+     * Filter, which OidcClient to fetch.
+     */
+    where: OidcClientWhereUniqueInput
+  }
+
+  /**
+   * OidcClient findUniqueOrThrow
+   */
+  export type OidcClientFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcClient
+     */
+    select?: OidcClientSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OidcClientInclude<ExtArgs> | null
+    /**
+     * Filter, which OidcClient to fetch.
+     */
+    where: OidcClientWhereUniqueInput
+  }
+
+  /**
+   * OidcClient findFirst
+   */
+  export type OidcClientFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcClient
+     */
+    select?: OidcClientSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OidcClientInclude<ExtArgs> | null
+    /**
+     * Filter, which OidcClient to fetch.
+     */
+    where?: OidcClientWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OidcClients to fetch.
+     */
+    orderBy?: OidcClientOrderByWithRelationInput | OidcClientOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OidcClients.
+     */
+    cursor?: OidcClientWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OidcClients from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OidcClients.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OidcClients.
+     */
+    distinct?: OidcClientScalarFieldEnum | OidcClientScalarFieldEnum[]
+  }
+
+  /**
+   * OidcClient findFirstOrThrow
+   */
+  export type OidcClientFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcClient
+     */
+    select?: OidcClientSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OidcClientInclude<ExtArgs> | null
+    /**
+     * Filter, which OidcClient to fetch.
+     */
+    where?: OidcClientWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OidcClients to fetch.
+     */
+    orderBy?: OidcClientOrderByWithRelationInput | OidcClientOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OidcClients.
+     */
+    cursor?: OidcClientWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OidcClients from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OidcClients.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OidcClients.
+     */
+    distinct?: OidcClientScalarFieldEnum | OidcClientScalarFieldEnum[]
+  }
+
+  /**
+   * OidcClient findMany
+   */
+  export type OidcClientFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcClient
+     */
+    select?: OidcClientSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OidcClientInclude<ExtArgs> | null
+    /**
+     * Filter, which OidcClients to fetch.
+     */
+    where?: OidcClientWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OidcClients to fetch.
+     */
+    orderBy?: OidcClientOrderByWithRelationInput | OidcClientOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OidcClients.
+     */
+    cursor?: OidcClientWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OidcClients from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OidcClients.
+     */
+    skip?: number
+    distinct?: OidcClientScalarFieldEnum | OidcClientScalarFieldEnum[]
+  }
+
+  /**
+   * OidcClient create
+   */
+  export type OidcClientCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcClient
+     */
+    select?: OidcClientSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OidcClientInclude<ExtArgs> | null
+    /**
+     * The data needed to create a OidcClient.
+     */
+    data: XOR<OidcClientCreateInput, OidcClientUncheckedCreateInput>
+  }
+
+  /**
+   * OidcClient createMany
+   */
+  export type OidcClientCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OidcClients.
+     */
+    data: OidcClientCreateManyInput | OidcClientCreateManyInput[]
+  }
+
+  /**
+   * OidcClient createManyAndReturn
+   */
+  export type OidcClientCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcClient
+     */
+    select?: OidcClientSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many OidcClients.
+     */
+    data: OidcClientCreateManyInput | OidcClientCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OidcClientIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OidcClient update
+   */
+  export type OidcClientUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcClient
+     */
+    select?: OidcClientSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OidcClientInclude<ExtArgs> | null
+    /**
+     * The data needed to update a OidcClient.
+     */
+    data: XOR<OidcClientUpdateInput, OidcClientUncheckedUpdateInput>
+    /**
+     * Choose, which OidcClient to update.
+     */
+    where: OidcClientWhereUniqueInput
+  }
+
+  /**
+   * OidcClient updateMany
+   */
+  export type OidcClientUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OidcClients.
+     */
+    data: XOR<OidcClientUpdateManyMutationInput, OidcClientUncheckedUpdateManyInput>
+    /**
+     * Filter which OidcClients to update
+     */
+    where?: OidcClientWhereInput
+  }
+
+  /**
+   * OidcClient upsert
+   */
+  export type OidcClientUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcClient
+     */
+    select?: OidcClientSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OidcClientInclude<ExtArgs> | null
+    /**
+     * The filter to search for the OidcClient to update in case it exists.
+     */
+    where: OidcClientWhereUniqueInput
+    /**
+     * In case the OidcClient found by the `where` argument doesn't exist, create a new OidcClient with this data.
+     */
+    create: XOR<OidcClientCreateInput, OidcClientUncheckedCreateInput>
+    /**
+     * In case the OidcClient was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OidcClientUpdateInput, OidcClientUncheckedUpdateInput>
+  }
+
+  /**
+   * OidcClient delete
+   */
+  export type OidcClientDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcClient
+     */
+    select?: OidcClientSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OidcClientInclude<ExtArgs> | null
+    /**
+     * Filter which OidcClient to delete.
+     */
+    where: OidcClientWhereUniqueInput
+  }
+
+  /**
+   * OidcClient deleteMany
+   */
+  export type OidcClientDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OidcClients to delete
+     */
+    where?: OidcClientWhereInput
+  }
+
+  /**
+   * OidcClient.application
+   */
+  export type OidcClient$applicationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Application
+     */
+    select?: ApplicationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ApplicationInclude<ExtArgs> | null
+    where?: ApplicationWhereInput
+  }
+
+  /**
+   * OidcClient without action
+   */
+  export type OidcClientDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcClient
+     */
+    select?: OidcClientSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OidcClientInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model OidcPayload
+   */
+
+  export type AggregateOidcPayload = {
+    _count: OidcPayloadCountAggregateOutputType | null
+    _min: OidcPayloadMinAggregateOutputType | null
+    _max: OidcPayloadMaxAggregateOutputType | null
+  }
+
+  export type OidcPayloadMinAggregateOutputType = {
+    id: string | null
+    type: string | null
+    payload: string | null
+    grantId: string | null
+    userCode: string | null
+    uid: string | null
+    expiresAt: Date | null
+    consumedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type OidcPayloadMaxAggregateOutputType = {
+    id: string | null
+    type: string | null
+    payload: string | null
+    grantId: string | null
+    userCode: string | null
+    uid: string | null
+    expiresAt: Date | null
+    consumedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type OidcPayloadCountAggregateOutputType = {
+    id: number
+    type: number
+    payload: number
+    grantId: number
+    userCode: number
+    uid: number
+    expiresAt: number
+    consumedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type OidcPayloadMinAggregateInputType = {
+    id?: true
+    type?: true
+    payload?: true
+    grantId?: true
+    userCode?: true
+    uid?: true
+    expiresAt?: true
+    consumedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type OidcPayloadMaxAggregateInputType = {
+    id?: true
+    type?: true
+    payload?: true
+    grantId?: true
+    userCode?: true
+    uid?: true
+    expiresAt?: true
+    consumedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type OidcPayloadCountAggregateInputType = {
+    id?: true
+    type?: true
+    payload?: true
+    grantId?: true
+    userCode?: true
+    uid?: true
+    expiresAt?: true
+    consumedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type OidcPayloadAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OidcPayload to aggregate.
+     */
+    where?: OidcPayloadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OidcPayloads to fetch.
+     */
+    orderBy?: OidcPayloadOrderByWithRelationInput | OidcPayloadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OidcPayloadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OidcPayloads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OidcPayloads.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OidcPayloads
+    **/
+    _count?: true | OidcPayloadCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OidcPayloadMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OidcPayloadMaxAggregateInputType
+  }
+
+  export type GetOidcPayloadAggregateType<T extends OidcPayloadAggregateArgs> = {
+        [P in keyof T & keyof AggregateOidcPayload]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOidcPayload[P]>
+      : GetScalarType<T[P], AggregateOidcPayload[P]>
+  }
+
+
+
+
+  export type OidcPayloadGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OidcPayloadWhereInput
+    orderBy?: OidcPayloadOrderByWithAggregationInput | OidcPayloadOrderByWithAggregationInput[]
+    by: OidcPayloadScalarFieldEnum[] | OidcPayloadScalarFieldEnum
+    having?: OidcPayloadScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OidcPayloadCountAggregateInputType | true
+    _min?: OidcPayloadMinAggregateInputType
+    _max?: OidcPayloadMaxAggregateInputType
+  }
+
+  export type OidcPayloadGroupByOutputType = {
+    id: string
+    type: string
+    payload: string
+    grantId: string | null
+    userCode: string | null
+    uid: string | null
+    expiresAt: Date | null
+    consumedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: OidcPayloadCountAggregateOutputType | null
+    _min: OidcPayloadMinAggregateOutputType | null
+    _max: OidcPayloadMaxAggregateOutputType | null
+  }
+
+  type GetOidcPayloadGroupByPayload<T extends OidcPayloadGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OidcPayloadGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OidcPayloadGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OidcPayloadGroupByOutputType[P]>
+            : GetScalarType<T[P], OidcPayloadGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OidcPayloadSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    payload?: boolean
+    grantId?: boolean
+    userCode?: boolean
+    uid?: boolean
+    expiresAt?: boolean
+    consumedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["oidcPayload"]>
+
+  export type OidcPayloadSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    payload?: boolean
+    grantId?: boolean
+    userCode?: boolean
+    uid?: boolean
+    expiresAt?: boolean
+    consumedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["oidcPayload"]>
+
+  export type OidcPayloadSelectScalar = {
+    id?: boolean
+    type?: boolean
+    payload?: boolean
+    grantId?: boolean
+    userCode?: boolean
+    uid?: boolean
+    expiresAt?: boolean
+    consumedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $OidcPayloadPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OidcPayload"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      type: string
+      payload: string
+      grantId: string | null
+      userCode: string | null
+      uid: string | null
+      expiresAt: Date | null
+      consumedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["oidcPayload"]>
+    composites: {}
+  }
+
+  type OidcPayloadGetPayload<S extends boolean | null | undefined | OidcPayloadDefaultArgs> = $Result.GetResult<Prisma.$OidcPayloadPayload, S>
+
+  type OidcPayloadCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<OidcPayloadFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: OidcPayloadCountAggregateInputType | true
+    }
+
+  export interface OidcPayloadDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OidcPayload'], meta: { name: 'OidcPayload' } }
+    /**
+     * Find zero or one OidcPayload that matches the filter.
+     * @param {OidcPayloadFindUniqueArgs} args - Arguments to find a OidcPayload
+     * @example
+     * // Get one OidcPayload
+     * const oidcPayload = await prisma.oidcPayload.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OidcPayloadFindUniqueArgs>(args: SelectSubset<T, OidcPayloadFindUniqueArgs<ExtArgs>>): Prisma__OidcPayloadClient<$Result.GetResult<Prisma.$OidcPayloadPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one OidcPayload that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {OidcPayloadFindUniqueOrThrowArgs} args - Arguments to find a OidcPayload
+     * @example
+     * // Get one OidcPayload
+     * const oidcPayload = await prisma.oidcPayload.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OidcPayloadFindUniqueOrThrowArgs>(args: SelectSubset<T, OidcPayloadFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OidcPayloadClient<$Result.GetResult<Prisma.$OidcPayloadPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first OidcPayload that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OidcPayloadFindFirstArgs} args - Arguments to find a OidcPayload
+     * @example
+     * // Get one OidcPayload
+     * const oidcPayload = await prisma.oidcPayload.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OidcPayloadFindFirstArgs>(args?: SelectSubset<T, OidcPayloadFindFirstArgs<ExtArgs>>): Prisma__OidcPayloadClient<$Result.GetResult<Prisma.$OidcPayloadPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first OidcPayload that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OidcPayloadFindFirstOrThrowArgs} args - Arguments to find a OidcPayload
+     * @example
+     * // Get one OidcPayload
+     * const oidcPayload = await prisma.oidcPayload.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OidcPayloadFindFirstOrThrowArgs>(args?: SelectSubset<T, OidcPayloadFindFirstOrThrowArgs<ExtArgs>>): Prisma__OidcPayloadClient<$Result.GetResult<Prisma.$OidcPayloadPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more OidcPayloads that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OidcPayloadFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OidcPayloads
+     * const oidcPayloads = await prisma.oidcPayload.findMany()
+     * 
+     * // Get first 10 OidcPayloads
+     * const oidcPayloads = await prisma.oidcPayload.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const oidcPayloadWithIdOnly = await prisma.oidcPayload.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OidcPayloadFindManyArgs>(args?: SelectSubset<T, OidcPayloadFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OidcPayloadPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a OidcPayload.
+     * @param {OidcPayloadCreateArgs} args - Arguments to create a OidcPayload.
+     * @example
+     * // Create one OidcPayload
+     * const OidcPayload = await prisma.oidcPayload.create({
+     *   data: {
+     *     // ... data to create a OidcPayload
+     *   }
+     * })
+     * 
+     */
+    create<T extends OidcPayloadCreateArgs>(args: SelectSubset<T, OidcPayloadCreateArgs<ExtArgs>>): Prisma__OidcPayloadClient<$Result.GetResult<Prisma.$OidcPayloadPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many OidcPayloads.
+     * @param {OidcPayloadCreateManyArgs} args - Arguments to create many OidcPayloads.
+     * @example
+     * // Create many OidcPayloads
+     * const oidcPayload = await prisma.oidcPayload.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OidcPayloadCreateManyArgs>(args?: SelectSubset<T, OidcPayloadCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many OidcPayloads and returns the data saved in the database.
+     * @param {OidcPayloadCreateManyAndReturnArgs} args - Arguments to create many OidcPayloads.
+     * @example
+     * // Create many OidcPayloads
+     * const oidcPayload = await prisma.oidcPayload.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many OidcPayloads and only return the `id`
+     * const oidcPayloadWithIdOnly = await prisma.oidcPayload.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OidcPayloadCreateManyAndReturnArgs>(args?: SelectSubset<T, OidcPayloadCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OidcPayloadPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a OidcPayload.
+     * @param {OidcPayloadDeleteArgs} args - Arguments to delete one OidcPayload.
+     * @example
+     * // Delete one OidcPayload
+     * const OidcPayload = await prisma.oidcPayload.delete({
+     *   where: {
+     *     // ... filter to delete one OidcPayload
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OidcPayloadDeleteArgs>(args: SelectSubset<T, OidcPayloadDeleteArgs<ExtArgs>>): Prisma__OidcPayloadClient<$Result.GetResult<Prisma.$OidcPayloadPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one OidcPayload.
+     * @param {OidcPayloadUpdateArgs} args - Arguments to update one OidcPayload.
+     * @example
+     * // Update one OidcPayload
+     * const oidcPayload = await prisma.oidcPayload.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OidcPayloadUpdateArgs>(args: SelectSubset<T, OidcPayloadUpdateArgs<ExtArgs>>): Prisma__OidcPayloadClient<$Result.GetResult<Prisma.$OidcPayloadPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more OidcPayloads.
+     * @param {OidcPayloadDeleteManyArgs} args - Arguments to filter OidcPayloads to delete.
+     * @example
+     * // Delete a few OidcPayloads
+     * const { count } = await prisma.oidcPayload.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OidcPayloadDeleteManyArgs>(args?: SelectSubset<T, OidcPayloadDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OidcPayloads.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OidcPayloadUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OidcPayloads
+     * const oidcPayload = await prisma.oidcPayload.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OidcPayloadUpdateManyArgs>(args: SelectSubset<T, OidcPayloadUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one OidcPayload.
+     * @param {OidcPayloadUpsertArgs} args - Arguments to update or create a OidcPayload.
+     * @example
+     * // Update or create a OidcPayload
+     * const oidcPayload = await prisma.oidcPayload.upsert({
+     *   create: {
+     *     // ... data to create a OidcPayload
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OidcPayload we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OidcPayloadUpsertArgs>(args: SelectSubset<T, OidcPayloadUpsertArgs<ExtArgs>>): Prisma__OidcPayloadClient<$Result.GetResult<Prisma.$OidcPayloadPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of OidcPayloads.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OidcPayloadCountArgs} args - Arguments to filter OidcPayloads to count.
+     * @example
+     * // Count the number of OidcPayloads
+     * const count = await prisma.oidcPayload.count({
+     *   where: {
+     *     // ... the filter for the OidcPayloads we want to count
+     *   }
+     * })
+    **/
+    count<T extends OidcPayloadCountArgs>(
+      args?: Subset<T, OidcPayloadCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OidcPayloadCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OidcPayload.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OidcPayloadAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OidcPayloadAggregateArgs>(args: Subset<T, OidcPayloadAggregateArgs>): Prisma.PrismaPromise<GetOidcPayloadAggregateType<T>>
+
+    /**
+     * Group by OidcPayload.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OidcPayloadGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OidcPayloadGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OidcPayloadGroupByArgs['orderBy'] }
+        : { orderBy?: OidcPayloadGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OidcPayloadGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOidcPayloadGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OidcPayload model
+   */
+  readonly fields: OidcPayloadFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OidcPayload.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OidcPayloadClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OidcPayload model
+   */ 
+  interface OidcPayloadFieldRefs {
+    readonly id: FieldRef<"OidcPayload", 'String'>
+    readonly type: FieldRef<"OidcPayload", 'String'>
+    readonly payload: FieldRef<"OidcPayload", 'String'>
+    readonly grantId: FieldRef<"OidcPayload", 'String'>
+    readonly userCode: FieldRef<"OidcPayload", 'String'>
+    readonly uid: FieldRef<"OidcPayload", 'String'>
+    readonly expiresAt: FieldRef<"OidcPayload", 'DateTime'>
+    readonly consumedAt: FieldRef<"OidcPayload", 'DateTime'>
+    readonly createdAt: FieldRef<"OidcPayload", 'DateTime'>
+    readonly updatedAt: FieldRef<"OidcPayload", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OidcPayload findUnique
+   */
+  export type OidcPayloadFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcPayload
+     */
+    select?: OidcPayloadSelect<ExtArgs> | null
+    /**
+     * Filter, which OidcPayload to fetch.
+     */
+    where: OidcPayloadWhereUniqueInput
+  }
+
+  /**
+   * OidcPayload findUniqueOrThrow
+   */
+  export type OidcPayloadFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcPayload
+     */
+    select?: OidcPayloadSelect<ExtArgs> | null
+    /**
+     * Filter, which OidcPayload to fetch.
+     */
+    where: OidcPayloadWhereUniqueInput
+  }
+
+  /**
+   * OidcPayload findFirst
+   */
+  export type OidcPayloadFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcPayload
+     */
+    select?: OidcPayloadSelect<ExtArgs> | null
+    /**
+     * Filter, which OidcPayload to fetch.
+     */
+    where?: OidcPayloadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OidcPayloads to fetch.
+     */
+    orderBy?: OidcPayloadOrderByWithRelationInput | OidcPayloadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OidcPayloads.
+     */
+    cursor?: OidcPayloadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OidcPayloads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OidcPayloads.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OidcPayloads.
+     */
+    distinct?: OidcPayloadScalarFieldEnum | OidcPayloadScalarFieldEnum[]
+  }
+
+  /**
+   * OidcPayload findFirstOrThrow
+   */
+  export type OidcPayloadFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcPayload
+     */
+    select?: OidcPayloadSelect<ExtArgs> | null
+    /**
+     * Filter, which OidcPayload to fetch.
+     */
+    where?: OidcPayloadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OidcPayloads to fetch.
+     */
+    orderBy?: OidcPayloadOrderByWithRelationInput | OidcPayloadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OidcPayloads.
+     */
+    cursor?: OidcPayloadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OidcPayloads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OidcPayloads.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OidcPayloads.
+     */
+    distinct?: OidcPayloadScalarFieldEnum | OidcPayloadScalarFieldEnum[]
+  }
+
+  /**
+   * OidcPayload findMany
+   */
+  export type OidcPayloadFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcPayload
+     */
+    select?: OidcPayloadSelect<ExtArgs> | null
+    /**
+     * Filter, which OidcPayloads to fetch.
+     */
+    where?: OidcPayloadWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OidcPayloads to fetch.
+     */
+    orderBy?: OidcPayloadOrderByWithRelationInput | OidcPayloadOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OidcPayloads.
+     */
+    cursor?: OidcPayloadWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OidcPayloads from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OidcPayloads.
+     */
+    skip?: number
+    distinct?: OidcPayloadScalarFieldEnum | OidcPayloadScalarFieldEnum[]
+  }
+
+  /**
+   * OidcPayload create
+   */
+  export type OidcPayloadCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcPayload
+     */
+    select?: OidcPayloadSelect<ExtArgs> | null
+    /**
+     * The data needed to create a OidcPayload.
+     */
+    data: XOR<OidcPayloadCreateInput, OidcPayloadUncheckedCreateInput>
+  }
+
+  /**
+   * OidcPayload createMany
+   */
+  export type OidcPayloadCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OidcPayloads.
+     */
+    data: OidcPayloadCreateManyInput | OidcPayloadCreateManyInput[]
+  }
+
+  /**
+   * OidcPayload createManyAndReturn
+   */
+  export type OidcPayloadCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcPayload
+     */
+    select?: OidcPayloadSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many OidcPayloads.
+     */
+    data: OidcPayloadCreateManyInput | OidcPayloadCreateManyInput[]
+  }
+
+  /**
+   * OidcPayload update
+   */
+  export type OidcPayloadUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcPayload
+     */
+    select?: OidcPayloadSelect<ExtArgs> | null
+    /**
+     * The data needed to update a OidcPayload.
+     */
+    data: XOR<OidcPayloadUpdateInput, OidcPayloadUncheckedUpdateInput>
+    /**
+     * Choose, which OidcPayload to update.
+     */
+    where: OidcPayloadWhereUniqueInput
+  }
+
+  /**
+   * OidcPayload updateMany
+   */
+  export type OidcPayloadUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OidcPayloads.
+     */
+    data: XOR<OidcPayloadUpdateManyMutationInput, OidcPayloadUncheckedUpdateManyInput>
+    /**
+     * Filter which OidcPayloads to update
+     */
+    where?: OidcPayloadWhereInput
+  }
+
+  /**
+   * OidcPayload upsert
+   */
+  export type OidcPayloadUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcPayload
+     */
+    select?: OidcPayloadSelect<ExtArgs> | null
+    /**
+     * The filter to search for the OidcPayload to update in case it exists.
+     */
+    where: OidcPayloadWhereUniqueInput
+    /**
+     * In case the OidcPayload found by the `where` argument doesn't exist, create a new OidcPayload with this data.
+     */
+    create: XOR<OidcPayloadCreateInput, OidcPayloadUncheckedCreateInput>
+    /**
+     * In case the OidcPayload was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OidcPayloadUpdateInput, OidcPayloadUncheckedUpdateInput>
+  }
+
+  /**
+   * OidcPayload delete
+   */
+  export type OidcPayloadDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcPayload
+     */
+    select?: OidcPayloadSelect<ExtArgs> | null
+    /**
+     * Filter which OidcPayload to delete.
+     */
+    where: OidcPayloadWhereUniqueInput
+  }
+
+  /**
+   * OidcPayload deleteMany
+   */
+  export type OidcPayloadDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OidcPayloads to delete
+     */
+    where?: OidcPayloadWhereInput
+  }
+
+  /**
+   * OidcPayload without action
+   */
+  export type OidcPayloadDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OidcPayload
+     */
+    select?: OidcPayloadSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -7310,6 +10581,60 @@ export namespace Prisma {
   };
 
   export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+  export const ApplicationScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    icon: 'icon',
+    url: 'url',
+    type: 'type',
+    status: 'status',
+    version: 'version',
+    developer: 'developer',
+    category: 'category',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ApplicationScalarFieldEnum = (typeof ApplicationScalarFieldEnum)[keyof typeof ApplicationScalarFieldEnum]
+
+
+  export const OidcClientScalarFieldEnum: {
+    id: 'id',
+    applicationId: 'applicationId',
+    clientId: 'clientId',
+    clientSecret: 'clientSecret',
+    clientName: 'clientName',
+    clientUri: 'clientUri',
+    logoUri: 'logoUri',
+    redirectUris: 'redirectUris',
+    grantTypes: 'grantTypes',
+    responseTypes: 'responseTypes',
+    scope: 'scope',
+    tokenEndpointAuthMethod: 'tokenEndpointAuthMethod',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type OidcClientScalarFieldEnum = (typeof OidcClientScalarFieldEnum)[keyof typeof OidcClientScalarFieldEnum]
+
+
+  export const OidcPayloadScalarFieldEnum: {
+    id: 'id',
+    type: 'type',
+    payload: 'payload',
+    grantId: 'grantId',
+    userCode: 'userCode',
+    uid: 'uid',
+    expiresAt: 'expiresAt',
+    consumedAt: 'consumedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type OidcPayloadScalarFieldEnum = (typeof OidcPayloadScalarFieldEnum)[keyof typeof OidcPayloadScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -7792,6 +11117,273 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
   }
 
+  export type ApplicationWhereInput = {
+    AND?: ApplicationWhereInput | ApplicationWhereInput[]
+    OR?: ApplicationWhereInput[]
+    NOT?: ApplicationWhereInput | ApplicationWhereInput[]
+    id?: StringFilter<"Application"> | string
+    name?: StringFilter<"Application"> | string
+    description?: StringNullableFilter<"Application"> | string | null
+    icon?: StringNullableFilter<"Application"> | string | null
+    url?: StringNullableFilter<"Application"> | string | null
+    type?: StringFilter<"Application"> | string
+    status?: StringFilter<"Application"> | string
+    version?: StringNullableFilter<"Application"> | string | null
+    developer?: StringNullableFilter<"Application"> | string | null
+    category?: StringNullableFilter<"Application"> | string | null
+    createdAt?: DateTimeFilter<"Application"> | Date | string
+    updatedAt?: DateTimeFilter<"Application"> | Date | string
+    oidcClient?: XOR<OidcClientNullableRelationFilter, OidcClientWhereInput> | null
+  }
+
+  export type ApplicationOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    icon?: SortOrderInput | SortOrder
+    url?: SortOrderInput | SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    version?: SortOrderInput | SortOrder
+    developer?: SortOrderInput | SortOrder
+    category?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    oidcClient?: OidcClientOrderByWithRelationInput
+  }
+
+  export type ApplicationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ApplicationWhereInput | ApplicationWhereInput[]
+    OR?: ApplicationWhereInput[]
+    NOT?: ApplicationWhereInput | ApplicationWhereInput[]
+    name?: StringFilter<"Application"> | string
+    description?: StringNullableFilter<"Application"> | string | null
+    icon?: StringNullableFilter<"Application"> | string | null
+    url?: StringNullableFilter<"Application"> | string | null
+    type?: StringFilter<"Application"> | string
+    status?: StringFilter<"Application"> | string
+    version?: StringNullableFilter<"Application"> | string | null
+    developer?: StringNullableFilter<"Application"> | string | null
+    category?: StringNullableFilter<"Application"> | string | null
+    createdAt?: DateTimeFilter<"Application"> | Date | string
+    updatedAt?: DateTimeFilter<"Application"> | Date | string
+    oidcClient?: XOR<OidcClientNullableRelationFilter, OidcClientWhereInput> | null
+  }, "id">
+
+  export type ApplicationOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    icon?: SortOrderInput | SortOrder
+    url?: SortOrderInput | SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    version?: SortOrderInput | SortOrder
+    developer?: SortOrderInput | SortOrder
+    category?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ApplicationCountOrderByAggregateInput
+    _max?: ApplicationMaxOrderByAggregateInput
+    _min?: ApplicationMinOrderByAggregateInput
+  }
+
+  export type ApplicationScalarWhereWithAggregatesInput = {
+    AND?: ApplicationScalarWhereWithAggregatesInput | ApplicationScalarWhereWithAggregatesInput[]
+    OR?: ApplicationScalarWhereWithAggregatesInput[]
+    NOT?: ApplicationScalarWhereWithAggregatesInput | ApplicationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Application"> | string
+    name?: StringWithAggregatesFilter<"Application"> | string
+    description?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    icon?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    url?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    type?: StringWithAggregatesFilter<"Application"> | string
+    status?: StringWithAggregatesFilter<"Application"> | string
+    version?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    developer?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    category?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Application"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Application"> | Date | string
+  }
+
+  export type OidcClientWhereInput = {
+    AND?: OidcClientWhereInput | OidcClientWhereInput[]
+    OR?: OidcClientWhereInput[]
+    NOT?: OidcClientWhereInput | OidcClientWhereInput[]
+    id?: StringFilter<"OidcClient"> | string
+    applicationId?: StringNullableFilter<"OidcClient"> | string | null
+    clientId?: StringFilter<"OidcClient"> | string
+    clientSecret?: StringNullableFilter<"OidcClient"> | string | null
+    clientName?: StringNullableFilter<"OidcClient"> | string | null
+    clientUri?: StringNullableFilter<"OidcClient"> | string | null
+    logoUri?: StringNullableFilter<"OidcClient"> | string | null
+    redirectUris?: StringFilter<"OidcClient"> | string
+    grantTypes?: StringFilter<"OidcClient"> | string
+    responseTypes?: StringFilter<"OidcClient"> | string
+    scope?: StringFilter<"OidcClient"> | string
+    tokenEndpointAuthMethod?: StringFilter<"OidcClient"> | string
+    createdAt?: DateTimeFilter<"OidcClient"> | Date | string
+    updatedAt?: DateTimeFilter<"OidcClient"> | Date | string
+    application?: XOR<ApplicationNullableRelationFilter, ApplicationWhereInput> | null
+  }
+
+  export type OidcClientOrderByWithRelationInput = {
+    id?: SortOrder
+    applicationId?: SortOrderInput | SortOrder
+    clientId?: SortOrder
+    clientSecret?: SortOrderInput | SortOrder
+    clientName?: SortOrderInput | SortOrder
+    clientUri?: SortOrderInput | SortOrder
+    logoUri?: SortOrderInput | SortOrder
+    redirectUris?: SortOrder
+    grantTypes?: SortOrder
+    responseTypes?: SortOrder
+    scope?: SortOrder
+    tokenEndpointAuthMethod?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    application?: ApplicationOrderByWithRelationInput
+  }
+
+  export type OidcClientWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    applicationId?: string
+    clientId?: string
+    AND?: OidcClientWhereInput | OidcClientWhereInput[]
+    OR?: OidcClientWhereInput[]
+    NOT?: OidcClientWhereInput | OidcClientWhereInput[]
+    clientSecret?: StringNullableFilter<"OidcClient"> | string | null
+    clientName?: StringNullableFilter<"OidcClient"> | string | null
+    clientUri?: StringNullableFilter<"OidcClient"> | string | null
+    logoUri?: StringNullableFilter<"OidcClient"> | string | null
+    redirectUris?: StringFilter<"OidcClient"> | string
+    grantTypes?: StringFilter<"OidcClient"> | string
+    responseTypes?: StringFilter<"OidcClient"> | string
+    scope?: StringFilter<"OidcClient"> | string
+    tokenEndpointAuthMethod?: StringFilter<"OidcClient"> | string
+    createdAt?: DateTimeFilter<"OidcClient"> | Date | string
+    updatedAt?: DateTimeFilter<"OidcClient"> | Date | string
+    application?: XOR<ApplicationNullableRelationFilter, ApplicationWhereInput> | null
+  }, "id" | "applicationId" | "clientId">
+
+  export type OidcClientOrderByWithAggregationInput = {
+    id?: SortOrder
+    applicationId?: SortOrderInput | SortOrder
+    clientId?: SortOrder
+    clientSecret?: SortOrderInput | SortOrder
+    clientName?: SortOrderInput | SortOrder
+    clientUri?: SortOrderInput | SortOrder
+    logoUri?: SortOrderInput | SortOrder
+    redirectUris?: SortOrder
+    grantTypes?: SortOrder
+    responseTypes?: SortOrder
+    scope?: SortOrder
+    tokenEndpointAuthMethod?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: OidcClientCountOrderByAggregateInput
+    _max?: OidcClientMaxOrderByAggregateInput
+    _min?: OidcClientMinOrderByAggregateInput
+  }
+
+  export type OidcClientScalarWhereWithAggregatesInput = {
+    AND?: OidcClientScalarWhereWithAggregatesInput | OidcClientScalarWhereWithAggregatesInput[]
+    OR?: OidcClientScalarWhereWithAggregatesInput[]
+    NOT?: OidcClientScalarWhereWithAggregatesInput | OidcClientScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"OidcClient"> | string
+    applicationId?: StringNullableWithAggregatesFilter<"OidcClient"> | string | null
+    clientId?: StringWithAggregatesFilter<"OidcClient"> | string
+    clientSecret?: StringNullableWithAggregatesFilter<"OidcClient"> | string | null
+    clientName?: StringNullableWithAggregatesFilter<"OidcClient"> | string | null
+    clientUri?: StringNullableWithAggregatesFilter<"OidcClient"> | string | null
+    logoUri?: StringNullableWithAggregatesFilter<"OidcClient"> | string | null
+    redirectUris?: StringWithAggregatesFilter<"OidcClient"> | string
+    grantTypes?: StringWithAggregatesFilter<"OidcClient"> | string
+    responseTypes?: StringWithAggregatesFilter<"OidcClient"> | string
+    scope?: StringWithAggregatesFilter<"OidcClient"> | string
+    tokenEndpointAuthMethod?: StringWithAggregatesFilter<"OidcClient"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"OidcClient"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"OidcClient"> | Date | string
+  }
+
+  export type OidcPayloadWhereInput = {
+    AND?: OidcPayloadWhereInput | OidcPayloadWhereInput[]
+    OR?: OidcPayloadWhereInput[]
+    NOT?: OidcPayloadWhereInput | OidcPayloadWhereInput[]
+    id?: StringFilter<"OidcPayload"> | string
+    type?: StringFilter<"OidcPayload"> | string
+    payload?: StringFilter<"OidcPayload"> | string
+    grantId?: StringNullableFilter<"OidcPayload"> | string | null
+    userCode?: StringNullableFilter<"OidcPayload"> | string | null
+    uid?: StringNullableFilter<"OidcPayload"> | string | null
+    expiresAt?: DateTimeNullableFilter<"OidcPayload"> | Date | string | null
+    consumedAt?: DateTimeNullableFilter<"OidcPayload"> | Date | string | null
+    createdAt?: DateTimeFilter<"OidcPayload"> | Date | string
+    updatedAt?: DateTimeFilter<"OidcPayload"> | Date | string
+  }
+
+  export type OidcPayloadOrderByWithRelationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    payload?: SortOrder
+    grantId?: SortOrderInput | SortOrder
+    userCode?: SortOrderInput | SortOrder
+    uid?: SortOrderInput | SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    consumedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OidcPayloadWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: OidcPayloadWhereInput | OidcPayloadWhereInput[]
+    OR?: OidcPayloadWhereInput[]
+    NOT?: OidcPayloadWhereInput | OidcPayloadWhereInput[]
+    type?: StringFilter<"OidcPayload"> | string
+    payload?: StringFilter<"OidcPayload"> | string
+    grantId?: StringNullableFilter<"OidcPayload"> | string | null
+    userCode?: StringNullableFilter<"OidcPayload"> | string | null
+    uid?: StringNullableFilter<"OidcPayload"> | string | null
+    expiresAt?: DateTimeNullableFilter<"OidcPayload"> | Date | string | null
+    consumedAt?: DateTimeNullableFilter<"OidcPayload"> | Date | string | null
+    createdAt?: DateTimeFilter<"OidcPayload"> | Date | string
+    updatedAt?: DateTimeFilter<"OidcPayload"> | Date | string
+  }, "id">
+
+  export type OidcPayloadOrderByWithAggregationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    payload?: SortOrder
+    grantId?: SortOrderInput | SortOrder
+    userCode?: SortOrderInput | SortOrder
+    uid?: SortOrderInput | SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    consumedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: OidcPayloadCountOrderByAggregateInput
+    _max?: OidcPayloadMaxOrderByAggregateInput
+    _min?: OidcPayloadMinOrderByAggregateInput
+  }
+
+  export type OidcPayloadScalarWhereWithAggregatesInput = {
+    AND?: OidcPayloadScalarWhereWithAggregatesInput | OidcPayloadScalarWhereWithAggregatesInput[]
+    OR?: OidcPayloadScalarWhereWithAggregatesInput[]
+    NOT?: OidcPayloadScalarWhereWithAggregatesInput | OidcPayloadScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"OidcPayload"> | string
+    type?: StringWithAggregatesFilter<"OidcPayload"> | string
+    payload?: StringWithAggregatesFilter<"OidcPayload"> | string
+    grantId?: StringNullableWithAggregatesFilter<"OidcPayload"> | string | null
+    userCode?: StringNullableWithAggregatesFilter<"OidcPayload"> | string | null
+    uid?: StringNullableWithAggregatesFilter<"OidcPayload"> | string | null
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"OidcPayload"> | Date | string | null
+    consumedAt?: DateTimeNullableWithAggregatesFilter<"OidcPayload"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"OidcPayload"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"OidcPayload"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     name?: string | null
@@ -8259,6 +11851,324 @@ export namespace Prisma {
     priority?: StringFieldUpdateOperationsInput | string
     startDate?: DateTimeFieldUpdateOperationsInput | Date | string
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    icon?: string | null
+    url?: string | null
+    type?: string
+    status?: string
+    version?: string | null
+    developer?: string | null
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    oidcClient?: OidcClientCreateNestedOneWithoutApplicationInput
+  }
+
+  export type ApplicationUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    icon?: string | null
+    url?: string | null
+    type?: string
+    status?: string
+    version?: string | null
+    developer?: string | null
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    oidcClient?: OidcClientUncheckedCreateNestedOneWithoutApplicationInput
+  }
+
+  export type ApplicationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    oidcClient?: OidcClientUpdateOneWithoutApplicationNestedInput
+  }
+
+  export type ApplicationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    oidcClient?: OidcClientUncheckedUpdateOneWithoutApplicationNestedInput
+  }
+
+  export type ApplicationCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    icon?: string | null
+    url?: string | null
+    type?: string
+    status?: string
+    version?: string | null
+    developer?: string | null
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ApplicationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OidcClientCreateInput = {
+    id?: string
+    clientId: string
+    clientSecret?: string | null
+    clientName?: string | null
+    clientUri?: string | null
+    logoUri?: string | null
+    redirectUris: string
+    grantTypes: string
+    responseTypes: string
+    scope?: string
+    tokenEndpointAuthMethod?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    application?: ApplicationCreateNestedOneWithoutOidcClientInput
+  }
+
+  export type OidcClientUncheckedCreateInput = {
+    id?: string
+    applicationId?: string | null
+    clientId: string
+    clientSecret?: string | null
+    clientName?: string | null
+    clientUri?: string | null
+    logoUri?: string | null
+    redirectUris: string
+    grantTypes: string
+    responseTypes: string
+    scope?: string
+    tokenEndpointAuthMethod?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OidcClientUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientId?: StringFieldUpdateOperationsInput | string
+    clientSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    clientName?: NullableStringFieldUpdateOperationsInput | string | null
+    clientUri?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUri?: NullableStringFieldUpdateOperationsInput | string | null
+    redirectUris?: StringFieldUpdateOperationsInput | string
+    grantTypes?: StringFieldUpdateOperationsInput | string
+    responseTypes?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    tokenEndpointAuthMethod?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    application?: ApplicationUpdateOneWithoutOidcClientNestedInput
+  }
+
+  export type OidcClientUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: NullableStringFieldUpdateOperationsInput | string | null
+    clientId?: StringFieldUpdateOperationsInput | string
+    clientSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    clientName?: NullableStringFieldUpdateOperationsInput | string | null
+    clientUri?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUri?: NullableStringFieldUpdateOperationsInput | string | null
+    redirectUris?: StringFieldUpdateOperationsInput | string
+    grantTypes?: StringFieldUpdateOperationsInput | string
+    responseTypes?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    tokenEndpointAuthMethod?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OidcClientCreateManyInput = {
+    id?: string
+    applicationId?: string | null
+    clientId: string
+    clientSecret?: string | null
+    clientName?: string | null
+    clientUri?: string | null
+    logoUri?: string | null
+    redirectUris: string
+    grantTypes: string
+    responseTypes: string
+    scope?: string
+    tokenEndpointAuthMethod?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OidcClientUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientId?: StringFieldUpdateOperationsInput | string
+    clientSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    clientName?: NullableStringFieldUpdateOperationsInput | string | null
+    clientUri?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUri?: NullableStringFieldUpdateOperationsInput | string | null
+    redirectUris?: StringFieldUpdateOperationsInput | string
+    grantTypes?: StringFieldUpdateOperationsInput | string
+    responseTypes?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    tokenEndpointAuthMethod?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OidcClientUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicationId?: NullableStringFieldUpdateOperationsInput | string | null
+    clientId?: StringFieldUpdateOperationsInput | string
+    clientSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    clientName?: NullableStringFieldUpdateOperationsInput | string | null
+    clientUri?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUri?: NullableStringFieldUpdateOperationsInput | string | null
+    redirectUris?: StringFieldUpdateOperationsInput | string
+    grantTypes?: StringFieldUpdateOperationsInput | string
+    responseTypes?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    tokenEndpointAuthMethod?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OidcPayloadCreateInput = {
+    id: string
+    type: string
+    payload: string
+    grantId?: string | null
+    userCode?: string | null
+    uid?: string | null
+    expiresAt?: Date | string | null
+    consumedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OidcPayloadUncheckedCreateInput = {
+    id: string
+    type: string
+    payload: string
+    grantId?: string | null
+    userCode?: string | null
+    uid?: string | null
+    expiresAt?: Date | string | null
+    consumedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OidcPayloadUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    payload?: StringFieldUpdateOperationsInput | string
+    grantId?: NullableStringFieldUpdateOperationsInput | string | null
+    userCode?: NullableStringFieldUpdateOperationsInput | string | null
+    uid?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OidcPayloadUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    payload?: StringFieldUpdateOperationsInput | string
+    grantId?: NullableStringFieldUpdateOperationsInput | string | null
+    userCode?: NullableStringFieldUpdateOperationsInput | string | null
+    uid?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OidcPayloadCreateManyInput = {
+    id: string
+    type: string
+    payload: string
+    grantId?: string | null
+    userCode?: string | null
+    uid?: string | null
+    expiresAt?: Date | string | null
+    consumedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OidcPayloadUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    payload?: StringFieldUpdateOperationsInput | string
+    grantId?: NullableStringFieldUpdateOperationsInput | string | null
+    userCode?: NullableStringFieldUpdateOperationsInput | string | null
+    uid?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OidcPayloadUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    payload?: StringFieldUpdateOperationsInput | string
+    grantId?: NullableStringFieldUpdateOperationsInput | string | null
+    userCode?: NullableStringFieldUpdateOperationsInput | string | null
+    uid?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    consumedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8733,6 +12643,151 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
+  export type OidcClientNullableRelationFilter = {
+    is?: OidcClientWhereInput | null
+    isNot?: OidcClientWhereInput | null
+  }
+
+  export type ApplicationCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    icon?: SortOrder
+    url?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    version?: SortOrder
+    developer?: SortOrder
+    category?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApplicationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    icon?: SortOrder
+    url?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    version?: SortOrder
+    developer?: SortOrder
+    category?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApplicationMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    icon?: SortOrder
+    url?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    version?: SortOrder
+    developer?: SortOrder
+    category?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ApplicationNullableRelationFilter = {
+    is?: ApplicationWhereInput | null
+    isNot?: ApplicationWhereInput | null
+  }
+
+  export type OidcClientCountOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    clientId?: SortOrder
+    clientSecret?: SortOrder
+    clientName?: SortOrder
+    clientUri?: SortOrder
+    logoUri?: SortOrder
+    redirectUris?: SortOrder
+    grantTypes?: SortOrder
+    responseTypes?: SortOrder
+    scope?: SortOrder
+    tokenEndpointAuthMethod?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OidcClientMaxOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    clientId?: SortOrder
+    clientSecret?: SortOrder
+    clientName?: SortOrder
+    clientUri?: SortOrder
+    logoUri?: SortOrder
+    redirectUris?: SortOrder
+    grantTypes?: SortOrder
+    responseTypes?: SortOrder
+    scope?: SortOrder
+    tokenEndpointAuthMethod?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OidcClientMinOrderByAggregateInput = {
+    id?: SortOrder
+    applicationId?: SortOrder
+    clientId?: SortOrder
+    clientSecret?: SortOrder
+    clientName?: SortOrder
+    clientUri?: SortOrder
+    logoUri?: SortOrder
+    redirectUris?: SortOrder
+    grantTypes?: SortOrder
+    responseTypes?: SortOrder
+    scope?: SortOrder
+    tokenEndpointAuthMethod?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OidcPayloadCountOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    payload?: SortOrder
+    grantId?: SortOrder
+    userCode?: SortOrder
+    uid?: SortOrder
+    expiresAt?: SortOrder
+    consumedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OidcPayloadMaxOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    payload?: SortOrder
+    grantId?: SortOrder
+    userCode?: SortOrder
+    uid?: SortOrder
+    expiresAt?: SortOrder
+    consumedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OidcPayloadMinOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    payload?: SortOrder
+    grantId?: SortOrder
+    userCode?: SortOrder
+    uid?: SortOrder
+    expiresAt?: SortOrder
+    consumedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type AccountCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -8941,6 +12996,54 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type OidcClientCreateNestedOneWithoutApplicationInput = {
+    create?: XOR<OidcClientCreateWithoutApplicationInput, OidcClientUncheckedCreateWithoutApplicationInput>
+    connectOrCreate?: OidcClientCreateOrConnectWithoutApplicationInput
+    connect?: OidcClientWhereUniqueInput
+  }
+
+  export type OidcClientUncheckedCreateNestedOneWithoutApplicationInput = {
+    create?: XOR<OidcClientCreateWithoutApplicationInput, OidcClientUncheckedCreateWithoutApplicationInput>
+    connectOrCreate?: OidcClientCreateOrConnectWithoutApplicationInput
+    connect?: OidcClientWhereUniqueInput
+  }
+
+  export type OidcClientUpdateOneWithoutApplicationNestedInput = {
+    create?: XOR<OidcClientCreateWithoutApplicationInput, OidcClientUncheckedCreateWithoutApplicationInput>
+    connectOrCreate?: OidcClientCreateOrConnectWithoutApplicationInput
+    upsert?: OidcClientUpsertWithoutApplicationInput
+    disconnect?: OidcClientWhereInput | boolean
+    delete?: OidcClientWhereInput | boolean
+    connect?: OidcClientWhereUniqueInput
+    update?: XOR<XOR<OidcClientUpdateToOneWithWhereWithoutApplicationInput, OidcClientUpdateWithoutApplicationInput>, OidcClientUncheckedUpdateWithoutApplicationInput>
+  }
+
+  export type OidcClientUncheckedUpdateOneWithoutApplicationNestedInput = {
+    create?: XOR<OidcClientCreateWithoutApplicationInput, OidcClientUncheckedCreateWithoutApplicationInput>
+    connectOrCreate?: OidcClientCreateOrConnectWithoutApplicationInput
+    upsert?: OidcClientUpsertWithoutApplicationInput
+    disconnect?: OidcClientWhereInput | boolean
+    delete?: OidcClientWhereInput | boolean
+    connect?: OidcClientWhereUniqueInput
+    update?: XOR<XOR<OidcClientUpdateToOneWithWhereWithoutApplicationInput, OidcClientUpdateWithoutApplicationInput>, OidcClientUncheckedUpdateWithoutApplicationInput>
+  }
+
+  export type ApplicationCreateNestedOneWithoutOidcClientInput = {
+    create?: XOR<ApplicationCreateWithoutOidcClientInput, ApplicationUncheckedCreateWithoutOidcClientInput>
+    connectOrCreate?: ApplicationCreateOrConnectWithoutOidcClientInput
+    connect?: ApplicationWhereUniqueInput
+  }
+
+  export type ApplicationUpdateOneWithoutOidcClientNestedInput = {
+    create?: XOR<ApplicationCreateWithoutOidcClientInput, ApplicationUncheckedCreateWithoutOidcClientInput>
+    connectOrCreate?: ApplicationCreateOrConnectWithoutOidcClientInput
+    upsert?: ApplicationUpsertWithoutOidcClientInput
+    disconnect?: ApplicationWhereInput | boolean
+    delete?: ApplicationWhereInput | boolean
+    connect?: ApplicationWhereUniqueInput
+    update?: XOR<XOR<ApplicationUpdateToOneWithWhereWithoutOidcClientInput, ApplicationUpdateWithoutOidcClientInput>, ApplicationUncheckedUpdateWithoutOidcClientInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -9529,6 +13632,162 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type OidcClientCreateWithoutApplicationInput = {
+    id?: string
+    clientId: string
+    clientSecret?: string | null
+    clientName?: string | null
+    clientUri?: string | null
+    logoUri?: string | null
+    redirectUris: string
+    grantTypes: string
+    responseTypes: string
+    scope?: string
+    tokenEndpointAuthMethod?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OidcClientUncheckedCreateWithoutApplicationInput = {
+    id?: string
+    clientId: string
+    clientSecret?: string | null
+    clientName?: string | null
+    clientUri?: string | null
+    logoUri?: string | null
+    redirectUris: string
+    grantTypes: string
+    responseTypes: string
+    scope?: string
+    tokenEndpointAuthMethod?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OidcClientCreateOrConnectWithoutApplicationInput = {
+    where: OidcClientWhereUniqueInput
+    create: XOR<OidcClientCreateWithoutApplicationInput, OidcClientUncheckedCreateWithoutApplicationInput>
+  }
+
+  export type OidcClientUpsertWithoutApplicationInput = {
+    update: XOR<OidcClientUpdateWithoutApplicationInput, OidcClientUncheckedUpdateWithoutApplicationInput>
+    create: XOR<OidcClientCreateWithoutApplicationInput, OidcClientUncheckedCreateWithoutApplicationInput>
+    where?: OidcClientWhereInput
+  }
+
+  export type OidcClientUpdateToOneWithWhereWithoutApplicationInput = {
+    where?: OidcClientWhereInput
+    data: XOR<OidcClientUpdateWithoutApplicationInput, OidcClientUncheckedUpdateWithoutApplicationInput>
+  }
+
+  export type OidcClientUpdateWithoutApplicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientId?: StringFieldUpdateOperationsInput | string
+    clientSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    clientName?: NullableStringFieldUpdateOperationsInput | string | null
+    clientUri?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUri?: NullableStringFieldUpdateOperationsInput | string | null
+    redirectUris?: StringFieldUpdateOperationsInput | string
+    grantTypes?: StringFieldUpdateOperationsInput | string
+    responseTypes?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    tokenEndpointAuthMethod?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OidcClientUncheckedUpdateWithoutApplicationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientId?: StringFieldUpdateOperationsInput | string
+    clientSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    clientName?: NullableStringFieldUpdateOperationsInput | string | null
+    clientUri?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUri?: NullableStringFieldUpdateOperationsInput | string | null
+    redirectUris?: StringFieldUpdateOperationsInput | string
+    grantTypes?: StringFieldUpdateOperationsInput | string
+    responseTypes?: StringFieldUpdateOperationsInput | string
+    scope?: StringFieldUpdateOperationsInput | string
+    tokenEndpointAuthMethod?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationCreateWithoutOidcClientInput = {
+    id?: string
+    name: string
+    description?: string | null
+    icon?: string | null
+    url?: string | null
+    type?: string
+    status?: string
+    version?: string | null
+    developer?: string | null
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ApplicationUncheckedCreateWithoutOidcClientInput = {
+    id?: string
+    name: string
+    description?: string | null
+    icon?: string | null
+    url?: string | null
+    type?: string
+    status?: string
+    version?: string | null
+    developer?: string | null
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ApplicationCreateOrConnectWithoutOidcClientInput = {
+    where: ApplicationWhereUniqueInput
+    create: XOR<ApplicationCreateWithoutOidcClientInput, ApplicationUncheckedCreateWithoutOidcClientInput>
+  }
+
+  export type ApplicationUpsertWithoutOidcClientInput = {
+    update: XOR<ApplicationUpdateWithoutOidcClientInput, ApplicationUncheckedUpdateWithoutOidcClientInput>
+    create: XOR<ApplicationCreateWithoutOidcClientInput, ApplicationUncheckedCreateWithoutOidcClientInput>
+    where?: ApplicationWhereInput
+  }
+
+  export type ApplicationUpdateToOneWithWhereWithoutOidcClientInput = {
+    where?: ApplicationWhereInput
+    data: XOR<ApplicationUpdateWithoutOidcClientInput, ApplicationUncheckedUpdateWithoutOidcClientInput>
+  }
+
+  export type ApplicationUpdateWithoutOidcClientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApplicationUncheckedUpdateWithoutOidcClientInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    version?: NullableStringFieldUpdateOperationsInput | string | null
+    developer?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AccountCreateManyUserInput = {
     id?: string
     type: string
@@ -9692,6 +13951,18 @@ export namespace Prisma {
      * @deprecated Use ProjectDefaultArgs instead
      */
     export type ProjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProjectDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ApplicationDefaultArgs instead
+     */
+    export type ApplicationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ApplicationDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use OidcClientDefaultArgs instead
+     */
+    export type OidcClientArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = OidcClientDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use OidcPayloadDefaultArgs instead
+     */
+    export type OidcPayloadArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = OidcPayloadDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

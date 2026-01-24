@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import {
+  IconApps,
   IconCamera,
   IconChartBar,
   IconDashboard,
@@ -35,6 +36,7 @@ import {
 
 // Icon Map
 const iconMap: Record<string, any> = {
+  IconApps,
   IconDashboard,
   IconListDetails,
   IconChartBar,

@@ -185,6 +185,51 @@ exports.Prisma.ProjectScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ApplicationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  icon: 'icon',
+  url: 'url',
+  type: 'type',
+  status: 'status',
+  version: 'version',
+  developer: 'developer',
+  category: 'category',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OidcClientScalarFieldEnum = {
+  id: 'id',
+  applicationId: 'applicationId',
+  clientId: 'clientId',
+  clientSecret: 'clientSecret',
+  clientName: 'clientName',
+  clientUri: 'clientUri',
+  logoUri: 'logoUri',
+  redirectUris: 'redirectUris',
+  grantTypes: 'grantTypes',
+  responseTypes: 'responseTypes',
+  scope: 'scope',
+  tokenEndpointAuthMethod: 'tokenEndpointAuthMethod',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OidcPayloadScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  payload: 'payload',
+  grantId: 'grantId',
+  userCode: 'userCode',
+  uid: 'uid',
+  expiresAt: 'expiresAt',
+  consumedAt: 'consumedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -202,7 +247,10 @@ exports.Prisma.ModelName = {
   Account: 'Account',
   Session: 'Session',
   VerificationToken: 'VerificationToken',
-  Project: 'Project'
+  Project: 'Project',
+  Application: 'Application',
+  OidcClient: 'OidcClient',
+  OidcPayload: 'OidcPayload'
 };
 
 /**

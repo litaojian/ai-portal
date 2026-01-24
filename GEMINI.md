@@ -2,125 +2,57 @@
 
 ## 1. 项目概览
 **项目名称：** dashboard-v1 (AI Portal)
-**愿景：** 一个集中的用户门户和管理后台，旨在作为未来应用统一入口（"1+N"模式）。它提供身份验证、导航和管理能力。
-**当前状态：** 早期开发阶段。目前是一个独立的 Next.js 应用程序，已实现基础 UI 结构、身份认证和部分业务模块。
+**愿景：** 一个集中的用户门户和管理后台，旨在作为未来应用统一入口（"1+N"模式）。
+**当前状态：** 早期开发阶段。已是一个功能相对完整的 Next.js 应用程序，实现了基础 UI 结构、身份认证、**项目管理**、**应用管理** 以及 **OIDC 身份提供商 (Provider)** 服务。
 
-## 2. 技术栈
-- **框架:** [Next.js 16.1.4](https://nextjs.org/) (App Router, Turbopack)
+## 2. 关键规范索引
+*为保持文档清晰，详细规范已拆分为独立文件，请点击链接查看：*
+
+- 📅 **[开发流程规范](docs/specs/1_开发流程规范.md)**
+  - 涵盖：工作流、Next.js 16 异步参数、URL 状态同步、Server Action 写法、构建检查。
+- 📝 **[需求文档规范](docs/specs/2_需求文档规范.md)**
+  - 涵盖：文档结构、用户故事、字段定义、验收标准。
+- 🎨 **[功能设计规范](docs/specs/3_功能设计规范.md)**
+  - 涵盖：UX/UI 交互标准、反馈机制、分页/筛选行为、异常处理。
+- 🛠️ **[技术栈与组件规范](docs/specs/4_技术栈与组件规范.md)**
+  - 涵盖：Next.js, Shadcn/UI, Zod/React Hook Form 使用准则 (特别是类型安全)。
+- 🗄️ **[数据库设计规范](docs/specs/5_数据库设计规范.md)**
+  - 涵盖：Prisma 模型命名、字段规范、安全操作。
+
+## 3. 技术栈
+- **框架:** Next.js 16.1.4 (App Router)
 - **语言:** TypeScript
-- **样式:**
-  - [Tailwind CSS v4](https://tailwindcss.com/)
-  - [Shadcn/UI](https://ui.shadcn.com/) (New York 风格, Neutral 色调)
-  - `clsx` & `tailwind-merge` (样式工具)
-- **图标:** `lucide-react` (主要), `@tabler/icons-react` (侧边栏等)
-- **数据展示:** `@tanstack/react-table` (表格), `recharts` (图表)
-- **表单与验证:** `react-hook-form`, `zod`
-- **身份认证:** NextAuth.js v4 (Credentials Provider)
-- **ORM/数据库:** Prisma v5 + SQLite (开发环境: dev.db)
-- **交互组件:** `sonner` (Toast通知), `vaul` (抽屉), `@dnd-kit` (拖拽)
-- **工具库:** `date-fns` (日期处理)
-- **包管理器:** pnpm
+- **样式:** Tailwind CSS v4, Shadcn/UI
+- **数据:** Prisma v5 + SQLite
+- **认证:** NextAuth.js v4, OIDC Provider
+- **包管理:** pnpm
 
-## 3. 项目结构
+## 4. 项目结构
 ```text
 D:\ai_works\ai-portal\
 ├── app/                 # Next.js App Router 页面和布局
-│   ├── dashboard/       # 主仪表盘视图
-│   ├── globals.css      # 全局样式和 Tailwind 变量
-│   ├── layout.tsx       # 根布局
-│   └── page.tsx         # 落地页 (Landing page)
-├── components/          # React 组件
-│   ├── ui/              # Shadcn/UI 基础组件 (除非必要请勿手动修改)
-│   └── ...              # 业务特定组件 (如 app-sidebar, nav-*)
-├── docs/                # 文档和需求 (按模块组织)
-├── lib/                 # 工具函数 (utils.ts, prisma.ts, schemas.ts)
-├── public/              # 静态资源
-└── components.json      # Shadcn/UI 配置
+│   ├── dashboard/       # 主仪表盘
+│   ├── apps/            # 应用管理
+│   ├── projects/        # 项目管理
+│   ├── oidc/            # OIDC 服务
+│   └── api/             # API 路由
+├── components/          # React 组件 (ui/ 为 Shadcn)
+├── docs/                # 项目文档
+│   ├── specs/           # >>> 开发规范与标准 <<<
+│   ├── 项目管理/        # 业务模块文档
+│   ├── 应用管理/
+│   └── OIDC服务/
+├── lib/                 # 工具函数与配置
+└── prisma/              # 数据库 Schema
 ```
 
-## 4. 开发与使用
-
-### 4.1. 安装与运行
-项目使用 `pnpm`。
-
-- **安装依赖：**
-  ```bash
-  pnpm install
-  ```
-- **启动开发服务器：**
-  ```bash
-  # 运行在 http://localhost:3000
-  pnpm dev
-  ```
-- **构建生产版本：**
-  ```bash
-  pnpm build
-  ```
-- **代码检查：**
-  ```bash
-  pnpm lint
-  ```
-
-### 4.2. 关键开发规范
-*开发过程中请严格遵守以下规则：*
-
-- **语言规范：**
-  - **UI/前端：** 所有面向用户的文本默认使用 **简体中文**。
-  - **沟通：** 使用简体中文进行推理、计划和用户交互。
-- **UI 组件：**
-  - 优先使用 `components/ui` 中的 **Shadcn/UI** 组件。
-  - 新增 UI 元素前，先检查是否有现成的 Shadcn 组件可用。
-- **数据表格：**
-  - 展示数据列表时，**必须** 实现分页。
-  - 显示记录总数和当前页码信息。
-- **代码质量：**
-  - 批量修改后，务必验证无语法错误。
-  - 确保项目能成功编译（建议在进行关键更改后运行 `pnpm build` 检查）。
-- **开发流程：**
-  - **严格工作流：** 开发新功能时，必须严格遵循：**需求分析 -> 页面设计 -> 代码开发 -> 功能测试**。
-  - **用户确认：** 每个步骤完成后，必须经用户确认方可进行下一步。
-  - **文档管理：** 将所有文档（需求、数据库设计、UI设计）保存至 `/docs/<模块名称>/` 目录，按业务功能模块组织文件夹。
-  - **文档同步：** 如果需求变更，及时更新 `GEMINI.md` 或 `docs/` 下的文档。
-  - **测试：** 适用时生成 E2E 测试用例。
-
-## 5. 需求 vs 当前状态
-
-*参考自 `docs/项目需求.md`:*
-
-- **目标架构：** Monorepo (Turborepo + pnpm workspaces) 并集成 Prisma & Auth.js。
-
-- **当前状态：** 单体 Next.js 应用。已集成 Prisma (SQLite) 和 NextAuth (Credentials)。
-
-- **近期重点：** 完善路由保护（Middleware/Proxy），优化用户登录/登出体验（汉化、确认弹窗），以及持续迭代 Dashboard 功能。
-
-
+## 5. 快速开始
+- **安装依赖：** `pnpm install`
+- **开发服务：** `pnpm dev`
+- **构建检查：** `pnpm build` (提交前必跑)
 
 ## 6. 最近开发任务
-
-### 6.1. 项目管理功能 (v1.0)
-
-- **状态：** 已完成
-
-- **文档路径：** `/docs/项目管理/`
-
-- **实现细节：**
-
-  - 数据模型：`Project` (包含 `leader`, `budget` 字段)。
-
-  - 交互模式：使用 **Sheet (侧边抽屉)** 进行 CRUD 操作。
-
-  - 前端路径：`/projects`。
-
-
-
-### 6.2. 身份认证与导航优化
-
-- **状态：** 进行中/部分完成
-
-- **实现细节：**
-
-  - **登录/登出：** 实现了基于 NextAuth 的 Credentials 登录；侧边栏用户信息动态展示；登出功能汉化并增加确认弹窗。
-
-  - **路由保护：** 配置 `proxy.ts` (作为 Middleware) 保护除首页和登录页以外的路由。
-
-  - **侧边栏：** 使用 Server Component 获取 Session 并传递给 Client Component，解决了用户信息显示问题。
+- **项目管理 (v1.0)**: 已完成。
+- **身份认证与导航**: 已完成。
+- **应用管理 (v1.0)**: 已完成。
+- **OIDC 服务 (v1.0)**: 已完成。

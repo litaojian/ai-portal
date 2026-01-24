@@ -113,12 +113,13 @@ export function ProjectClient({ data }: ProjectClientProps) {
     },
     {
       id: "actions",
-      cell: ({ row }) => {
-        const project = row.original;
-        return (
-          <div className="flex items-center gap-2 justify-end">
-            <Button
-              variant="ghost"
+            cell: ({ row }) => {
+              const project = row.original;
+              return (
+                <div className="flex items-center gap-2 justify-end">
+                  <Button
+                    variant="ghost" 
+      
               size="icon"
               className="h-8 w-8 text-muted-foreground hover:text-primary"
               onClick={() => {

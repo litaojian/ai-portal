@@ -31,7 +31,7 @@ export function FormSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent 
         className={cn(
-          "sm:max-w-[540px] overflow-y-auto px-10 py-6", 
+          "sm:max-w-[540px] overflow-y-auto p-6", 
           className
         )}
       >

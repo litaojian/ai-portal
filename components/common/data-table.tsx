@@ -39,6 +39,13 @@ interface DataTableProps<TData, TValue> {
   searchKey?: string; // Column accessor key to filter by
   searchPlaceholder?: string;
   children?: React.ReactNode; // For extra toolbar actions like "Create" button
+  
+  // Server-side pagination support
+  pageCount?: number;
+  pageIndex?: number;
+  pageSize?: number;
+  onPageChange?: (page: number) => void;
+  onSearch?: (value: string) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -47,33 +54,63 @@ export function DataTable<TData, TValue>({
   searchKey,
   searchPlaceholder = "搜索...",
   children,
+  pageCount,
+  pageIndex,
+  pageSize = 10,
+  onPageChange,
+  onSearch,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [searchValue, setSearchValue] = React.useState("");
+
+  const isManual = pageCount !== undefined;
 
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
+    pageCount: isManual ? pageCount : undefined,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination: isManual ? {
+        pageIndex: (pageIndex || 1) - 1,
+        pageSize,
+      } : undefined,
     },
+    manualPagination: isManual,
+    manualFiltering: !!onSearch,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
+    // Only use client-side models if not manual
+    getPaginationRowModel: !isManual ? getPaginationRowModel() : undefined,
+    getSortedRowModel: !isManual ? getSortedRowModel() : undefined,
+    getFilteredRowModel: !isManual ? getFilteredRowModel() : undefined,
   });
+
+  const handleSearch = (value: string) => {
+    setSearchValue(value);
+    if (onSearch) {
+      onSearch(value);
+    } else if (searchKey) {
+      table.getColumn(searchKey)?.setFilterValue(value);
+    }
+  };
+
+  const handlePageChange = (idx: number) => {
+      if (onPageChange) {
+          onPageChange(idx + 1);
+      } else {
+          table.setPageIndex(idx);
+      }
+  };
 
   return (
     <div className="space-y-4">
@@ -82,11 +119,12 @@ export function DataTable<TData, TValue>({
           <div className="flex items-center py-4">
             <Input
               placeholder={searchPlaceholder}
-              value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
-              onChange={(event) =>
-                table.getColumn(searchKey)?.setFilterValue(event.target.value)
-              }
+              value={(searchValue || (table.getColumn(searchKey)?.getFilterValue() as string)) ?? ""}
+              onChange={(event) => handleSearch(event.target.value)}
               className="max-w-sm"
+              onKeyDown={(e) => {
+                if(e.key === "Enter" && onSearch) onSearch(searchValue);
+              }}
             />
           </div>
         )}
@@ -120,6 +158,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="group"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -146,30 +185,34 @@ export function DataTable<TData, TValue>({
       </div>
       <div className="flex items-center justify-between px-2">
         <div className="flex-1 text-sm text-muted-foreground">
-          已选择 {table.getFilteredSelectedRowModel().rows.length} 行 / 共{" "}
-          {table.getFilteredRowModel().rows.length} 行
+             {/* Selection text logic if needed */}
+             {isManual ? `共 ${pageCount ? pageCount * pageSize : 0} 条 (估算)` : `共 ${table.getFilteredRowModel().rows.length} 条`}
         </div>
         <div className="flex items-center space-x-6 lg:space-x-8">
-          <div className="flex items-center space-x-2">
-            <p className="text-sm font-medium">每页行数</p>
-            <Select
-              value={`${table.getState().pagination.pageSize}`}
-              onValueChange={(value) => {
-                table.setPageSize(Number(value));
-              }}
-            >
-              <SelectTrigger className="h-8 w-[70px]">
-                <SelectValue placeholder={table.getState().pagination.pageSize} />
-              </SelectTrigger>
-              <SelectContent side="top">
-                {[10, 20, 30, 40, 50].map((pageSize) => (
-                  <SelectItem key={pageSize} value={`${pageSize}`}>
-                    {pageSize}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+           {/* Page Size Selector - Hide for manual for now or implement logic */}
+          {!isManual && (
+            <div className="flex items-center space-x-2">
+                <p className="text-sm font-medium">每页行数</p>
+                <Select
+                value={`${table.getState().pagination.pageSize}`}
+                onValueChange={(value) => {
+                    table.setPageSize(Number(value));
+                }}
+                >
+                <SelectTrigger className="h-8 w-[70px]">
+                    <SelectValue placeholder={table.getState().pagination.pageSize} />
+                </SelectTrigger>
+                <SelectContent side="top">
+                    {[10, 20, 30, 40, 50].map((pageSize) => (
+                    <SelectItem key={pageSize} value={`${pageSize}`}>
+                        {pageSize}
+                    </SelectItem>
+                    ))}
+                </SelectContent>
+                </Select>
+            </div>
+          )}
+          
           <div className="flex w-[100px] items-center justify-center text-sm font-medium">
             第 {table.getState().pagination.pageIndex + 1} 页 / 共{" "}
             {table.getPageCount()} 页
@@ -178,7 +221,7 @@ export function DataTable<TData, TValue>({
             <Button
               variant="outline"
               className="hidden h-8 w-8 p-0 lg:flex"
-              onClick={() => table.setPageIndex(0)}
+              onClick={() => handlePageChange(0)}
               disabled={!table.getCanPreviousPage()}
             >
               <span className="sr-only">Go to first page</span>
@@ -187,7 +230,7 @@ export function DataTable<TData, TValue>({
             <Button
               variant="outline"
               className="h-8 w-8 p-0"
-              onClick={() => table.previousPage()}
+              onClick={() => handlePageChange(table.getState().pagination.pageIndex - 1)}
               disabled={!table.getCanPreviousPage()}
             >
               <span className="sr-only">Go to previous page</span>
@@ -196,7 +239,7 @@ export function DataTable<TData, TValue>({
             <Button
               variant="outline"
               className="h-8 w-8 p-0"
-              onClick={() => table.nextPage()}
+              onClick={() => handlePageChange(table.getState().pagination.pageIndex + 1)}
               disabled={!table.getCanNextPage()}
             >
               <span className="sr-only">Go to next page</span>
@@ -205,7 +248,7 @@ export function DataTable<TData, TValue>({
             <Button
               variant="outline"
               className="hidden h-8 w-8 p-0 lg:flex"
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+              onClick={() => handlePageChange(table.getPageCount() - 1)}
               disabled={!table.getCanNextPage()}
             >
               <span className="sr-only">Go to last page</span>

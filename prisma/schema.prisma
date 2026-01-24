@@ -120,7 +120,70 @@ model Project {
   
 
   createdAt   DateTime  @default(now())
-
   updatedAt   DateTime  @updatedAt
+}
 
+model Application {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  icon        String?
+  url         String?
+  
+  type        String   @default("internal") // internal, third_party
+  
+  status      String   @default("draft") // draft, published, offline
+  version     String?  @default("1.0.0")
+  developer   String?
+  category    String?
+
+  oidcClient  OidcClient?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// OIDC 客户端配置表
+model OidcClient {
+  id            String   @id @default(cuid())
+  
+  applicationId String?  @unique
+  application   Application? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  clientId      String   @unique
+  clientSecret  String?  // 对于 public client 可为空
+  clientName    String?
+  clientUri     String?
+  logoUri       String?
+  
+  // 核心配置 (JSON 存储)
+  redirectUris  String   // JSON string
+  grantTypes    String   // JSON string
+  responseTypes String   // JSON string
+  scope         String   @default("openid profile email")
+  
+  // 策略配置
+  tokenEndpointAuthMethod String @default("client_secret_basic")
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// OIDC 运行时数据存储
+model OidcPayload {
+  id         String   @id // key
+  type       String   // Session, AccessToken, etc.
+  payload    String   // JSON Data
+  grantId    String?
+  userCode   String?
+  uid        String?
+  expiresAt  DateTime?
+  consumedAt DateTime?
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([type])
+  @@index([grantId])
+  @@index([expiresAt])
 }
