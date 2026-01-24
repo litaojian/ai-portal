@@ -2,46 +2,14 @@
 
 import { useState } from "react";
 import { Project } from "@prisma/client";
-import {
-  ColumnDef,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  getFilteredRowModel,
-  useReactTable,
-  flexRender,
-  SortingState,
-  ColumnFiltersState,
-} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import {
-  MoreHorizontal,
-  ArrowUpDown,
-  Plus,
-  Pencil,
-  Trash2,
-} from "lucide-react";
+import { Pencil, Trash2, Plus } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -54,19 +22,28 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { deleteProject } from "@/app/actions/projects";
-import { ProjectSheet } from "@/components/project-sheet";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ProjectSheet } from "./project-sheet";
+import { DataTable } from "@/components/common/data-table";
 
-interface ProjectTableProps {
+interface ProjectClientProps {
   data: Project[];
 }
 
-export function ProjectTable({ data }: ProjectTableProps) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+export function ProjectClient({ data }: ProjectClientProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  const handleDelete = async () => {
+    if (!deleteId) return;
+    const res = await deleteProject(deleteId);
+    if (res.success) {
+      toast.success("项目已删除");
+    } else {
+      toast.error(res.error);
+    }
+    setDeleteId(null);
+  };
 
   const columns: ColumnDef<Project>[] = [
     {
@@ -99,11 +76,10 @@ export function ProjectTable({ data }: ProjectTableProps) {
         const status = row.getValue("status") as string;
         let variant: "default" | "secondary" | "outline" | "destructive" =
           "outline";
-        if (status === "进行中") variant = "default"; // Black/Primary
+        if (status === "进行中") variant = "default";
         if (status === "已完成") variant = "secondary";
         if (status === "暂停") variant = "destructive";
         
-        // Custom colors can be applied via classes if needed, sticking to variants for now
         return <Badge variant={variant}>{status}</Badge>;
       },
     },
@@ -170,43 +146,14 @@ export function ProjectTable({ data }: ProjectTableProps) {
     },
   ];
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      sorting,
-      columnFilters,
-    },
-  });
-
-  const handleDelete = async () => {
-    if (!deleteId) return;
-    const res = await deleteProject(deleteId);
-    if (res.success) {
-      toast.success("项目已删除");
-    } else {
-      toast.error(res.error);
-    }
-    setDeleteId(null);
-  };
-
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <Input
-          placeholder="搜索项目名称..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+    <>
+      <DataTable 
+        columns={columns} 
+        data={data} 
+        searchKey="name" 
+        searchPlaceholder="搜索项目名称..."
+      >
         <Button onClick={() => {
             setEditingProject(null);
             setSheetOpen(true);
@@ -214,75 +161,7 @@ export function ProjectTable({ data }: ProjectTableProps) {
           <Plus className="mr-2 h-4 w-4" />
           新建项目
         </Button>
-      </div>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  暂无数据
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          上一页
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          下一页
-        </Button>
-      </div>
+      </DataTable>
 
       <ProjectSheet
         open={sheetOpen}
@@ -309,6 +188,6 @@ export function ProjectTable({ data }: ProjectTableProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </>
   );
 }

@@ -1,5 +1,5 @@
 import { getProjects } from "@/app/actions/projects";
-import { ProjectTable } from "@/components/project-table";
+import { ProjectClient } from "./project-client";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -53,9 +53,9 @@ export default async function ProjectsPage() {
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 md:p-8">
             <div className="flex items-center justify-between space-y-2">
-            <h2 className="text-2xl font-bold tracking-tight">项目列表</h2>
+              <h2 className="text-2xl font-bold tracking-tight">项目列表</h2>
             </div>
-            <ProjectTable data={projects || []} />
+            <ProjectClient data={projects || []} />
         </div>
       </SidebarInset>
     </SidebarProvider>
