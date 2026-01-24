@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Project } from "@prisma/client";
+import { Project } from "@/prisma/generated/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { Pencil, Trash2, Plus } from "lucide-react";

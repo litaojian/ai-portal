@@ -1,4 +1,4 @@
-import { LoginForm } from "@/components/login-form";
+import { LoginForm } from "./login-form";
 
 export default function LoginPage() {
   return (
@@ -17,7 +17,7 @@ export default function LoginPage() {
         <div className="mb-10 flex flex-col items-center gap-2">
           <div className="flex items-center gap-3 font-bold text-4xl tracking-tight text-foreground">
             <div className="bg-primary text-primary-foreground px-2 py-0.5 rounded-lg shadow-lg shadow-primary/20">AI</div>
-            <span className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">PORTAL</span>
+            <span className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">应用中心</span>
           </div>
           <div className="h-1 w-10 bg-primary/40 rounded-full mt-1" />
         </div>

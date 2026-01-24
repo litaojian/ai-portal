@@ -53,10 +53,10 @@ const iconMap: Record<string, any> = {
 }
 
 // Fallback user data
-const userData = {
-  name: "shadcn",
-  email: "m@example.com",
-  avatar: "/avatars/shadcn.jpg",
+const defaultUserData = {
+  name: "Guest",
+  email: "guest@example.com",
+  avatar: "",
 }
 
 interface AppSidebarClientProps extends React.ComponentProps<typeof Sidebar> {
@@ -66,9 +66,14 @@ interface AppSidebarClientProps extends React.ComponentProps<typeof Sidebar> {
     documents: any[];
     navClouds?: any[];
   } | null;
+  user?: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  } | null;
 }
 
-export function AppSidebarClient({ menuData, ...props }: AppSidebarClientProps) {
+export function AppSidebarClient({ menuData, user, ...props }: AppSidebarClientProps) {
   // Transform string icons to components
   const processItems = (items: any[]) => {
     if (!items) return [];
@@ -81,9 +86,12 @@ export function AppSidebarClient({ menuData, ...props }: AppSidebarClientProps) 
   const navMain = processItems(menuData?.navMain || []);
   const navSecondary = processItems(menuData?.navSecondary || []);
   const documents = processItems(menuData?.documents || []);
-  // const navClouds = processItems(menuData?.navClouds || []); // Not used in current layout based on previous file, but was in data object.
-  // Wait, previous file rendered NavMain, NavDocuments, NavSecondary. NavClouds was in data but NOT rendered in JSX.
-  // I will ignore NavClouds for now to match previous rendering logic.
+  
+  const currentUser = user ? {
+    name: user.name || "User",
+    email: user.email || "",
+    avatar: user.image || "",
+  } : defaultUserData;
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -104,11 +112,11 @@ export function AppSidebarClient({ menuData, ...props }: AppSidebarClientProps) 
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMain} />
-        <NavDocuments items={documents} />
-        <NavSecondary items={navSecondary} className="mt-auto" />
+        {/* <NavDocuments items={documents} />
+        <NavSecondary items={navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={userData} />
+        <NavUser user={currentUser} />
       </SidebarFooter>
     </Sidebar>
   )

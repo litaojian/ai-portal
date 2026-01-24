@@ -6,16 +6,20 @@
 **当前状态：** 早期开发阶段。目前是一个独立的 Next.js 应用程序，已实现基础 UI 结构、身份认证和部分业务模块。
 
 ## 2. 技术栈
-- **框架：** [Next.js 16](https://nextjs.org/) (App Router)
-- **语言：** TypeScript
-- **样式：**
+- **框架:** [Next.js 16.1.4](https://nextjs.org/) (App Router, Turbopack)
+- **语言:** TypeScript
+- **样式:**
   - [Tailwind CSS v4](https://tailwindcss.com/)
   - [Shadcn/UI](https://ui.shadcn.com/) (New York 风格, Neutral 色调)
-- **图标：** `lucide-react`, `@tabler/icons-react`
-- **数据展示：** `@tanstack/react-table` (表格), `recharts` (图表)
-- **验证：** `zod`
-- **ORM/数据库：** Prisma + SQLite (开发环境)
-- **包管理器：** pnpm
+  - `clsx` & `tailwind-merge` (样式工具)
+- **图标:** `lucide-react` (主要), `@tabler/icons-react` (侧边栏等)
+- **数据展示:** `@tanstack/react-table` (表格), `recharts` (图表)
+- **表单与验证:** `react-hook-form`, `zod`
+- **身份认证:** NextAuth.js v4 (Credentials Provider)
+- **ORM/数据库:** Prisma v5 + SQLite (开发环境: dev.db)
+- **交互组件:** `sonner` (Toast通知), `vaul` (抽屉), `@dnd-kit` (拖拽)
+- **工具库:** `date-fns` (日期处理)
+- **包管理器:** pnpm
 
 ## 3. 项目结构
 ```text
@@ -80,15 +84,43 @@ D:\ai_works\ai-portal\
   - **测试：** 适用时生成 E2E 测试用例。
 
 ## 5. 需求 vs 当前状态
-*参考自 `docs/项目需求.md`:*
-- **目标架构：** Monorepo (Turborepo + pnpm workspaces) 并集成 Prisma & Auth.js。
-- **当前状态：** 单体 Next.js 应用。已集成 Prisma (SQLite) 和 NextAuth (Credentials)。
-- **近期重点：** 完善 Dashboard UI/UX，侧边栏导航，以及构建核心管理功能（如项目管理）。
 
-## 6. 最近开发任务：项目管理功能
-- **状态：** 已完成 (v1.0)
+*参考自 `docs/项目需求.md`:*
+
+- **目标架构：** Monorepo (Turborepo + pnpm workspaces) 并集成 Prisma & Auth.js。
+
+- **当前状态：** 单体 Next.js 应用。已集成 Prisma (SQLite) 和 NextAuth (Credentials)。
+
+- **近期重点：** 完善路由保护（Middleware/Proxy），优化用户登录/登出体验（汉化、确认弹窗），以及持续迭代 Dashboard 功能。
+
+
+
+## 6. 最近开发任务
+
+### 6.1. 项目管理功能 (v1.0)
+
+- **状态：** 已完成
+
 - **文档路径：** `/docs/项目管理/`
+
 - **实现细节：**
+
   - 数据模型：`Project` (包含 `leader`, `budget` 字段)。
+
   - 交互模式：使用 **Sheet (侧边抽屉)** 进行 CRUD 操作。
+
   - 前端路径：`/projects`。
+
+
+
+### 6.2. 身份认证与导航优化
+
+- **状态：** 进行中/部分完成
+
+- **实现细节：**
+
+  - **登录/登出：** 实现了基于 NextAuth 的 Credentials 登录；侧边栏用户信息动态展示；登出功能汉化并增加确认弹窗。
+
+  - **路由保护：** 配置 `proxy.ts` (作为 Middleware) 保护除首页和登录页以外的路由。
+
+  - **侧边栏：** 使用 Server Component 获取 Session 并传递给 Client Component，解决了用户信息显示问题。
