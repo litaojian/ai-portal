@@ -1,83 +1,94 @@
-# AI Portal (Dashboard v1) Project Context
+# AI 门户 (Dashboard v1) 项目背景
 
-## 1. Project Overview
-**Name:** dashboard-v1 (AI Portal)
-**Vision:** A centralized user portal and management backend intended to serve as a unified entry point ("1+N" model) for future applications. It aims to provide authentication, navigation, and administration capabilities.
-**Current Status:** Early development phase. Currently a standalone Next.js application implementing the foundational UI and structure.
+## 1. 项目概览
+**项目名称：** dashboard-v1 (AI Portal)
+**愿景：** 一个集中的用户门户和管理后台，旨在作为未来应用统一入口（"1+N"模式）。它提供身份验证、导航和管理能力。
+**当前状态：** 早期开发阶段。目前是一个独立的 Next.js 应用程序，已实现基础 UI 结构、身份认证和部分业务模块。
 
-## 2. Tech Stack
-- **Framework:** [Next.js 16](https://nextjs.org/) (App Router)
-- **Language:** TypeScript
-- **Styling:**
+## 2. 技术栈
+- **框架：** [Next.js 16](https://nextjs.org/) (App Router)
+- **语言：** TypeScript
+- **样式：**
   - [Tailwind CSS v4](https://tailwindcss.com/)
-  - [Shadcn/UI](https://ui.shadcn.com/) (New York style, Neutral base)
-- **Icons:** `lucide-react`, `@tabler/icons-react`
-- **Data Display:** `@tanstack/react-table` (Tables), `recharts` (Charts)
-- **Validation:** `zod`
-- **Package Manager:** pnpm
+  - [Shadcn/UI](https://ui.shadcn.com/) (New York 风格, Neutral 色调)
+- **图标：** `lucide-react`, `@tabler/icons-react`
+- **数据展示：** `@tanstack/react-table` (表格), `recharts` (图表)
+- **验证：** `zod`
+- **ORM/数据库：** Prisma + SQLite (开发环境)
+- **包管理器：** pnpm
 
-## 3. Project Structure
+## 3. 项目结构
 ```text
 D:\ai_works\ai-portal\
-├── app/                 # Next.js App Router pages and layouts
-│   ├── dashboard/       # Main dashboard views
-│   ├── globals.css      # Global styles and Tailwind variables
-│   ├── layout.tsx       # Root layout
-│   └── page.tsx         # Landing page
-├── components/          # React components
-│   ├── ui/              # Shadcn/UI primitive components (do not modify manually unless necessary)
-│   └── ...              # Business-specific components (e.g., app-sidebar, nav-*)
-├── docs/                # Documentation and requirements
-├── lib/                 # Utility functions (utils.ts)
-├── public/              # Static assets
-└── components.json      # Shadcn/UI configuration
+├── app/                 # Next.js App Router 页面和布局
+│   ├── dashboard/       # 主仪表盘视图
+│   ├── globals.css      # 全局样式和 Tailwind 变量
+│   ├── layout.tsx       # 根布局
+│   └── page.tsx         # 落地页 (Landing page)
+├── components/          # React 组件
+│   ├── ui/              # Shadcn/UI 基础组件 (除非必要请勿手动修改)
+│   └── ...              # 业务特定组件 (如 app-sidebar, nav-*)
+├── docs/                # 文档和需求 (按模块组织)
+├── lib/                 # 工具函数 (utils.ts, prisma.ts, schemas.ts)
+├── public/              # 静态资源
+└── components.json      # Shadcn/UI 配置
 ```
 
-## 4. Development & Usage
+## 4. 开发与使用
 
-### 4.1. Setup & Run
-The project uses `pnpm` (inferred from lockfile) or `npm`.
+### 4.1. 安装与运行
+项目使用 `pnpm`。
 
-- **Install Dependencies:**
+- **安装依赖：**
   ```bash
   pnpm install
   ```
-- **Start Development Server:**
+- **启动开发服务器：**
   ```bash
-  # Runs on http://localhost:3000
+  # 运行在 http://localhost:3000
   pnpm dev
   ```
-- **Build for Production:**
+- **构建生产版本：**
   ```bash
   pnpm build
   ```
-- **Linting:**
+- **代码检查：**
   ```bash
   pnpm lint
   ```
 
-### 4.2. Key Conventions
-*Adhere strictly to these rules during development:*
+### 4.2. 关键开发规范
+*开发过程中请严格遵守以下规则：*
 
-- **Language:**
-  - **UI/Frontend:** Default to **Simplified Chinese (简体中文)** for all user-facing text.
-  - **Communication:** Use Simplified Chinese for all reasoning, planning, and user interaction.
-- **UI Components:**
-  - Use **Shadcn/UI** components from `components/ui`.
-  - For new UI elements, check if a Shadcn component exists first.
-- **Data Tables:**
-  - When displaying lists of data, **always** implement pagination.
-  - Display total counts and current page information.
-- **Code Quality:**
-  - After batch modifications, verify there are no syntax errors.
-  - Ensure the project compiles successfully (`pnpm build` check recommended for critical changes).
-- **Process:**
-  - **Step-by-step:** Requirements Analysis -> Code Development -> Testing.
-  - **Doc Sync:** Keep `GEMINI.md` or `docs/` updated if requirements change.
-  - **Testing:** Generate E2E test cases where applicable.
+- **语言规范：**
+  - **UI/前端：** 所有面向用户的文本默认使用 **简体中文**。
+  - **沟通：** 使用简体中文进行推理、计划和用户交互。
+- **UI 组件：**
+  - 优先使用 `components/ui` 中的 **Shadcn/UI** 组件。
+  - 新增 UI 元素前，先检查是否有现成的 Shadcn 组件可用。
+- **数据表格：**
+  - 展示数据列表时，**必须** 实现分页。
+  - 显示记录总数和当前页码信息。
+- **代码质量：**
+  - 批量修改后，务必验证无语法错误。
+  - 确保项目能成功编译（建议在进行关键更改后运行 `pnpm build` 检查）。
+- **开发流程：**
+  - **严格工作流：** 开发新功能时，必须严格遵循：**需求分析 -> 页面设计 -> 代码开发 -> 功能测试**。
+  - **用户确认：** 每个步骤完成后，必须经用户确认方可进行下一步。
+  - **文档管理：** 将所有文档（需求、数据库设计、UI设计）保存至 `/docs/<模块名称>/` 目录，按业务功能模块组织文件夹。
+  - **文档同步：** 如果需求变更，及时更新 `GEMINI.md` 或 `docs/` 下的文档。
+  - **测试：** 适用时生成 E2E 测试用例。
 
-## 5. Requirements vs. Current State
-*Reference from `docs/项目需求.md`:*
-- **Target Architecture:** Monorepo (Turborepo + pnpm workspaces) with Prisma & Auth.js.
-- **Current State:** Single-repo Next.js application. Database and Auth layers are not yet fully integrated in `package.json` dependencies.
-- **Immediate Focus:** Building out the UI/UX for the Dashboard, Sidebar, and basic data visualization based on the existing file structure (`app/dashboard`, `components/app-sidebar.tsx`).
+## 5. 需求 vs 当前状态
+*参考自 `docs/项目需求.md`:*
+- **目标架构：** Monorepo (Turborepo + pnpm workspaces) 并集成 Prisma & Auth.js。
+- **当前状态：** 单体 Next.js 应用。已集成 Prisma (SQLite) 和 NextAuth (Credentials)。
+- **近期重点：** 完善 Dashboard UI/UX，侧边栏导航，以及构建核心管理功能（如项目管理）。
+
+## 6. 最近开发任务：项目管理功能
+- **状态：** 已完成 (v1.0)
+- **文档路径：** `/docs/项目管理/`
+- **实现细节：**
+  - 数据模型：`Project` (包含 `leader`, `budget` 字段)。
+  - 交互模式：使用 **Sheet (侧边抽屉)** 进行 CRUD 操作。
+  - 前端路径：`/projects`。

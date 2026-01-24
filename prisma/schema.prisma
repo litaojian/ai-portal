@@ -3,11 +3,11 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/client"
 }
 
 datasource db {
   provider = "sqlite"
+  url      = "file:../dev.db"
 }
 
 model User {
@@ -58,4 +58,32 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Project {
+
+  id          String    @id @default(cuid())
+
+  name        String
+
+  description String?
+
+  leader      String?
+
+  budget      Float?    @default(0)
+
+  status      String    @default("进行中") // 进行中, 已完成, 暂停
+
+  priority    String    @default("中")     // 高, 中, 低
+
+  startDate   DateTime  @default(now())
+
+  endDate     DateTime?
+
+  
+
+  createdAt   DateTime  @default(now())
+
+  updatedAt   DateTime  @updatedAt
+
 }

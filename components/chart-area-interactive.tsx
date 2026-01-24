@@ -128,14 +128,14 @@ const chartData = [
 
 const chartConfig = {
   visitors: {
-    label: "Visitors",
+    label: "总访客",
   },
   desktop: {
-    label: "Desktop",
+    label: "桌面端",
     color: "var(--primary)",
   },
   mobile: {
-    label: "Mobile",
+    label: "移动端",
     color: "var(--primary)",
   },
 } satisfies ChartConfig
@@ -167,12 +167,12 @@ export function ChartAreaInteractive() {
   return (
     <Card className="@container/card">
       <CardHeader>
-        <CardTitle>Total Visitors</CardTitle>
+        <CardTitle>总访客数</CardTitle>
         <CardDescription>
           <span className="hidden @[540px]/card:block">
-            Total for the last 3 months
+            最近3个月统计
           </span>
-          <span className="@[540px]/card:hidden">Last 3 months</span>
+          <span className="@[540px]/card:hidden">最近3个月</span>
         </CardDescription>
         <CardAction>
           <ToggleGroup
@@ -182,9 +182,9 @@ export function ChartAreaInteractive() {
             variant="outline"
             className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
           >
-            <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
-            <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
-            <ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
+            <ToggleGroupItem value="90d">最近3个月</ToggleGroupItem>
+            <ToggleGroupItem value="30d">最近30天</ToggleGroupItem>
+            <ToggleGroupItem value="7d">最近7天</ToggleGroupItem>
           </ToggleGroup>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger
@@ -196,13 +196,13 @@ export function ChartAreaInteractive() {
             </SelectTrigger>
             <SelectContent className="rounded-xl">
               <SelectItem value="90d" className="rounded-lg">
-                Last 3 months
+                最近3个月
               </SelectItem>
               <SelectItem value="30d" className="rounded-lg">
-                Last 30 days
+                最近30天
               </SelectItem>
               <SelectItem value="7d" className="rounded-lg">
-                Last 7 days
+                最近7天
               </SelectItem>
             </SelectContent>
           </Select>

@@ -41,27 +41,27 @@ const data = {
   },
   navMain: [
     {
-      title: "Dashboard",
+      title: "仪表盘",
       url: "#",
       icon: IconDashboard,
     },
     {
-      title: "Lifecycle",
+      title: "生命周期",
       url: "#",
       icon: IconListDetails,
     },
     {
-      title: "Analytics",
+      title: "数据分析",
       url: "#",
       icon: IconChartBar,
     },
     {
-      title: "Projects",
-      url: "#",
+      title: "项目管理",
+      url: "/projects",
       icon: IconFolder,
     },
     {
-      title: "Team",
+      title: "团队成员",
       url: "#",
       icon: IconUsers,
     },
@@ -116,34 +116,34 @@ const data = {
   ],
   navSecondary: [
     {
-      title: "Settings",
+      title: "设置",
       url: "#",
       icon: IconSettings,
     },
     {
-      title: "Get Help",
+      title: "获取帮助",
       url: "#",
       icon: IconHelp,
     },
     {
-      title: "Search",
+      title: "搜索",
       url: "#",
       icon: IconSearch,
     },
   ],
   documents: [
     {
-      name: "Data Library",
+      name: "数据仓库",
       url: "#",
       icon: IconDatabase,
     },
     {
-      name: "Reports",
+      name: "报表中心",
       url: "#",
       icon: IconReport,
     },
     {
-      name: "Word Assistant",
+      name: "文档助手",
       url: "#",
       icon: IconFileWord,
     },
