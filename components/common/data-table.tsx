@@ -194,13 +194,13 @@ export function DataTable<TData, TValue>({
             <div className="flex items-center space-x-2">
                 <p className="text-sm font-medium">每页行数</p>
                 <Select
-                value={`${table.getState().pagination.pageSize}`}
+                value={`${table.getState().pagination?.pageSize ?? 10}`}
                 onValueChange={(value) => {
                     table.setPageSize(Number(value));
                 }}
                 >
                 <SelectTrigger className="h-8 w-[70px]">
-                    <SelectValue placeholder={table.getState().pagination.pageSize} />
+                    <SelectValue placeholder={table.getState().pagination?.pageSize ?? 10} />
                 </SelectTrigger>
                 <SelectContent side="top">
                     {[10, 20, 30, 40, 50].map((pageSize) => (
@@ -214,7 +214,7 @@ export function DataTable<TData, TValue>({
           )}
           
           <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-            第 {table.getState().pagination.pageIndex + 1} 页 / 共{" "}
+            第 {(table.getState().pagination?.pageIndex ?? 0) + 1} 页 / 共{" "}
             {table.getPageCount()} 页
           </div>
           <div className="flex items-center space-x-2">
@@ -230,7 +230,7 @@ export function DataTable<TData, TValue>({
             <Button
               variant="outline"
               className="h-8 w-8 p-0"
-              onClick={() => handlePageChange(table.getState().pagination.pageIndex - 1)}
+              onClick={() => handlePageChange((table.getState().pagination?.pageIndex ?? 0) - 1)}
               disabled={!table.getCanPreviousPage()}
             >
               <span className="sr-only">Go to previous page</span>
@@ -239,7 +239,7 @@ export function DataTable<TData, TValue>({
             <Button
               variant="outline"
               className="h-8 w-8 p-0"
-              onClick={() => handlePageChange(table.getState().pagination.pageIndex + 1)}
+              onClick={() => handlePageChange((table.getState().pagination?.pageIndex ?? 0) + 1)}
               disabled={!table.getCanNextPage()}
             >
               <span className="sr-only">Go to next page</span>

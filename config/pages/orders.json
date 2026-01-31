@@ -1,0 +1,119 @@
+{
+  "$schema": "https://ai-portal.com/schemas/page-config.json",
+  "meta": {
+    "key": "orders",
+    "title": "订单管理",
+    "description": "查看和管理系统内的客户订单信息",
+    "icon": "ShoppingCart",
+    "api": {
+      "resource": "orders",
+      "methods": ["list", "detail", "create", "update", "delete"]
+    }
+  },
+  "model": {
+    "fields": {
+      "id": {
+        "label": "ID",
+        "type": "string",
+        "hidden": true,
+        "primaryKey": true
+      },
+      "orderNo": {
+        "label": "订单编号",
+        "type": "string",
+        "validation": {
+          "required": true,
+          "pattern": "^ORD-\\d{8}$",
+          "message": "订单号格式需为 ORD-YYYYMMDD"
+        }
+      },
+      "customerName": {
+        "label": "客户名称",
+        "type": "string",
+        "validation": {
+          "required": true,
+          "min": 2
+        }
+      },
+      "amount": {
+        "label": "订单金额",
+        "type": "number",
+        "format": "currency",
+        "validation": {
+          "required": true,
+          "min": 0
+        }
+      },
+      "status": {
+        "label": "状态",
+        "type": "select",
+        "options": [
+          { "label": "待支付", "value": "pending", "color": "yellow" },
+          { "label": "已支付", "value": "paid", "color": "green" },
+          { "label": "已发货", "value": "shipped", "color": "blue" },
+          { "label": "已取消", "value": "cancelled", "color": "red" }
+        ],
+        "defaultValue": "pending"
+      },
+      "orderDate": {
+        "label": "下单日期",
+        "type": "date",
+        "validation": {
+          "required": true
+        }
+      },
+      "notes": {
+        "label": "备注",
+        "type": "textarea",
+        "validation": {
+          "max": 500
+        }
+      }
+    }
+  },
+  "views": {
+    "search": {
+      "fields": [
+        { "key": "orderNo", "placeholder": "输入订单号查询" },
+        { "key": "customerName", "placeholder": "客户名称" },
+        { "key": "status" },
+        { "key": "orderDate", "component": "date-range" }
+      ]
+    },
+    "table": {
+      "columns": [
+        { "key": "orderNo", "width": 150, "copyable": true },
+        { "key": "customerName", "sortable": true },
+        { "key": "amount", "align": "right", "sortable": true },
+        { "key": "status", "component": "badge" },
+        { "key": "orderDate", "format": "YYYY-MM-DD HH:mm" }
+      ],
+      "actions": {
+        "row": ["edit", "delete", "detail"],
+        "toolbar": ["create", "export"]
+      },
+      "pagination": {
+        "enabled": true,
+        "pageSize": 10
+      }
+    },
+    "form": {
+      "layout": "grid",
+      "columns": 2,
+      "sections": [
+        {
+          "title": "基础信息",
+          "fields": ["orderNo", "customerName", "status", "orderDate"]
+        },
+        {
+          "title": "财务信息",
+          "fields": ["amount"]
+        },
+        {
+          "title": "其他",
+          "fields": [{ "key": "notes", "colSpan": 2 }]
+        }
+      ]
+    }
+  }
+}

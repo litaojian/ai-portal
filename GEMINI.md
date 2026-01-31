@@ -1,7 +1,7 @@
 # AI 门户 (Dashboard v1) 项目背景
 
 ## 1. 项目概览
-**项目名称：** dashboard-v1 (AI Portal)
+**项目名称：** AI-Portal-v1 (AI Portal)
 **愿景：** 一个集中的用户门户和管理后台，旨在作为未来应用统一入口（"1+N"模式）。
 **当前状态：** 早期开发阶段。已是一个功能相对完整的 Next.js 应用程序，实现了基础 UI 结构、身份认证、**项目管理**、**应用管理** 以及 **OIDC 身份提供商 (Provider)** 服务。
 
@@ -23,7 +23,7 @@
 - **框架:** Next.js 16.1.4 (App Router)
 - **语言:** TypeScript
 - **样式:** Tailwind CSS v4, Shadcn/UI
-- **数据:** Prisma v5 + SQLite
+- **数据:** Drizzle + SQLite + MySQL
 - **认证:** NextAuth.js v4, OIDC Provider
 - **包管理:** pnpm
 

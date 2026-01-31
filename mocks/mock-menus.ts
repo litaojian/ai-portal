@@ -7,6 +7,7 @@ export const mockMenus = {
     { title: "项目管理 (Mock)", url: "/projects", icon: "IconFolder" },
     { title: "生命周期 (Mock)", url: "#", icon: "IconListDetails" },
     { title: "数据分析 (Mock)", url: "#", icon: "IconChartBar" },
+    { title: "订单管理 (Mock)", url: "/portal/orders", icon: "IconUsers" },
     
   ],
   navSecondary: [
