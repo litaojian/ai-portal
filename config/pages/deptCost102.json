@@ -1,0 +1,65 @@
+{
+	"pageTitle":"部门开票收入明细表",
+	"pageType": "ReportView",
+	"tabs": true,	
+	"entityName": "deptCostAnalysis",
+	"statusColumn": { "col": "row_status", "val": "OPEN" },
+    "rowKey": "row_num",
+	"createdbyColumn": "createdby",	
+	"contentBody":{
+		"mainPanel":[
+			{
+				"query":{
+					"component":"QueryForm",
+					"form":{
+						"layout":"inline",
+						"layoutType":"Form",
+						"submitText": "查询",
+						"fields":[{
+							"valueType":"group", 
+							"fieldProps":{ "style": {"padding": "2px"}, "size": [12,10] }, 
+							"columns":[
+								{"title": "日期", "dataIndex": "billdate_at", "width":"sm", "valueType": "dateRange"},	
+				      			{"title": "部门", "dataIndex": "orgId",  "width":"sm", "valueType": "select", "options":"${myDepts}$" }
+							]
+						}]
+					}
+				}
+			},
+			{			
+				"card1":{	
+					"component":"FlexTable",
+					"table":{
+						"alwaysShowSummary": true,
+						"summaryProps": [
+						   {"name": "col1", "valueType": "text", "title": "合计:", "colSpan": 3 },
+						   {"name": "total_amt", "valueType": "amount" },
+						   {"name": "col2", "valueType": "text", "title": "" }
+						],	
+						"columns": [
+						  {"title": "日期", "dataIndex": "billdate_at", "width":60, "valueType": "dateRange", "hideInSearch": false, "hideInTable": true},	
+					      {"title": "部门", "dataIndex": "orgId", "width":120, "valueType": "select", "options":"${myDepts}$", "hideInTable": true },
+					      {"title": "序号",  "dataIndex": "row_num", "align":"center", "width":50, "hideInSearch": true},
+					      {"title": "记账日期", "dataIndex": "bill_date", "filter": true,  "onFilter": true, "width":120, "hideInSearch": true},
+					      {"title": "摘要", "dataIndex": "cdigest", "width":180},
+					      {"title": "金额","dataIndex": "amt","width":90, "valueType": "amount", "align":"right", "sorter": true, "hideInSearch": true},
+						  {"title": "凭证号","dataIndex": "voucher_num", "align":"left", "width":120, "sorter": true, "hideInSearch": true }
+					    ]													
+					}    	
+				}
+			}	
+		],
+		"formPanel":[]
+	},
+	"initParams": {
+	  	"queryForm":{
+		  	"named_query":"getReportData102",
+	  		"pageSize":10,
+	  		"billdate_at":["${Year-0D}$", "${TODAY}$"],
+	  		"orgId":0
+	  	}
+	},
+    "valueList":{
+    	"myDepts":[]
+	}	
+}

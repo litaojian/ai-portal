@@ -1,0 +1,97 @@
+{
+	"pageTitle": "组织机构",
+	"pageType": "CrudView",
+	"entityName": "sysOrganization",
+	"mainPanel": "mainPanel",
+	"statusColumn": { "col": "work_status", "val": "Enabled" },
+    "rowKey": "org_id",
+	"createdbyColumn": "created_by",	
+	"contentBody":{
+		"mainPanel":[{
+			"query":{
+				"component":"QueryForm",
+				"form":{
+					"layout":"inline",
+					"layoutType":"Form",
+					"submitText": "查询",
+					"hideExport": true,
+					"fields":[{
+						"valueType":"group", 
+						"fieldProps":{ "style": {"padding": "2px"}, "size": [12,10] }, 
+						"columns":[
+							{"title": "部门", "dataIndex": "parent_id", "width": "sm", "valueType": "treeSelect", "options":"${myOrgTree}$" },
+							{"title": "名称", "dataIndex": "org_name",  "width":"xs", "valueType": "text" }
+						]
+					}]
+				}	
+			}
+		},{
+			"dataTable":{	
+				"component":"CrudTable",
+				"table":{
+					"search":false,
+					"columns": [
+						{"title": "ID", "dataIndex": "org_id", "width":260 },
+                        {"title": "部门代码",    "dataIndex": "org_code", "width":120},
+						{"title": "部门名称",    "dataIndex": "org_name", "width":260},						
+						{"title": "部门负责人",    "dataIndex": "manager_user_id", "width":150, "valueType":"select", "options":"${appUserList}$"},
+						{"title": "输入日期","dataIndex": "created", "valueType":"dateTime", "width":180, "sorter": true },
+                        {"title": "操作", "valueType": "buttons", "width":180, "buttons": ["edit", "delete"], "align":"center"}  
+					]						
+				}    	
+			}	
+		}],
+		"detailPanel":[
+			{
+				"detailForm": {
+					"component":"DetailForm",
+					"form": {
+						"layout":"horizontal",
+						"layoutType":"Form",
+						"labelCol": { "span": 8 },
+    					"wrapperCol": { "span": 12 },						
+						"submitText": "保存",
+						"fields":[
+                            {"title": "部门编码",    "dataIndex": "org_code", "required":"true"},
+                            {"title": "部门名称",    "dataIndex": "org_name", "required":"true"},	
+							{"title": "上级部门", "dataIndex": "parent_id", "required":"true", "valueType":"treeSelect", "options":"${myOrgTree}$"},		
+							{"title": "部门负责人", "dataIndex": "manager_user_id", "valueType":"treeSelect", "options":"${myUserTree}$"},				
+                            {"title": "状态", "dataIndex": "work_status", "valueType":"select", "options":"${rowStatus}$" },
+                            {"title": "类别", "dataIndex": "org_type", "valueType":"select", "options":"${orgType}$" },							
+                            {"title": "输入人","dataIndex": "created_by","valueType":"text", "readonly":true},
+                            {"title": "输入日期","dataIndex": "created", "valueType":"dateTime", "readonly":true}
+						]
+					}
+				}
+			}	
+		]
+	},
+	"initParams": {
+	  	"queryForm":{
+	  		"named_query":"queryTreeTableData",
+	  		"sub_admin": "Y",
+	  		"pageSize":10
+	  	},
+		"detailForm":{	
+			"parent_id": "${LOGIN.userOrgId}$",		
+			"work_status": "Enabled",
+			"org_type": "DEPT",
+			"created": "${Now}$",
+			"created_by": "${LOGIN.loginAccount}$"			
+		}
+	},
+    "valueList":{
+		"appUserList":[
+		],
+		"myOrgTree":[
+		],
+		"myUserTree":[
+		],
+    	"orgType":[
+		],
+		"rowStatus":[
+			{"value": "Enabled", "label":"有效" },
+			{"value": "Disabled", "label":"失效" }
+		]
+	}	
+}

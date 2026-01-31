@@ -1,0 +1,76 @@
+{
+	"pageTitle":"部门收支情况一览表",
+	"pageType": "ReportView",
+	"entityName": "deptCostAnalysis",
+	"statusColumn": { "col": "row_status", "val": "OPEN" },
+    "rowKey": "row_num",
+	"createdbyColumn": "createdby",	
+	"contentBody":{
+		"mainPanel":[
+			{
+				"query":{
+					"component":"QueryForm",
+					"form":{
+						"layout":"inline",
+						"layoutType":"Form",
+						"submitText": "查询",
+						"roleAuth":{
+							"exportButton": ["user","role2"]
+						},
+						"fields":[{
+							"valueType":"group", 
+							"fieldProps":{ "style": {"padding": "2px"}, "size": [12,10] }, 
+							"columns":[
+								{"title": "日期", "dataIndex": "billdate_at", "width":"sm", "valueType": "dateRange", "format":"YYYY-MM-DD"},	
+				      			{"title": "部门", "dataIndex": "orgId",  "width":"sm", "valueType": "select", "options":"${myDepts}$" },
+				      			{"title": "关键字", "dataIndex": "queryKey",  "width":"xs", "valueType": "text" }
+							]
+						}]
+					}	
+				}
+			},
+			{			
+				"card1":{	
+					"component":"FlexTable",
+					"table":{
+						"search":false,
+						"summaryProps": [
+						   {"name": "col1", "valueType": "text", "title": "合计:", "colSpan": 3 },
+						   {"name": "balamt1", "valueType": "amount" },
+						   {"name": "ttlincomeamt2", "valueType": "amount" },
+				 		   {"name": "ttlaramt1", "valueType": "amount" },
+				 		   {"name": "ttlaramt2", "valueType": "amount" },
+				 		   {"name": "ttlexpamt2", "valueType": "amount" },
+				 		   {"name": "balamt2", "valueType": "amount" }
+						],	
+						"columns": [
+					      {"title": "序号",  "dataIndex": "row_num", "width":60,  "align":"center", "hideInSearch": true},
+					      {"title": "部门", "dataIndex": "orgcode", "width":100, "hideInSearch": true },
+					      {"title": "部门名称", "dataIndex": "orgname", "width":180, "hideInSearch": true },
+					      {"title": "实际到账收入","dataIndex": "balamt1","width":140, "valueType": "amount", "align":"right", "sorter": true, "hideInSearch": true},
+						  {"title": "开票收入\r\n(含预开发票)","dataIndex": "ttlincomeamt2", "valueType": "link", "to":"/cost/dept/deptCost102", "params": ["orgId","billdate_at"], "pattern": "#,##0.00", "align":"right", "width":140, "sorter": true, "hideInSearch": true },
+					      {"title": "预开发票情况", "key":"yk001", "hideInSearch": true,  "children":[
+					      	{"title": "历年累计", "dataIndex": "ttlaramt1", "valueType": "amount", "align":"right", "width":120, "hideInSearch": true },
+					      	{"title": "本年合计", "dataIndex": "ttlaramt2", "valueType": "link", "to":"/cost/dept/deptCost103", "params": ["orgId","billdate_at"], "pattern": "#,##0.00", "align":"right", "width":120, "hideInSearch": true}
+					      ]},
+					      {"title": "支出费用", "dataIndex": "ttlexpamt2", "valueType": "link", "to":"/cost/dept/deptCost104", "params": ["orgId","billdate_at"], "pattern": "#,##0.00", "align":"right", "width":150, "hideInSearch": true},
+					      {"title": "毛利",    "dataIndex": "balamt2",    "valueType": "amount", "align":"right", "width":160, "hideInSearch": true}
+					    ]						
+					}    	
+				}
+			}	
+		],
+		"formPanel":[]
+	},
+	"initParams": {
+	  	"queryForm":{
+		  	"named_query":"getReportData101",
+	  		"pageSize":100,
+	  		"billdate_at":["${Year-0D}$", "${TODAY}$"],
+	  		"orgId":0
+	  	}
+	},
+    "valueList":{
+    	"myDepts":[]
+	}	
+}

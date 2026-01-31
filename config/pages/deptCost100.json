@@ -1,0 +1,152 @@
+{
+	"pageTitle":"数据看板",
+	"pageType": "ReportView",
+	"entityName": "deptCostAnalysis",
+	"statusColumn": { "col": "row_status", "val": "OPEN" },
+    "rowKey": "row_num",
+	"createdbyColumn": "createdby",	
+	"contentBody":{
+		"mainPanel":[
+			{			
+				"card1":{	
+					"component":"FlexCard",
+					"card":{
+						"title":"数据视图1",
+						"menu_label":"全部",
+						"groups": {
+							"group1":{
+								"kpi1":{
+									"colSpan": 24,
+									"statistic": {
+										"title": "部门盈利",
+										"value": 19,
+										"precision": 2,
+										"suffix": "万元",
+										"description": {
+											"title": "同比",
+											"value": "7.12%",
+											"trend": "up"
+										}
+									},
+									"chartConfig": {
+										"type": "column",
+										"data": [
+											{ "label": "2023-01", "value": 1000 },
+											{ "label": "2023-02", "value": 2000 },
+											{ "label": "2023-03", "value": 5500 },
+											{ "label": "2023-04", "value": 4000 },
+											{ "label": "2023-05", "value": 5000 },
+											{ "label": "2023-06", "value": 5100 },
+											{ "label": "2023-07", "value": 5200 },
+											{ "label": "2023-08", "value": 8000 },
+											{ "label": "2023-09", "value": 9000 },
+											{ "label": "2023-10", "value": 1000 },
+											{ "label": "2023-11", "value": 1200 }
+										  ],
+										"xField": "label",
+										"yField": "value",
+										"width": 300,
+										"height": 150
+									}
+								  }							
+							},	
+							"group2":{
+								"kpi1":{
+									"colSpan": 24,
+									"statistic": {
+										"title": "部门收入",
+										"value": 200.68,
+										"precision": 2,
+										"suffix": "万元",
+										"description": {
+											"title": "同比",
+											"value": "8.12%",
+											"trend": "up"
+										}
+									},
+									"chartConfig": {
+										"type": "DualAxes",
+										"data": [[
+											{ "label": "2023-01", "value": 10000 },
+											{ "label": "2023-02", "value": 11000 },
+											{ "label": "2023-03", "value": 13000 },
+											{ "label": "2023-04", "value": 40000 },
+											{ "label": "2023-05", "value": 50000 },
+											{ "label": "2023-06", "value": 51000 },
+											{ "label": "2023-07", "value": 5200 },
+											{ "label": "2023-08", "value": 8000 },
+											{ "label": "2023-09", "value": 9000 },
+											{ "label": "2023-10", "value": 1000 },
+											{ "label": "2023-11", "value": 100 }
+										  ],[
+											{ "label": "2023-01", "amt": 10000 },
+											{ "label": "2023-02", "amt": 11000 },
+											{ "label": "2023-03", "amt": 13000 },
+											{ "label": "2023-04", "amt": 40000 },
+											{ "label": "2023-05", "amt": 50000 },
+											{ "label": "2023-06", "amt": 51000 },
+											{ "label": "2023-07", "amt": 5200 },
+											{ "label": "2023-08", "amt": 8000 },
+											{ "label": "2023-09", "amt": 9000 },
+											{ "label": "2023-10", "amt": 1000 },
+											{ "label": "2023-11", "amt": 100 }
+										  ]],
+										"xField": "label",
+										"yField": ["value","amt"],
+										"geometryOptions" :[
+											{
+											  "geometry":"column"
+										    },
+										    {
+										      "geometry": "line",
+										      "lineStyle": {
+										        "lineWidth": 2
+										      }
+										    }
+										],
+										"width": 300,
+										"height": 150
+									}
+								  }							
+							}	
+						}
+					}    	
+				},
+				"drawer":{
+					"component":"DrawerPanel",
+					"configForm": {
+						"layout":"vertical",
+						"submitTitle":"确定",
+						"fields":[
+							{"title": "年度", "dataIndex": "acc_year", "width":"sm", "valueType": "dateYear"},	
+							{"title": "部门", "dataIndex": "orgId",  "width":"sm", "valueType": "select", "options":"${myDepts}$" }
+						]
+					}
+				}
+			}	
+		],
+		"formPanel":[]
+	},
+	"initParams": {
+	  	"queryForm":{
+		  	"named_query":"getReportData100",
+	  		"pageSize":100,
+			"acc_year": 2023,
+	  		"billdate_at":["${Year-0D}$", "${TODAY}$"],
+	  		"orgId":0
+	  	}
+	},
+    "valueList":{
+    	"myDepts":[
+			{
+				"label":"部门1", 
+				"value": 1,
+				"children": [
+					{"label":"部门1-1", "value": 11},
+					{"label":"部门1-2", "value": 12}		
+				]
+			},
+			{"label":"部门2", "value": 2}
+		]
+	}	
+}
