@@ -18,6 +18,11 @@ import {
   IconSearch,
   IconSettings,
   IconUsers,
+  IconBolt,
+  IconShoppingCart,
+  IconUserShield,
+  IconKey,
+  IconDeviceDesktop,
 } from "@tabler/icons-react"
 
 import { NavApps } from "@/components/nav-apps"
@@ -29,6 +34,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarInput,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -51,7 +57,12 @@ const iconMap: Record<string, any> = {
   IconDatabase,
   IconReport,
   IconFileWord,
-  IconInnerShadowTop
+  IconInnerShadowTop,
+  IconBolt,
+  IconShoppingCart,
+  IconUserShield,
+  IconKey,
+  IconDeviceDesktop,
 }
 
 // Fallback user data
@@ -76,12 +87,15 @@ interface AppSidebarClientProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebarClient({ menuData, user, ...props }: AppSidebarClientProps) {
+  const [query, setQuery] = React.useState("")
+
   // Transform string icons to components
-  const processItems = (items: any[]) => {
+  const processItems = (items: any[]): any[] => {
     if (!items) return [];
     return items.map((item) => ({
       ...item,
       icon: item.icon && iconMap[item.icon] ? iconMap[item.icon] : undefined,
+      items: item.items ? processItems(item.items) : undefined,
     }));
   };
 
@@ -95,6 +109,29 @@ export function AppSidebarClient({ menuData, user, ...props }: AppSidebarClientP
     email: user.email || "",
     avatar: user.image || "",
   } : defaultUserData;
+
+  const filterItems = (items: any[]) => {
+    if (!query) return items;
+    const lowerQuery = query.toLowerCase();
+    
+    return items.reduce((acc: any[], item) => {
+      const matchesTitle = item.title?.toLowerCase().includes(lowerQuery);
+      
+      const filteredChildren = item.items?.filter((child: any) => 
+        child.title?.toLowerCase().includes(lowerQuery)
+      );
+      
+      if (matchesTitle) {
+        acc.push({ ...item, isActive: true });
+      } else if (filteredChildren && filteredChildren.length > 0) {
+        acc.push({ ...item, items: filteredChildren, isActive: true });
+      }
+      
+      return acc;
+    }, []);
+  };
+
+  const filteredNavMain = filterItems(navMain);
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -112,9 +149,14 @@ export function AppSidebarClient({ menuData, user, ...props }: AppSidebarClientP
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+        <SidebarInput 
+          placeholder="搜索菜单..." 
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navMain} />
+        <NavMain items={filteredNavMain} />
         <NavApps items={navApps} />
         <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarContent>

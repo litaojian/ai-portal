@@ -55,6 +55,7 @@ export function NavApps({
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild isActive={subItem.isActive}>
                         <a href={subItem.url}>
+                          {subItem.icon && <subItem.icon />}
                           <span>{subItem.title}</span>
                         </a>
                       </SidebarMenuSubButton>

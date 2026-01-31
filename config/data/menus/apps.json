@@ -2,10 +2,11 @@
     "title":"应用中心",
     "url": "/apps",
     "icon": "IconApps",
+    "order": 1,
+    "isActive": true,
     "items":[
         { "title": "用户管理",  "url": "/users", "icon": "IconUsers" },
-        { "title": "角色管理",  "url": "/roles"},
-        { "title": "订单管理",  "url": "/portal/orders" },
-        { "title": "OIDC 客户端",  "url": "/oidc/clients" }
+        { "title": "角色管理",  "url": "/roles", "icon": "IconUserShield"},
+        { "title": "OIDC 客户端",  "url": "/oidc/clients", "icon": "IconKey" }
     ]
 }

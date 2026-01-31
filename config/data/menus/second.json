@@ -1,0 +1,9 @@
+{
+    "title":"快捷",
+    "url": "/shortcut",
+    "icon": "IconBolt",
+    "items":[
+        { "title": "搜索",  "url": "#", "icon": "IconSearch" },
+        { "title": "帮助",  "url": "#", "icon": "IconHelp" }
+    ]
+}
