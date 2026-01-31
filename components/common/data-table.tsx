@@ -66,6 +66,12 @@ export function DataTable<TData, TValue>({
   const [rowSelection, setRowSelection] = React.useState({});
   const [searchValue, setSearchValue] = React.useState("");
 
+  // Explicit pagination state for client-side pagination
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: pageSize,
+  });
+
   const isManual = pageCount !== undefined;
 
   const table = useReactTable({
@@ -77,10 +83,11 @@ export function DataTable<TData, TValue>({
       columnFilters,
       columnVisibility,
       rowSelection,
+      // Use prop-based pagination for manual, otherwise use local state
       pagination: isManual ? {
         pageIndex: (pageIndex || 1) - 1,
         pageSize,
-      } : undefined,
+      } : pagination,
     },
     manualPagination: isManual,
     manualFiltering: !!onSearch,
@@ -88,6 +95,7 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     // Only use client-side models if not manual
     getPaginationRowModel: !isManual ? getPaginationRowModel() : undefined,

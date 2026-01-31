@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { mockMenus } from "@/mocks/mock-menus";
+import { mockMenus } from "@/mocks/menus";
 
 export async function getMenus() {
   if (process.env.USE_MOCK_DATA === "true") {

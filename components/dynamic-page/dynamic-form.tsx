@@ -2,9 +2,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { PageConfig, FieldConfig } from '@/lib/schemas/dynamic-page.types';
+import { PageConfig } from '@/lib/schemas/page-config';
 import FormFieldRenderer from './fields/form-field-renderer';
-import { DataService } from '@/lib/data-service';
+import { BizDataService } from '@/lib/biz-data-service';
+import { Button } from '@/components/ui/button';
 
 interface DynamicFormProps {
   config: PageConfig;
@@ -24,9 +25,12 @@ export default function DynamicForm({ config, mode, entityId, onSubmit }: Dynami
     } else {
       // 设置默认值
       const defaults: Record<string, any> = {};
-      config.fields.forEach(field => {
+      Object.entries(config.model.fields).forEach(([key, field]) => {
         if (field.defaultValue !== undefined) {
-          defaults[field.name] = field.defaultValue;
+          defaults[key] = field.defaultValue;
+        } else if (field.type === 'date' || field.type === 'datetime') {
+          // 如果日期字段没有初始值，默认显示当天日期 (YYYY-MM-DD)
+          defaults[key] = new Date().toISOString().split('T')[0];
         }
       });
       setFormData(defaults);
@@ -34,10 +38,23 @@ export default function DynamicForm({ config, mode, entityId, onSubmit }: Dynami
   }, [mode, entityId]);
 
   const loadEntityData = async () => {
-    const dataService = DataService.getInstance();
-    const data = await dataService.fetchOne(config.modelName, entityId!);
-    setInitialData(data);
-    setFormData(data);
+    const dataService = BizDataService.getInstance();
+    try {
+        const data = await dataService.fetchOne(config.meta.key, entityId!, config.meta.api);
+        
+        // 确保编辑模式下，如果日期字段为空，也显示默认日期
+        const enrichedData = { ...data };
+        Object.entries(config.model.fields).forEach(([key, field]) => {
+            if ((field.type === 'date' || field.type === 'datetime') && !enrichedData[key]) {
+                enrichedData[key] = new Date().toISOString().split('T')[0];
+            }
+        });
+
+        setInitialData(enrichedData);
+        setFormData(enrichedData);
+    } catch (error) {
+        console.error("Failed to load entity data", error);
+    }
   };
 
   const handleChange = (fieldName: string, value: any) => {
@@ -58,30 +75,31 @@ export default function DynamicForm({ config, mode, entityId, onSubmit }: Dynami
   };
 
   return (
-    <form onSubmit={handleSubmit} className="dynamic-form">
-      <div className="form-grid">
-        {config.fields
-          .filter(field => field.ui?.showInForm !== false)
-          .map(field => (
-            <div key={field.id} className="form-field">
-              <FormFieldRenderer
-                field={field}
-                value={formData[field.name]}
-                onChange={(value) => handleChange(field.name, value)}
-                disabled={loading}
-              />
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid gap-4 py-4">
+        {Object.entries(config.model.fields)
+          .filter(([_, field]) => !field.hidden)
+          .map(([key, field]) => (
+            <div key={key} className="grid grid-cols-4 items-center gap-4">
+              <div className="col-span-4">
+                <FormFieldRenderer
+                  field={field}
+                  value={formData[key]}
+                  onChange={(value) => handleChange(key, value)}
+                  disabled={loading}
+                />
+              </div>
             </div>
           ))}
       </div>
 
-      <div className="form-actions">
-        <button
+      <div className="flex justify-end space-x-2">
+        <Button
           type="submit"
           disabled={loading}
-          className="btn btn-primary"
         >
           {loading ? '提交中...' : mode === 'create' ? '创建' : '更新'}
-        </button>
+        </Button>
       </div>
     </form>
   );

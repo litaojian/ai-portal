@@ -48,6 +48,9 @@ export const TableColumnSchema = z.object({
   component: z.string().optional(), // 强制指定渲染组件，如 'badge', 'link'
   hidden: z.boolean().optional(), // 在表格中默认隐藏
   permissions: z.array(z.string()).optional(), // 列级别的权限控制 (e.g. ['ADMIN'])
+  align: z.enum(["left", "center", "right"]).optional(),
+  summaryType: z.enum(["sum", "avg", "count", "label"]).optional(),
+  summaryText: z.string().optional(),
 });
 
 export const SearchFieldSchema = z.object({
@@ -87,20 +90,37 @@ export const PageConfigSchema = z.object({
     title: z.string(),
     description: z.string().optional(),
     icon: z.string().optional(),
+    api: z.string().optional(),
   }),
   permissions: PermissionConfigSchema.optional(),
   model: z.object({
-    fields: z.record(FieldSchema),
+    fields: z.record(z.string(), FieldSchema),
   }),
   views: z.object({
     search: z.object({
       fields: z.array(SearchFieldSchema),
+      showReset: z.boolean().optional(),
     }).optional(),
     table: z.object({
+      size: z.enum(["default", "small"]).optional(),
+      scroll: z.number().optional(),
+      summary: z.boolean().optional(),
+      rownum: z.boolean().optional(),
+      checkbox: z.boolean().optional(),
       columns: z.array(TableColumnSchema),
       actions: z.object({
         row: z.array(z.string()).optional(),
-        toolbar: z.array(z.string()).optional(),
+        toolbar: z.array(
+          z.union([
+            z.string(),
+            z.object({
+              title: z.string(),
+              action: z.string(),
+              icon: z.string().optional(),
+              variant: z.string().optional(),
+            })
+          ])
+        ).optional(),
       }).optional(),
       pagination: z.object({
         enabled: z.boolean().optional(),

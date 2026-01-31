@@ -47,18 +47,19 @@ const DateRenderer = ({ value }: CellRendererProps) => {
 };
 
 const BadgeRenderer = ({ value, field }: CellRendererProps) => {
-  if (!field.options) return <span>{value}</span>;
+  if (value === null || value === undefined) return <span className="text-muted-foreground">-</span>;
+  if (!field.options) return <span>{String(value)}</span>;
   
   const option = field.options.find((opt) => opt.value === value);
-  if (!option) return <span>{value}</span>;
+  if (!option) return <span>{String(value)}</span>;
 
   // Simple color mapping
   const colorMap: Record<string, string> = {
-    green: "bg-green-100 text-green-800 border-green-200 hover:bg-green-100",
-    blue: "bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-100",
-    red: "bg-red-100 text-red-800 border-red-200 hover:bg-red-100",
-    yellow: "bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-100",
-    gray: "bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-100",
+    green: "bg-green-100 text-green-800 border-green-200 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800",
+    blue: "bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800",
+    red: "bg-red-100 text-red-800 border-red-200 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800",
+    yellow: "bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800",
+    gray: "bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-100 dark:bg-gray-800/30 dark:text-gray-400 dark:border-gray-700",
   };
 
   const className = option.color ? colorMap[option.color] : "";
@@ -68,6 +69,14 @@ const BadgeRenderer = ({ value, field }: CellRendererProps) => {
       {option.label}
     </Badge>
   );
+};
+
+const SelectRenderer = ({ value, field }: CellRendererProps) => {
+  if (value === null || value === undefined) return <span className="text-muted-foreground">-</span>;
+  if (!field.options) return <span>{String(value)}</span>;
+  
+  const option = field.options.find((opt) => opt.value === value);
+  return <span>{option ? option.label : String(value)}</span>;
 };
 
 // --- Registry Core ---
@@ -80,7 +89,8 @@ const registry: Record<string, RendererComponent> = {
   number: NumberRenderer,
   date: DateRenderer,
   datetime: DateRenderer, // Simplify for now
-  select: BadgeRenderer, // Default select to badge in table
+  select: SelectRenderer, // Default select to plain text label
+  badge: BadgeRenderer,   // Explicit badge component
   boolean: ({ value }) => <Badge variant={value ? "default" : "secondary"}>{value ? "是" : "否"}</Badge>,
 };
 

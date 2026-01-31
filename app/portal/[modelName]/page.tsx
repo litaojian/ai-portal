@@ -15,22 +15,10 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { DynamicTable } from "@/components/dynamic-page/dynamic-table";
+import PageBuilder from "@/components/dynamic-page/page-builder";
 
 interface PageProps {
   params: Promise<{ modelName: string }>;
-}
-
-async function getMockData(modelName: string) {
-    // In a real scenario, this would call the DB or an API
-    if (modelName === "orders") {
-        return [
-          { id: "1", orderNo: "ORD-20231001", customerName: "Acme Corp", amount: 1200.50, status: "paid", orderDate: "2023-10-01T10:00:00Z" },
-          { id: "2", orderNo: "ORD-20231002", customerName: "Globex", amount: 850.00, status: "pending", orderDate: "2023-10-02T14:30:00Z" },
-          { id: "3", orderNo: "ORD-20231005", customerName: "Soylent Corp", amount: 2300.00, status: "shipped", orderDate: "2023-10-05T09:15:00Z" },
-        ];
-    }
-    return [];
 }
 
 export default async function DynamicListPage({ params }: PageProps) {
@@ -40,8 +28,6 @@ export default async function DynamicListPage({ params }: PageProps) {
   if (!config) {
     return notFound();
   }
-
-  const data = await getMockData(modelName);
 
   return (
     <SidebarProvider
@@ -71,15 +57,8 @@ export default async function DynamicListPage({ params }: PageProps) {
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 md:p-8">
-            <div className="flex items-center justify-between space-y-2">
-              <div>
-                <h2 className="text-2xl font-bold tracking-tight">{config.meta.title}</h2>
-                <p className="text-muted-foreground">{config.meta.description}</p>
-              </div>
-            </div>
-            
-            <DynamicTable config={config} data={data} />
+        <div className="flex flex-1 flex-col gap-2 p-2 md:p-4">
+            <PageBuilder pageId={modelName} />
         </div>
       </SidebarInset>
     </SidebarProvider>

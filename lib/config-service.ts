@@ -1,10 +1,10 @@
 // services/config-service.ts
-import { PageConfig } from '@/lib/schemas/dynamic-page.types';
+import { PageConfig } from '@/lib/schemas/page-config';
 
 export class ConfigService {
   private static instance: ConfigService;
   private configs: Map<string, PageConfig> = new Map();
-  private configPath = '/configs/pages';
+  private configPath = 'config/pages'; // Fixed path to match actual directory
 
   static getInstance(): ConfigService {
     if (!ConfigService.instance) {
@@ -19,7 +19,17 @@ export class ConfigService {
     }
 
     try {
-      const config = await import(`@/${this.configPath}/${pageId}.json`);
+      // Dynamic import needs to be relative to where it is or use alias
+      // Since this is client-side code mostly (implied by usage in components), direct fs read isn't possible
+      // But import() works if webpack can resolve it.
+      // However, the original code used `@/configs/pages`.
+      // Our structure is `config/pages`.
+      // Note: dynamic import with variables is tricky.
+      // Assuming for now the build system handles it or we might need a server action loader.
+      // The original code was `import('@/configs/pages/' + pageId + '.json')`
+      // We'll trust the previous pattern but correct the path.
+      
+      const config = await import(`@/config/pages/${pageId}.json`);
       this.configs.set(pageId, config.default);
       return config.default;
     } catch (error) {
@@ -29,15 +39,11 @@ export class ConfigService {
   }
 
   async saveConfig(pageId: string, config: PageConfig): Promise<void> {
-    // 实现配置保存逻辑，可以保存到数据库或文件系统
     this.configs.set(pageId, config);
-    
-    // 这里可以添加持久化逻辑
-    // await db.configs.upsert({ id: pageId, config });
   }
 
   getFieldConfig(pageId: string, fieldId: string) {
     const config = this.configs.get(pageId);
-    return config?.fields.find(f => f.id === fieldId);
+    return config?.model.fields[fieldId];
   }
 }

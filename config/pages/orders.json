@@ -5,22 +5,19 @@
     "title": "订单管理",
     "description": "查看和管理系统内的客户订单信息",
     "icon": "ShoppingCart",
-    "api": {
-      "resource": "orders",
-      "methods": ["list", "detail", "create", "update", "delete"]
-    }
+    "api": "/api/rest/orders"
   },
   "model": {
     "fields": {
       "id": {
         "label": "ID",
-        "type": "string",
+        "type": "text",
         "hidden": true,
         "primaryKey": true
       },
       "orderNo": {
         "label": "订单编号",
-        "type": "string",
+        "type": "text",
         "validation": {
           "required": true,
           "pattern": "^ORD-\\d{8}$",
@@ -29,7 +26,7 @@
       },
       "customerName": {
         "label": "客户名称",
-        "type": "string",
+        "type": "text",
         "validation": {
           "required": true,
           "min": 2
@@ -55,12 +52,56 @@
         ],
         "defaultValue": "pending"
       },
+      "paymentMethod": {
+        "label": "支付方式",
+        "type": "select",
+        "options": [
+          { "label": "微信支付", "value": "wechat" },
+          { "label": "支付宝", "value": "alipay" },
+          { "label": "银行转账", "value": "bank" },
+          { "label": "信用卡", "value": "credit" },
+          { "label": "现金", "value": "cash" }
+        ]
+      },
+      "orderSource": {
+        "label": "订单来源",
+        "type": "select",
+        "options": [
+          { "label": "线上商城", "value": "web" },
+          { "label": "手机APP", "value": "app" },
+          { "label": "线下门店", "value": "store" },
+          { "label": "电话订单", "value": "phone" },
+          { "label": "合作伙伴", "value": "partner" }
+        ]
+      },
       "orderDate": {
         "label": "下单日期",
         "type": "date",
         "validation": {
           "required": true
         }
+      },
+      "deliveryDate": {
+        "label": "送货日期",
+        "type": "date"
+      },
+      "recipient": {
+        "label": "收货人",
+        "type": "text",
+        "validation": {
+          "required": true
+        }
+      },
+      "shippingAddress": {
+        "label": "收货地址",
+        "type": "text",
+        "validation": {
+          "required": true
+        }
+      },
+      "trackingNumber": {
+        "label": "快递单号",
+        "type": "text"
       },
       "notes": {
         "label": "备注",
@@ -77,20 +118,36 @@
         { "key": "orderNo", "placeholder": "输入订单号查询" },
         { "key": "customerName", "placeholder": "客户名称" },
         { "key": "status" },
+        { "key": "paymentMethod" },
+        { "key": "orderSource" },
         { "key": "orderDate", "component": "date-range" }
       ]
     },
     "table": {
+      "size":"small",
+      "scroll":1600,
+      "rownum":true,
+      "checkbox":false,
+      "summary":true,
       "columns": [
         { "key": "orderNo", "width": 150, "copyable": true },
-        { "key": "customerName", "sortable": true },
-        { "key": "amount", "align": "right", "sortable": true },
+        { "key": "customerName", "sortable": true, "summaryType": "label", "summaryText": "合计" },
+        { "key": "amount", "sortable": true, "summaryType": "sum" },
         { "key": "status", "component": "badge" },
-        { "key": "orderDate", "format": "YYYY-MM-DD HH:mm" }
+        { "key": "paymentMethod" },
+        { "key": "orderSource" },
+        { "key": "orderDate" },
+        { "key": "deliveryDate" },
+        { "key": "recipient" },
+        { "key": "trackingNumber" }
       ],
       "actions": {
         "row": ["edit", "delete", "detail"],
-        "toolbar": ["create", "export"]
+        "toolbar": [
+                    {"title":"导入", "action":"import" }, 
+                    {"title":"导出", "action":"export" },
+                    {"title":"新增", "action":"create" }                    
+                  ]
       },
       "pagination": {
         "enabled": true,
@@ -103,11 +160,15 @@
       "sections": [
         {
           "title": "基础信息",
-          "fields": ["orderNo", "customerName", "status", "orderDate"]
+          "fields": ["orderNo", "customerName", "status", "orderSource", "orderDate"]
         },
         {
-          "title": "财务信息",
-          "fields": ["amount"]
+          "title": "支付信息",
+          "fields": ["amount", "paymentMethod"]
+        },
+        {
+          "title": "物流信息",
+          "fields": ["recipient", "shippingAddress", "deliveryDate", "trackingNumber"]
         },
         {
           "title": "其他",
