@@ -49,7 +49,7 @@ export function DynamicSearch({ config, onSearch, onReset }: DynamicSearchProps)
           if (!fieldDef) return null;
 
           return (
-            <div key={searchField.key} className="space-y-1 w-[180px]">
+            <div key={searchField.key} className="flex flex-col gap-1 w-[180px]">
               <label className="text-xs font-medium text-muted-foreground whitespace-nowrap block">
                 {searchField.label || fieldDef.label}
               </label>
@@ -59,7 +59,7 @@ export function DynamicSearch({ config, onSearch, onReset }: DynamicSearchProps)
                   value={values[searchField.key] || "all"}
                   onValueChange={(val) => handleChange(searchField.key, val === "all" ? undefined : val)}
                 >
-                  <SelectTrigger className="h-8 w-full text-xs [&>span]:line-clamp-1">
+                  <SelectTrigger className="!h-8 w-full !text-xs !py-1">
                     <SelectValue placeholder={searchField.placeholder || "全部"} />
                   </SelectTrigger>
                   <SelectContent>
@@ -74,14 +74,14 @@ export function DynamicSearch({ config, onSearch, onReset }: DynamicSearchProps)
               ) : fieldDef.type === 'date' ? (
                  <Input
                   type="date"
-                  className="h-8 w-full text-xs px-2"
+                  className="!h-8 w-full !text-xs !px-2"
                   value={values[searchField.key] || ""}
                   onChange={(e) => handleChange(searchField.key, e.target.value)}
                 />
               ) : (
                 <Input
                   placeholder={searchField.placeholder || `请输入`}
-                  className="h-8 w-full text-xs px-2"
+                  className="!h-8 w-full !text-xs !px-2"
                   value={values[searchField.key] || ""}
                   onChange={(e) => handleChange(searchField.key, e.target.value)}
                 />

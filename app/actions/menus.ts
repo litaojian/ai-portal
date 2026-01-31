@@ -41,7 +41,7 @@ export async function getMenus() {
     return {
       navMain: navMain.map(formatMenu),
       navSecondary: navSecondary.map(formatMenu),
-      documents: documents.map(menu => ({ name: menu.title, url: menu.url, icon: menu.icon })), // documents 格式略有不同
+      navApps: documents.map(menu => ({ title: menu.title, url: menu.url, icon: menu.icon })),
       navClouds: navClouds.map(formatMenu),
     };
 

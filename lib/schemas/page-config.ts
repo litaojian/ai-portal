@@ -39,10 +39,33 @@ export const FieldSchema = z.object({
 });
 
 // --- 视图配置 ---
+const ConditionValueSchema = z.union([
+  z.string(),
+  z.number(),
+  z.boolean(),
+  z.array(z.union([z.string(), z.number()])),
+  z.object({
+    operator: z.enum(["in", "nin", "eq", "ne", "gt", "lt", "ge", "le"]),
+    value: z.any()
+  })
+]);
+
+const RowActionSchema = z.union([
+  z.string(),
+  z.object({
+    action: z.string(),
+    title: z.string().optional(),
+    icon: z.string().optional(),
+    conditions: z.record(z.string(), ConditionValueSchema).optional(),
+  })
+]);
+
 export const TableColumnSchema = z.object({
   key: z.string(),
   label: z.string().optional(), // 覆盖 model 中的 label
   width: z.number().optional(),
+  minWidth: z.number().optional(),
+  maxWidth: z.number().optional(),
   sortable: z.boolean().optional(),
   copyable: z.boolean().optional(),
   component: z.string().optional(), // 强制指定渲染组件，如 'badge', 'link'
@@ -109,7 +132,7 @@ export const PageConfigSchema = z.object({
       checkbox: z.boolean().optional(),
       columns: z.array(TableColumnSchema),
       actions: z.object({
-        row: z.array(z.string()).optional(),
+        row: z.array(RowActionSchema).optional(),
         toolbar: z.array(
           z.union([
             z.string(),

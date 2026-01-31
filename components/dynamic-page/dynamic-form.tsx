@@ -12,9 +12,10 @@ interface DynamicFormProps {
   mode: 'create' | 'edit';
   entityId?: string;
   onSubmit: (data: any) => Promise<void>;
+  onCancel?: () => void;
 }
 
-export default function DynamicForm({ config, mode, entityId, onSubmit }: DynamicFormProps) {
+export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel }: DynamicFormProps) {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(false);
   const [initialData, setInitialData] = useState<any>(null);
@@ -94,6 +95,16 @@ export default function DynamicForm({ config, mode, entityId, onSubmit }: Dynami
       </div>
 
       <div className="flex justify-end space-x-2">
+        {onCancel && (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={loading}
+          >
+            取消
+          </Button>
+        )}
         <Button
           type="submit"
           disabled={loading}

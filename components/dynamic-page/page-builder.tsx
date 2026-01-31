@@ -134,15 +134,19 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
     }
   };
 
+  const handleCancel = () => {
+    router.push(`/portal/${pageId}`);
+  };
+
   if (loading) return <div>加载中...</div>;
   if (!config) return <div>页面配置不存在</div>;
 
   return (
-    <Card className="w-full shadow-sm">
-      <CardContent className="p-4">
+    <Card className="w-full shadow-sm overflow-hidden min-w-0">
+      <CardContent className="p-4 overflow-hidden min-w-0">
         {mode === 'list' && (
             <>
-                <div className="space-y-4">
+                <div className="space-y-4 min-w-0">
                     <DynamicSearch 
                         config={config} 
                         onSearch={handleSearch} 
@@ -194,6 +198,7 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
             config={config}
             mode="create"
             onSubmit={handleFormSubmit}
+            onCancel={handleCancel}
             />
         )}
 
@@ -203,6 +208,7 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
             mode="edit"
             entityId={entityId}
             onSubmit={handleFormSubmit}
+            onCancel={handleCancel}
             />
         )}
       </CardContent>

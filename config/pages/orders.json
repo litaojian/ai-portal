@@ -118,14 +118,12 @@
         { "key": "orderNo", "placeholder": "输入订单号查询" },
         { "key": "customerName", "placeholder": "客户名称" },
         { "key": "status" },
-        { "key": "paymentMethod" },
-        { "key": "orderSource" },
-        { "key": "orderDate", "component": "date-range" }
+        { "key": "orderSource" }
       ]
     },
     "table": {
       "size":"small",
-      "scroll":1600,
+      "scroll":600,
       "rownum":true,
       "checkbox":false,
       "summary":true,
@@ -136,13 +134,29 @@
         { "key": "status", "component": "badge" },
         { "key": "paymentMethod" },
         { "key": "orderSource" },
-        { "key": "orderDate" },
-        { "key": "deliveryDate" },
-        { "key": "recipient" },
         { "key": "trackingNumber" }
       ],
       "actions": {
-        "row": ["edit", "delete", "detail"],
+        "row": [
+          {
+            "action": "edit",
+            "conditions": {
+              "status": ["pending", "cancelled"]
+            }
+          },
+          {
+            "action": "detail",
+            "conditions": {
+              "status": { "operator": "nin", "value": ["pending", "cancelled"] }
+            }
+          },
+          {
+            "action": "delete",
+            "conditions": {
+              "status": ["pending", "cancelled"]
+            }
+          }
+        ],
         "toolbar": [
                     {"title":"导入", "action":"import" }, 
                     {"title":"导出", "action":"export" },

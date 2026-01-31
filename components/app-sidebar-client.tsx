@@ -20,7 +20,7 @@ import {
   IconUsers,
 } from "@tabler/icons-react"
 
-import { NavDocuments } from "@/components/nav-documents"
+import { NavApps } from "@/components/nav-apps"
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
@@ -65,7 +65,7 @@ interface AppSidebarClientProps extends React.ComponentProps<typeof Sidebar> {
   menuData?: {
     navMain: any[];
     navSecondary: any[];
-    documents: any[];
+    navApps: any[];
     navClouds?: any[];
   } | null;
   user?: {
@@ -87,7 +87,8 @@ export function AppSidebarClient({ menuData, user, ...props }: AppSidebarClientP
 
   const navMain = processItems(menuData?.navMain || []);
   const navSecondary = processItems(menuData?.navSecondary || []);
-  const documents = processItems(menuData?.documents || []);
+  const navApps = processItems(menuData?.navApps || []);
+  const navClouds = processItems(menuData?.navClouds || []);
   
   const currentUser = user ? {
     name: user.name || "User",
@@ -114,8 +115,8 @@ export function AppSidebarClient({ menuData, user, ...props }: AppSidebarClientP
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMain} />
-        {/* <NavDocuments items={documents} />
-        <NavSecondary items={navSecondary} className="mt-auto" /> */}
+        <NavApps items={navApps} />
+        <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={currentUser} />
