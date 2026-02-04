@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Application } from "@/prisma/generated/client";
+import { Application } from "@/lib/db/schema";
 import { AppSheet } from "./app-sheet";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,7 +40,7 @@ export function AppClient({ initialData, total, currentPage, totalPages }: AppCl
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editingApp, setEditingApp] = useState<Application | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get("type") || "all";
@@ -111,7 +111,7 @@ export function AppClient({ initialData, total, currentPage, totalPages }: AppCl
             <TabsTrigger value="third_party">第三方应用</TabsTrigger>
           </TabsList>
         </Tabs>
-        
+
         <div className="flex flex-wrap items-center gap-2">
           <Select value={status} onValueChange={onStatusChange}>
             <SelectTrigger className="w-[130px]">
@@ -143,10 +143,10 @@ export function AppClient({ initialData, total, currentPage, totalPages }: AppCl
         </Button>
       </DataTable>
 
-      <AppSheet 
-        open={sheetOpen} 
-        onOpenChange={setSheetOpen} 
-        app={editingApp} 
+      <AppSheet
+        open={sheetOpen}
+        onOpenChange={setSheetOpen}
+        app={editingApp}
       />
 
       <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>

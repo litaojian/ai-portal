@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { OidcClient } from "@/prisma/generated/client";
+import { OidcClient } from "@/lib/db/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -135,7 +135,7 @@ export function ClientList({ initialData }: ClientListProps) {
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
                   control={form.control}
                   name="grantTypes"
@@ -161,10 +161,10 @@ export function ClientList({ initialData }: ClientListProps) {
                                         return checked
                                           ? field.onChange([...field.value, item.id])
                                           : field.onChange(
-                                              field.value?.filter(
-                                                (value) => value !== item.id
-                                              )
+                                            field.value?.filter(
+                                              (value) => value !== item.id
                                             )
+                                          )
                                       }}
                                     />
                                   </FormControl>
@@ -215,7 +215,7 @@ export function ClientList({ initialData }: ClientListProps) {
                     <code className="bg-muted px-1 rounded truncate max-w-[100px] block">
                       {client.clientSecret ? "••••••••" : "公开"}
                     </code>
-                     {client.clientSecret && (
+                    {client.clientSecret && (
                       <Button variant="ghost" size="icon" className="h-4 w-4" onClick={() => copyToClipboard(client.clientSecret!)}>
                         <Copy className="h-3 w-3" />
                       </Button>

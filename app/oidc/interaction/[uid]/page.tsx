@@ -7,7 +7,8 @@ import { OidcLogin } from "./oidc-login"; // 新建一个专门的登录组件
 import { OidcConsent } from "./oidc-consent"; // 新建同意组件
 
 interface PageProps {
-  params: Promise<{ uid: string }>;
+  params: Promise<any>;
+  searchParams: Promise<any>;
 }
 
 export default async function InteractionPage({ params }: PageProps) {

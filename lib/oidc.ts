@@ -1,5 +1,5 @@
 import Provider from "oidc-provider";
-import { PrismaAdapter } from "./oidc-adapter";
+import { DrizzleOidcAdapter } from "./oidc-adapter";
 
 // 生产环境应从环境变量加载 JWKS
 // 这里为了演示，生成一个临时的。注意：重启后 Key 变化会导致旧 Token 失效。
@@ -25,7 +25,7 @@ const jwks = {
 
 export function getOidcProvider(issuer: string) {
   const configuration = {
-    adapter: PrismaAdapter,
+    adapter: DrizzleOidcAdapter,
     clients: [], // 我们通过 Adapter 动态加载
     jwks,
     cookies: {
@@ -42,9 +42,9 @@ export function getOidcProvider(issuer: string) {
       return true; // 允许所有 Client 的 CORS (开发环境)
     },
     renderError: async (ctx: any, out: any, error: any) => {
-        console.error('[OIDC Provider Error]', error);
-        ctx.body = { error: error.message, stack: error.stack };
-        ctx.status = 500;
+      console.error('[OIDC Provider Error]', error);
+      ctx.body = { error: error.message, stack: error.stack };
+      ctx.status = 500;
     },
     pkce: {
       required: () => false, // 视需求开启，建议开启

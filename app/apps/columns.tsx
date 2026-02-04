@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2, ExternalLink, Globe, Shield } from "lucide-react";
 import { format } from "date-fns";
-import { Application } from "@/prisma/generated/client";
+import { Application } from "@/lib/db/schema";
 
 interface AppColumnsProps {
   onEdit: (app: Application) => void;
@@ -39,9 +39,9 @@ export const getAppColumns = ({ onEdit, onDelete }: AppColumnsProps): ColumnDef<
     cell: ({ row }) => {
       const type = row.getValue("type") as string;
       if (type === "third_party") {
-        return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200"><Globe className="w-3 h-3 mr-1"/>第三方</Badge>;
+        return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200"><Globe className="w-3 h-3 mr-1" />第三方</Badge>;
       }
-      return <Badge variant="outline" className="bg-slate-50 text-slate-700 border-slate-200"><Shield className="w-3 h-3 mr-1"/>内部</Badge>;
+      return <Badge variant="outline" className="bg-slate-50 text-slate-700 border-slate-200"><Shield className="w-3 h-3 mr-1" />内部</Badge>;
     },
   },
   {
@@ -80,18 +80,18 @@ export const getAppColumns = ({ onEdit, onDelete }: AppColumnsProps): ColumnDef<
       const app = row.original;
       return (
         <div className="flex justify-end gap-2">
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             className="h-8 w-8 text-muted-foreground hover:text-primary"
             onClick={() => onEdit(app)}
           >
             <Pencil className="h-4 w-4" />
             <span className="sr-only">编辑</span>
           </Button>
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             className="h-8 w-8 text-muted-foreground hover:text-red-600"
             onClick={() => onDelete(app.id)}
           >

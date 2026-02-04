@@ -3,29 +3,26 @@ import PageBuilder from '@/components/dynamic-page/page-builder';
 import { Metadata } from 'next';
 
 interface PageProps {
-  params: {
-    pageId: string;
-  };
-  searchParams: {
-    page?: string;
-    search?: string;
-  };
+  params: Promise<any>;
+  searchParams: Promise<any>;
 }
 
 export async function generateMetadata(
   { params }: PageProps
 ): Promise<Metadata> {
+  const { pageId } = await params;
   // 可以动态生成页面标题
   return {
-    title: `${params.pageId} - 管理系统`,
+    title: `${pageId} - 管理系统`,
   };
 }
 
-export default function AdminPage({ params, searchParams }: PageProps) {
+export default async function AdminPage({ params, searchParams }: PageProps) {
+  const { pageId } = await params;
   return (
     <div className="admin-page">
-      <PageBuilder 
-        pageId={params.pageId}
+      <PageBuilder
+        pageId={pageId}
         mode="list"
       />
     </div>

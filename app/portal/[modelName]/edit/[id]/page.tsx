@@ -18,7 +18,8 @@ import { AppSidebar } from "@/components/app-sidebar";
 import PageBuilder from "@/components/dynamic-page/page-builder";
 
 interface PageProps {
-  params: Promise<{ modelName: string; id: string }>;
+  params: Promise<any>;
+  searchParams: Promise<any>;
 }
 
 export default async function DynamicEditPage({ params }: PageProps) {
@@ -62,7 +63,7 @@ export default async function DynamicEditPage({ params }: PageProps) {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 md:p-8">
-            <PageBuilder pageId={modelName} mode="edit" entityId={id} />
+          <PageBuilder pageId={modelName} mode="edit" entityId={id} />
         </div>
       </SidebarInset>
     </SidebarProvider>

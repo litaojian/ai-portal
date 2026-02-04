@@ -1,16 +1,18 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/db";
+import { projects } from "@/lib/db/schema";
 import { projectSchema } from "@/lib/schemas";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { desc, eq } from "drizzle-orm";
 
 export async function getProjects() {
   try {
-    const projects = await prisma.project.findMany({
-      orderBy: { createdAt: "desc" },
+    const data = await db.query.projects.findMany({
+      orderBy: [desc(projects.createdAt)],
     });
-    return { success: true, data: projects };
+    return { success: true, data };
   } catch (error) {
     return { success: false, error: "获取项目列表失败" };
   }
@@ -24,9 +26,7 @@ export async function createProject(data: z.infer<typeof projectSchema>) {
   }
 
   try {
-    await prisma.project.create({
-      data: result.data,
-    });
+    await db.insert(projects).values(result.data);
     revalidatePath("/projects");
     return { success: true };
   } catch (error) {
@@ -42,10 +42,7 @@ export async function updateProject(id: string, data: z.infer<typeof projectSche
   }
 
   try {
-    await prisma.project.update({
-      where: { id },
-      data: result.data,
-    });
+    await db.update(projects).set(result.data).where(eq(projects.id, id));
     revalidatePath("/projects");
     return { success: true };
   } catch (error) {
@@ -55,9 +52,7 @@ export async function updateProject(id: string, data: z.infer<typeof projectSche
 
 export async function deleteProject(id: string) {
   try {
-    await prisma.project.delete({
-      where: { id },
-    });
+    await db.delete(projects).where(eq(projects.id, id));
     revalidatePath("/projects");
     return { success: true };
   } catch (error) {

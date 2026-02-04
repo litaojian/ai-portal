@@ -1,30 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/db";
+import { tables } from "@/lib/db/schema";
+import { count } from "drizzle-orm";
+
+export const dynamic = 'force-dynamic';
 
 // Add global declaration here too to be safe (or move to a d.ts)
 declare global {
-    var mockData: Record<string, any[]> | undefined;
-}
-
-function getPrismaModelName(modelName: string) {
-    let delegateName = modelName;
-    if (modelName.endsWith('s')) {
-        delegateName = modelName.slice(0, -1);
-    }
-    return delegateName;
+  var mockData: Record<string, any[]> | undefined;
 }
 
 async function getMockStore(modelName: string) {
-    if (!global.mockData) global.mockData = {};
-    if (!global.mockData[modelName]) {
-         if (modelName === 'orders') {
-            const { MOCK_ORDERS } = await import('@/mocks/orders');
-            global.mockData[modelName] = [...MOCK_ORDERS];
-        } else {
-            global.mockData[modelName] = [];
-        }
+  if (!global.mockData) global.mockData = {};
+  if (!global.mockData[modelName]) {
+    if (modelName === 'orders') {
+      const { MOCK_ORDERS } = await import('@/mocks/orders');
+      global.mockData[modelName] = [...MOCK_ORDERS];
+    } else {
+      global.mockData[modelName] = [];
     }
-    return global.mockData[modelName];
+  }
+  return global.mockData[modelName];
 }
 
 export async function GET(
@@ -32,38 +28,36 @@ export async function GET(
   { params }: { params: Promise<{ modelName: string }> }
 ) {
   const { modelName } = await params;
-  
+
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get("page") || "1");
   const pageSize = parseInt(searchParams.get("pageSize") || "10");
   const skip = (page - 1) * pageSize;
 
   try {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === "development" && modelName === 'orders') {
       const store = await getMockStore(modelName);
       const paginatedData = store.slice(skip, skip + pageSize);
       return NextResponse.json({
-          data: paginatedData,
-          total: store.length,
-          page,
-          pageSize
+        data: paginatedData,
+        total: store.length,
+        page,
+        pageSize
       });
     }
 
-    const delegateName = getPrismaModelName(modelName);
-    // @ts-ignore
-    const delegate = prisma[delegateName];
-    
-    if (!delegate) {
-        return NextResponse.json({ error: `Model ${modelName} not found` }, { status: 404 });
+    const table = tables[modelName as keyof typeof tables];
+
+    if (!table) {
+      return NextResponse.json({ error: `Model ${modelName} not found` }, { status: 404 });
     }
 
-    const [data, total] = await Promise.all([
-        delegate.findMany({ skip, take: pageSize }),
-        delegate.count()
+    const [data, totalCount] = await Promise.all([
+      db.select().from(table).limit(pageSize).offset(skip),
+      db.select({ count: count() }).from(table)
     ]);
 
-    return NextResponse.json({ data, total, page, pageSize });
+    return NextResponse.json({ data, total: totalCount[0].count, page, pageSize });
 
   } catch (error) {
     console.error("API Error:", error);
@@ -79,20 +73,23 @@ export async function POST(
   const body = await request.json();
 
   try {
-    if (process.env.NODE_ENV === "development") {
-        const store = await getMockStore(modelName);
-        const newItem = {
-            id: String(Date.now()), 
-            ...body
-        };
-        store.unshift(newItem); 
-        return NextResponse.json(newItem);
+    if (process.env.NODE_ENV === "development" && modelName === 'orders') {
+      const store = await getMockStore(modelName);
+      const newItem = {
+        id: String(Date.now()),
+        ...body
+      };
+      store.unshift(newItem);
+      return NextResponse.json(newItem);
     }
 
-    const delegateName = getPrismaModelName(modelName);
+    const table = tables[modelName as keyof typeof tables];
+    if (!table) {
+      return NextResponse.json({ error: `Model ${modelName} not found` }, { status: 404 });
+    }
+
     // @ts-ignore
-    const delegate = prisma[delegateName];
-    const newItem = await delegate.create({ data: body });
+    const [newItem] = await db.insert(table).values(body).returning();
     return NextResponse.json(newItem);
   } catch (error) {
     console.error("Create Error:", error);

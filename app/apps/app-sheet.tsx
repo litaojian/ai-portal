@@ -26,7 +26,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { createApp, updateApp } from "@/app/actions/apps";
 import { toast } from "sonner";
 import { useEffect } from "react";
-import { Application } from "@/prisma/generated/client";
+import { Application } from "@/lib/db/schema";
 import { FormSheet } from "@/components/common/form-sheet";
 import { Separator } from "@/components/ui/separator";
 
@@ -144,8 +144,8 @@ export function AppSheet({ open, onOpenChange, app }: AppSheetProps) {
   }
 
   return (
-    <FormSheet 
-      open={open} 
+    <FormSheet
+      open={open}
       onOpenChange={onOpenChange}
       title={app ? "编辑应用" : "新增应用"}
       description={app ? "修改应用信息。" : "填写新应用的基础信息。"}
@@ -157,7 +157,7 @@ export function AppSheet({ open, onOpenChange, app }: AppSheetProps) {
               <div className="h-4 w-1 bg-primary rounded-full" />
               <h3 className="font-medium text-sm text-muted-foreground">基本配置</h3>
             </div>
-            
+
             <FormField
               control={form.control}
               name="type"
@@ -286,10 +286,10 @@ export function AppSheet({ open, onOpenChange, app }: AppSheetProps) {
                                         return checked
                                           ? field.onChange([...field.value, item.id])
                                           : field.onChange(
-                                              field.value?.filter(
-                                                (value) => value !== item.id
-                                              )
+                                            field.value?.filter(
+                                              (value) => value !== item.id
                                             )
+                                          )
                                       }}
                                     />
                                   </FormControl>
@@ -359,8 +359,8 @@ export function AppSheet({ open, onOpenChange, app }: AppSheetProps) {
                 </FormItem>
               )}
             />
-            
-             <FormField
+
+            <FormField
               control={form.control}
               name="developer"
               render={({ field }) => (

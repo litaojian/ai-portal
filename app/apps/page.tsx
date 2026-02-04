@@ -13,7 +13,8 @@ import { SidebarInset, SidebarTrigger, SidebarProvider } from "@/components/ui/s
 import { AppSidebar } from "@/components/app-sidebar";
 
 interface PageProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<any>;
+  searchParams: Promise<any>;
 }
 
 export default async function AppsPage({ searchParams }: PageProps) {
@@ -22,7 +23,7 @@ export default async function AppsPage({ searchParams }: PageProps) {
   const query = (params.query as string) || "";
   const type = (params.type as string) || "all";
   const status = (params.status as string) || "all";
-  
+
   const { data, total, totalPages } = await getApps(query, type, status, page);
 
   return (
@@ -42,10 +43,10 @@ export default async function AppsPage({ searchParams }: PageProps) {
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
               <BreadcrumbList>
-                  <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="/">主页</BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="/">主页</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
                   <BreadcrumbPage>应用管理</BreadcrumbPage>
                 </BreadcrumbItem>
@@ -55,17 +56,17 @@ export default async function AppsPage({ searchParams }: PageProps) {
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min p-6">
-             <div className="mb-6">
+            <div className="mb-6">
               <h1 className="text-2xl font-bold tracking-tight">应用管理</h1>
               <p className="text-muted-foreground">
                 管理集成的 AI 应用，控制上架状态和基本信息。
               </p>
             </div>
-            <AppClient 
-              initialData={data} 
-              total={total} 
-              currentPage={page} 
-              totalPages={totalPages} 
+            <AppClient
+              initialData={data}
+              total={total}
+              currentPage={page}
+              totalPages={totalPages}
             />
           </div>
         </div>

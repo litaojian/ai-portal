@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Project } from "@/prisma/generated/client";
+import { Project } from "@/lib/db/schema";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -119,14 +119,14 @@ export function ProjectSheet({ open, onOpenChange, project }: ProjectSheetProps)
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          
+
           {/* 基本信息 Section */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="h-4 w-1 bg-primary rounded-full" />
               <h3 className="font-medium text-sm text-muted-foreground">基本信息</h3>
             </div>
-            
+
             <FormField
               control={form.control}
               name="name"
@@ -160,7 +160,7 @@ export function ProjectSheet({ open, onOpenChange, project }: ProjectSheetProps)
 
           {/* 属性配置 Section */}
           <div className="space-y-4">
-             <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
               <div className="h-4 w-1 bg-primary rounded-full" />
               <h3 className="font-medium text-sm text-muted-foreground">项目属性</h3>
             </div>
@@ -231,7 +231,7 @@ export function ProjectSheet({ open, onOpenChange, project }: ProjectSheetProps)
 
           {/* 时间安排 Section */}
           <div className="space-y-4">
-             <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
               <div className="h-4 w-1 bg-primary rounded-full" />
               <h3 className="font-medium text-sm text-muted-foreground">时间安排</h3>
             </div>

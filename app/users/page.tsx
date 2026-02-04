@@ -13,15 +13,18 @@ import { UserClient } from "./user-client";
 
 import { getUsers } from "@/app/actions/users";
 
+export const dynamic = "force-dynamic";
+
 interface PageProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<any>;
+  searchParams: Promise<any>;
 }
 
 export default async function UsersPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const page = Number(params.page) || 1;
   const query = (params.query as string) || "";
-  
+
   const { data, total, totalPages } = await getUsers(query, page);
 
   return (
@@ -61,11 +64,11 @@ export default async function UsersPage({ searchParams }: PageProps) {
               </p>
             </div>
             {/* Pass Mock Data */}
-            <UserClient 
-              initialData={data} 
-              total={total} 
-              currentPage={page} 
-              totalPages={totalPages} 
+            <UserClient
+              initialData={data}
+              total={total}
+              currentPage={page}
+              totalPages={totalPages}
             />
           </div>
         </div>

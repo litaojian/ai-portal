@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Project } from "@/prisma/generated/client";
+import { Project } from "@/lib/db/schema";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { Pencil, Trash2, Plus } from "lucide-react";
@@ -79,7 +79,7 @@ export function ProjectClient({ data }: ProjectClientProps) {
         if (status === "进行中") variant = "default";
         if (status === "已完成") variant = "secondary";
         if (status === "暂停") variant = "destructive";
-        
+
         return <Badge variant={variant}>{status}</Badge>;
       },
     },
@@ -113,13 +113,13 @@ export function ProjectClient({ data }: ProjectClientProps) {
     },
     {
       id: "actions",
-            cell: ({ row }) => {
-              const project = row.original;
-              return (
-                <div className="flex items-center gap-2 justify-end">
-                  <Button
-                    variant="ghost" 
-      
+      cell: ({ row }) => {
+        const project = row.original;
+        return (
+          <div className="flex items-center gap-2 justify-end">
+            <Button
+              variant="ghost"
+
               size="icon"
               className="h-8 w-8 text-muted-foreground hover:text-primary"
               onClick={() => {
@@ -149,15 +149,15 @@ export function ProjectClient({ data }: ProjectClientProps) {
 
   return (
     <>
-      <DataTable 
-        columns={columns} 
-        data={data} 
-        searchKey="name" 
+      <DataTable
+        columns={columns}
+        data={data}
+        searchKey="name"
         searchPlaceholder="搜索项目名称..."
       >
         <Button onClick={() => {
-            setEditingProject(null);
-            setSheetOpen(true);
+          setEditingProject(null);
+          setSheetOpen(true);
         }}>
           <Plus className="mr-2 h-4 w-4" />
           新建项目
@@ -167,8 +167,8 @@ export function ProjectClient({ data }: ProjectClientProps) {
       <ProjectSheet
         open={sheetOpen}
         onOpenChange={(open) => {
-            setSheetOpen(open);
-            if (!open) setEditingProject(null);
+          setSheetOpen(open);
+          if (!open) setEditingProject(null);
         }}
         project={editingProject}
       />

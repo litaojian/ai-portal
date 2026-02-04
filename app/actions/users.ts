@@ -1,9 +1,11 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/db";
+import { users } from "@/lib/db/schema";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
+import { count, desc, eq, like, or } from "drizzle-orm";
 
 // Validation Schemas
 const userCreateSchema = z.object({
@@ -24,46 +26,41 @@ const userUpdateSchema = z.object({
 // GET: Fetch Users with pagination and search
 export async function getUsers(query?: string, page = 1, limit = 10) {
   const skip = (page - 1) * limit;
-  const where: any = {};
+  let whereClause = undefined;
 
   if (query) {
-    where.OR = [
-      { name: { contains: query } },
-      { email: { contains: query } },
-    ];
+    whereClause = or(
+      like(users.name, `%${query}%`),
+      like(users.email, `%${query}%`)
+    );
   }
 
-  const [data, total] = await Promise.all([
-    prisma.user.findMany({
-      where,
-      skip,
-      take: limit,
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        image: true,
-        role: true,
-        createdAt: true,
-        // Exclude password
-      },
+  const [data, totalCount] = await Promise.all([
+    db.query.users.findMany({
+      where: whereClause,
+      limit,
+      offset: skip,
+      orderBy: [desc(users.createdAt)],
+      columns: {
+        password: false, // Exclude password
+      }
     }),
-    prisma.user.count({ where }),
+    db.select({ count: count() }).from(users).where(whereClause),
   ]);
 
-  return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
+  return { data, total: totalCount[0].count, page, limit, totalPages: Math.ceil(totalCount[0].count / limit) };
 }
 
 // POST: Create User
 export async function createUser(formData: z.infer<typeof userCreateSchema>) {
   try {
     const validated = userCreateSchema.parse(formData);
-    
+
     // Check duplication
-    const existing = await prisma.user.findUnique({
-      where: { email: validated.email },
+    const existing = await db.query.users.findFirst({
+      where: eq(users.email, validated.email)
     });
+
     if (existing) {
       return { success: false, error: "该邮箱已被注册" };
     }
@@ -71,13 +68,12 @@ export async function createUser(formData: z.infer<typeof userCreateSchema>) {
     // Hash password
     const hashedPassword = await bcrypt.hash(validated.password, 10);
 
-    await prisma.user.create({
-      data: {
-        name: validated.name,
-        email: validated.email,
-        password: hashedPassword,
-        role: validated.role,
-      },
+    await db.insert(users).values({
+      name: validated.name,
+      email: validated.email,
+      password: hashedPassword,
+      role: validated.role,
+      emailVerified: new Date(),
     });
 
     revalidatePath("/users");
@@ -94,16 +90,13 @@ export async function updateUser(formData: z.infer<typeof userUpdateSchema>) {
     const { id, password, ...data } = userUpdateSchema.parse(formData);
 
     const updateData: any = { ...data };
-    
+
     // Update password only if provided
     if (password && password.trim() !== "") {
       updateData.password = await bcrypt.hash(password, 10);
     }
 
-    await prisma.user.update({
-      where: { id },
-      data: updateData,
-    });
+    await db.update(users).set(updateData).where(eq(users.id, id));
 
     revalidatePath("/users");
     return { success: true };
@@ -116,9 +109,7 @@ export async function updateUser(formData: z.infer<typeof userUpdateSchema>) {
 // DELETE: Delete User
 export async function deleteUser(id: string) {
   try {
-    await prisma.user.delete({
-      where: { id },
-    });
+    await db.delete(users).where(eq(users.id, id));
     revalidatePath("/users");
     return { success: true };
   } catch (error) {

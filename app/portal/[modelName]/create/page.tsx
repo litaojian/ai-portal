@@ -18,7 +18,8 @@ import { AppSidebar } from "@/components/app-sidebar";
 import PageBuilder from "@/components/dynamic-page/page-builder";
 
 interface PageProps {
-  params: Promise<{ modelName: string }>;
+  params: Promise<any>;
+  searchParams: Promise<any>;
 }
 
 export default async function DynamicCreatePage({ params }: PageProps) {
@@ -62,7 +63,7 @@ export default async function DynamicCreatePage({ params }: PageProps) {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 md:p-8">
-            <PageBuilder pageId={modelName} mode="create" />
+          <PageBuilder pageId={modelName} mode="create" />
         </div>
       </SidebarInset>
     </SidebarProvider>
