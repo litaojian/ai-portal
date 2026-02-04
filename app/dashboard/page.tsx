@@ -1,3 +1,5 @@
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import {
@@ -10,7 +12,9 @@ import { StatCards } from "./components/stat-cards"
 import { VisitorsChart } from "./components/visitors-chart"
 import data from "./data.json"
 
-export default function Page() {
+export default async function Page() {
+  const session = await getServerSession(authOptions)
+
   return (
     <SidebarProvider
       style={
@@ -22,7 +26,7 @@ export default function Page() {
     >
       <AppSidebar variant="inset" />
       <SidebarInset>
-        <SiteHeader />
+        <SiteHeader user={session?.user} />
         <div className="flex flex-1 flex-col">
           <div className="@container/main flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">

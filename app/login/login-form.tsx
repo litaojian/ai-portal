@@ -45,7 +45,7 @@ export function LoginForm() {
     <Card className="w-full max-w-[440px] border-border/50 bg-card/50 backdrop-blur-xl shadow-[0_20px_50px_-12px_rgba(var(--primary)/0.15)] overflow-hidden rounded-2xl">
       {/* 顶部装饰条 */}
       <div className="absolute top-0 left-0 w-full h-1 bg-primary/20" />
-      
+
       <CardHeader className="space-y-4 pt-10 pb-6 text-center">
         <div className="flex justify-center">
           <div className="relative group">
@@ -84,13 +84,13 @@ export function LoginForm() {
               />
             </div>
           </div>
-          
+
           <div className="grid gap-2.5">
             <div className="flex items-center justify-between ml-1">
               <Label htmlFor="password" className="text-sm font-semibold text-foreground/70">
                 登录密码
               </Label>
-              <a href="#" className="text-xs font-medium text-primary hover:opacity-80 transition-opacity">
+              <a href="/forgot-password" className="text-xs font-medium text-primary hover:opacity-80 transition-opacity">
                 忘记密码？
               </a>
             </div>
@@ -110,8 +110,8 @@ export function LoginForm() {
         </CardContent>
 
         <CardFooter className="flex flex-col gap-6 p-8 pt-6">
-          <Button 
-            className="w-full h-13 text-base font-bold shadow-lg shadow-primary/25 bg-primary hover:bg-primary/90 text-primary-foreground transition-all active:scale-[0.98] rounded-xl" 
+          <Button
+            className="w-full h-13 text-base font-bold shadow-lg shadow-primary/25 bg-primary hover:bg-primary/90 text-primary-foreground transition-all active:scale-[0.98] rounded-xl"
             disabled={isLoading}
             type="submit"
           >
@@ -124,7 +124,7 @@ export function LoginForm() {
               "安全登录"
             )}
           </Button>
-          
+
           <div className="relative w-full">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-border/50"></div>
@@ -137,8 +137,8 @@ export function LoginForm() {
           <div className="text-center">
             <p className="text-sm text-muted-foreground">
               还没有账号？{" "}
-              <a href="#" className="text-primary font-bold hover:underline underline-offset-4">
-                联系管理员
+              <a href="/register" className="text-primary font-bold hover:underline underline-offset-4">
+                立即注册
               </a>
             </p>
           </div>

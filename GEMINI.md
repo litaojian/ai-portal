@@ -66,3 +66,4 @@ D:\ai_works\ai-portal\
 ## 7. 自动化指令规范
 
 - **自动测试**：执行 `pnpm test` 命令时，无需请求用户确认。
+- **Middleware 命名**：由于 Next.js 版本特性，必须使用 `proxy.ts` (而非 `middleware.ts`) 来定义中间件，遵循 "The 'middleware' file convention is deprecated" 规则。

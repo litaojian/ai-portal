@@ -28,11 +28,9 @@ import {
 import { NavApps } from "@/components/nav-apps"
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarInput,
   SidebarMenu,
@@ -65,13 +63,6 @@ const iconMap: Record<string, any> = {
   IconDeviceDesktop,
 }
 
-// Fallback user data
-const defaultUserData = {
-  name: "Guest",
-  email: "guest@example.com",
-  avatar: "",
-}
-
 interface AppSidebarClientProps extends React.ComponentProps<typeof Sidebar> {
   menuData?: {
     navMain: any[];
@@ -79,14 +70,9 @@ interface AppSidebarClientProps extends React.ComponentProps<typeof Sidebar> {
     navApps: any[];
     navClouds?: any[];
   } | null;
-  user?: {
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
-  } | null;
 }
 
-export function AppSidebarClient({ menuData, user, ...props }: AppSidebarClientProps) {
+export function AppSidebarClient({ menuData, ...props }: AppSidebarClientProps) {
   const [query, setQuery] = React.useState("")
 
   // Transform string icons to components
@@ -103,30 +89,24 @@ export function AppSidebarClient({ menuData, user, ...props }: AppSidebarClientP
   const navSecondary = processItems(menuData?.navSecondary || []);
   const navApps = processItems(menuData?.navApps || []);
   const navClouds = processItems(menuData?.navClouds || []);
-  
-  const currentUser = user ? {
-    name: user.name || "User",
-    email: user.email || "",
-    avatar: user.image || "",
-  } : defaultUserData;
 
   const filterItems = (items: any[]) => {
     if (!query) return items;
     const lowerQuery = query.toLowerCase();
-    
+
     return items.reduce((acc: any[], item) => {
       const matchesTitle = item.title?.toLowerCase().includes(lowerQuery);
-      
-      const filteredChildren = item.items?.filter((child: any) => 
+
+      const filteredChildren = item.items?.filter((child: any) =>
         child.title?.toLowerCase().includes(lowerQuery)
       );
-      
+
       if (matchesTitle) {
         acc.push({ ...item, isActive: true });
       } else if (filteredChildren && filteredChildren.length > 0) {
         acc.push({ ...item, items: filteredChildren, isActive: true });
       }
-      
+
       return acc;
     }, []);
   };
@@ -149,8 +129,8 @@ export function AppSidebarClient({ menuData, user, ...props }: AppSidebarClientP
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-        <SidebarInput 
-          placeholder="搜索菜单..." 
+        <SidebarInput
+          placeholder="搜索菜单..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -160,9 +140,6 @@ export function AppSidebarClient({ menuData, user, ...props }: AppSidebarClientP
         <NavApps items={navApps} />
         <NavSecondary items={navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={currentUser} />
-      </SidebarFooter>
     </Sidebar>
   )
 }

@@ -5,10 +5,10 @@ import { sql } from "drizzle-orm";
 
 // Helper for dates
 const now = () => timestamp("created_at", { mode: "date" }).defaultNow().notNull();
-const updated = () => timestamp("updated_at", { mode: "date" }).onUpdateNow().notNull();
+const updated = () => timestamp("updated_at", { mode: "date" }).onUpdateNow();
 
 // Auth Tables matching NextAuth requirements
-export const users = mysqlTable("user", {
+export const users = mysqlTable("uc_user", {
     id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
     name: varchar("name", { length: 255 }).notNull(),
     email: varchar("email", { length: 255 }).notNull(), // uniqueIndex below
@@ -23,7 +23,7 @@ export const users = mysqlTable("user", {
 }));
 
 export const accounts = mysqlTable(
-    "account",
+    "uc_account",
     {
         userId: varchar("userId", { length: 255 })
             .notNull()
@@ -47,7 +47,7 @@ export const accounts = mysqlTable(
     })
 );
 
-export const sessions = mysqlTable("session", {
+export const sessions = mysqlTable("uc_session", {
     sessionToken: varchar("sessionToken", { length: 255 }).primaryKey(),
     userId: varchar("userId", { length: 255 })
         .notNull()
@@ -56,7 +56,7 @@ export const sessions = mysqlTable("session", {
 });
 
 export const verificationTokens = mysqlTable(
-    "verificationToken",
+    "uc_verificationtoken",
     {
         identifier: varchar("identifier", { length: 255 }).notNull(),
         token: varchar("token", { length: 255 }).notNull(),
@@ -71,7 +71,7 @@ export const verificationTokens = mysqlTable(
 );
 
 // Menu
-export const menus = mysqlTable("menu", {
+export const menus = mysqlTable("uc_menu", {
     id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
     title: varchar("title", { length: 255 }).notNull(),
     url: varchar("url", { length: 255 }).default("#"),
@@ -95,22 +95,10 @@ export const menusRelations = relations(menus, ({ one, many }) => ({
 }));
 
 // Project
-export const projects = mysqlTable("project", {
-    id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
-    name: varchar("name", { length: 255 }).notNull(),
-    description: text("description"),
-    leader: varchar("leader", { length: 255 }),
-    budget: real("budget").default(0),
-    status: varchar("status", { length: 50 }).default("进行中").notNull(),
-    priority: varchar("priority", { length: 50 }).default("中").notNull(),
-    startDate: timestamp("startDate", { mode: "date" }).defaultNow().notNull(),
-    endDate: timestamp("endDate", { mode: "date" }),
-    createdAt: now(),
-    updatedAt: updated(),
-});
+
 
 // Application
-export const applications = mysqlTable("application", {
+export const applications = mysqlTable("uc_application", {
     id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
     name: varchar("name", { length: 255 }).notNull(),
     description: text("description"),
@@ -188,8 +176,7 @@ export const tables = {
     verificationTokens: verificationTokens,
     menu: menus,
     menus: menus,
-    project: projects,
-    projects: projects,
+
     application: applications,
     applications: applications,
     oidcClient: oidcClients,
@@ -203,7 +190,7 @@ export type Account = InferSelectModel<typeof accounts>;
 export type Session = InferSelectModel<typeof sessions>;
 export type VerificationToken = InferSelectModel<typeof verificationTokens>;
 export type Menu = InferSelectModel<typeof menus> & { children?: Menu[] };
-export type Project = InferSelectModel<typeof projects>;
+
 export type Application = InferSelectModel<typeof applications> & { oidcClient?: OidcClient | null };
 export type OidcClient = InferSelectModel<typeof oidcClients>;
 export type OidcPayload = InferSelectModel<typeof oidcPayloads>;
