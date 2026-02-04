@@ -88,9 +88,20 @@ export async function POST(
       return NextResponse.json({ error: `Model ${modelName} not found` }, { status: 404 });
     }
 
+    // Generate ID if missing (MySQL doesn't support .returning() well with Drizzle)
+    if (!body.id) {
+      body.id = crypto.randomUUID();
+    }
+
+    // Ensure createdAt/updatedAt defaults if not present (though DB might handle it, explicitly setting is safer for JSON return)
+    const now = new Date();
+    if (!body.createdAt) body.createdAt = now;
+    if (!body.updatedAt) body.updatedAt = now;
+
     // @ts-ignore
-    const [newItem] = await db.insert(table).values(body).returning();
-    return NextResponse.json(newItem);
+    await db.insert(table).values(body);
+
+    return NextResponse.json(body);
   } catch (error) {
     console.error("Create Error:", error);
     return NextResponse.json({ error: "Create failed" }, { status: 500 });

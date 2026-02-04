@@ -1,0 +1,136 @@
+{
+    "$schema": "https://ai-portal.com/schemas/page-config.json",
+    "meta": {
+        "key": "users",
+        "title": "用户管理",
+        "description": "管理系统用户及其角色分配",
+        "icon": "Users",
+        "api": "/api/rest/users"
+    },
+    "model": {
+        "fields": {
+            "id": {
+                "label": "ID",
+                "type": "text",
+                "hidden": true,
+                "primaryKey": true
+            },
+            "name": {
+                "label": "用户名",
+                "type": "text",
+                "validation": {
+                    "required": true,
+                    "min": 2
+                }
+            },
+            "email": {
+                "label": "邮箱",
+                "type": "text",
+                "validation": {
+                    "required": true,
+                    "email": true
+                }
+            },
+            "image": {
+                "label": "头像URL",
+                "type": "text"
+            },
+            "role": {
+                "label": "角色",
+                "type": "select",
+                "options": [
+                    {
+                        "label": "管理员",
+                        "value": "ADMIN",
+                        "color": "red"
+                    },
+                    {
+                        "label": "用户",
+                        "value": "USER",
+                        "color": "blue"
+                    }
+                ],
+                "defaultValue": "USER"
+            },
+            "createdAt": {
+                "label": "创建时间",
+                "type": "date",
+                "readonly": true
+            }
+        }
+    },
+    "views": {
+        "search": {
+            "fields": [
+                {
+                    "key": "name",
+                    "placeholder": "搜索用户名"
+                },
+                {
+                    "key": "email",
+                    "placeholder": "搜索邮箱"
+                },
+                {
+                    "key": "role"
+                }
+            ]
+        },
+        "table": {
+            "size": "small",
+            "rownum": true,
+            "columns": [
+                {
+                    "key": "name",
+                    "sortable": true
+                },
+                {
+                    "key": "email",
+                    "copyable": true
+                },
+                {
+                    "key": "role",
+                    "component": "badge"
+                },
+                {
+                    "key": "createdAt",
+                    "width": 180
+                }
+            ],
+            "actions": {
+                "row": [
+                    {
+                        "action": "edit"
+                    },
+                    {
+                        "action": "delete"
+                    }
+                ],
+                "toolbar": [
+                    {
+                        "title": "新增用户",
+                        "action": "create"
+                    }
+                ]
+            },
+            "pagination": {
+                "enabled": true,
+                "pageSize": 10
+            }
+        },
+        "form": {
+            "layout": "grid",
+            "columns": 1,
+            "sections": [
+                {
+                    "title": "基本信息",
+                    "fields": [
+                        "name",
+                        "email",
+                        "role",
+                        "image"
+                    ]
+                }
+            ]
+        }
+    }
+}

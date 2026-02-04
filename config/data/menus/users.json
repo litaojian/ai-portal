@@ -1,0 +1,19 @@
+{
+    "title": "用户",
+    "url": "/portal",
+    "icon": "IconShoppingCart",
+    "order": 2,
+    "isActive": true,
+    "items": [
+        {
+            "title": "用户管理",
+            "url": "/portal/users",
+            "icon": "IconListDetails"
+        },
+        {
+            "title": "角色管理",
+            "url": "/portal/roles",
+            "icon": "IconListDetails"
+        }
+    ]
+}

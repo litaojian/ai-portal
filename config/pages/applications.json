@@ -1,0 +1,175 @@
+{
+    "$schema": "https://ai-portal.com/schemas/page-config.json",
+    "meta": {
+        "key": "applications",
+        "title": "应用管理",
+        "description": "管理接入系统的应用",
+        "icon": "AppWindow",
+        "api": "/api/rest/applications"
+    },
+    "model": {
+        "fields": {
+            "id": {
+                "label": "ID",
+                "type": "text",
+                "hidden": true,
+                "primaryKey": true
+            },
+            "name": {
+                "label": "应用名称",
+                "type": "text",
+                "validation": {
+                    "required": true
+                }
+            },
+            "description": {
+                "label": "描述",
+                "type": "textarea"
+            },
+            "url": {
+                "label": "访问地址",
+                "type": "text",
+                "validation": {
+                    "url": true
+                }
+            },
+            "icon": {
+                "label": "图标",
+                "type": "text"
+            },
+            "type": {
+                "label": "类型",
+                "type": "select",
+                "options": [
+                    {
+                        "label": "内部应用",
+                        "value": "internal",
+                        "color": "blue"
+                    },
+                    {
+                        "label": "第三方应用",
+                        "value": "third_party",
+                        "color": "purple"
+                    }
+                ],
+                "defaultValue": "internal"
+            },
+            "status": {
+                "label": "状态",
+                "type": "select",
+                "options": [
+                    {
+                        "label": "草稿",
+                        "value": "draft",
+                        "color": "gray"
+                    },
+                    {
+                        "label": "已发布",
+                        "value": "published",
+                        "color": "green"
+                    },
+                    {
+                        "label": "下架",
+                        "value": "archived",
+                        "color": "red"
+                    }
+                ],
+                "defaultValue": "draft"
+            },
+            "category": {
+                "label": "分类",
+                "type": "text"
+            }
+        }
+    },
+    "views": {
+        "search": {
+            "fields": [
+                {
+                    "key": "name",
+                    "placeholder": "应用名称"
+                },
+                {
+                    "key": "type"
+                },
+                {
+                    "key": "status"
+                }
+            ]
+        },
+        "table": {
+            "size": "small",
+            "rownum": true,
+            "columns": [
+                {
+                    "key": "icon",
+                    "width": 50,
+                    "component": "image"
+                },
+                {
+                    "key": "name",
+                    "width": 150,
+                    "sortable": true
+                },
+                {
+                    "key": "url",
+                    "copyable": true
+                },
+                {
+                    "key": "type",
+                    "component": "badge"
+                },
+                {
+                    "key": "status",
+                    "component": "badge"
+                }
+            ],
+            "actions": {
+                "row": [
+                    {
+                        "action": "edit"
+                    },
+                    {
+                        "action": "delete"
+                    }
+                ],
+                "toolbar": [
+                    {
+                        "title": "创建应用",
+                        "action": "create"
+                    }
+                ]
+            },
+            "pagination": {
+                "enabled": true,
+                "pageSize": 10
+            }
+        },
+        "form": {
+            "layout": "grid",
+            "columns": 2,
+            "sections": [
+                {
+                    "title": "基本信息",
+                    "fields": [
+                        "name",
+                        "icon",
+                        "url",
+                        "category"
+                    ]
+                },
+                {
+                    "title": "配置",
+                    "fields": [
+                        "type",
+                        "status",
+                        {
+                            "key": "description",
+                            "colSpan": 2
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

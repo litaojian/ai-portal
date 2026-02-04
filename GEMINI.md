@@ -67,3 +67,4 @@ D:\ai_works\ai-portal\
 
 - **自动测试**：执行 `pnpm test` 命令时，无需请求用户确认。
 - **Middleware 命名**：由于 Next.js 版本特性，必须使用 `proxy.ts` (而非 `middleware.ts`) 来定义中间件，遵循 "The 'middleware' file convention is deprecated" 规则。
+- **数据库变更**：禁止 AI 自动执行 `drizzle-kit push` 或直接操作生产数据库结构。必须生成 SQL 脚本供用户手动执行。

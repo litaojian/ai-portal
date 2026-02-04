@@ -165,6 +165,17 @@ export const oidcPayloads = mysqlTable("oidc_payload", {
     expiresIdx: index("oidc_payload_expiresAt_idx").on(table.expiresAt),
 }));
 
+// Role
+export const roles = mysqlTable("uc_role", {
+    id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
+    name: varchar("name", { length: 255 }).notNull(),
+    code: varchar("code", { length: 50 }).notNull().unique(),
+    description: text("description"),
+    status: varchar("status", { length: 50 }).default("enabled").notNull(),
+    createdAt: now(),
+    updatedAt: updated(),
+});
+
 export const tables = {
     user: users,
     users: users,
@@ -176,6 +187,8 @@ export const tables = {
     verificationTokens: verificationTokens,
     menu: menus,
     menus: menus,
+    role: roles,
+    roles: roles,
 
     application: applications,
     applications: applications,
@@ -190,6 +203,7 @@ export type Account = InferSelectModel<typeof accounts>;
 export type Session = InferSelectModel<typeof sessions>;
 export type VerificationToken = InferSelectModel<typeof verificationTokens>;
 export type Menu = InferSelectModel<typeof menus> & { children?: Menu[] };
+export type Role = InferSelectModel<typeof roles>;
 
 export type Application = InferSelectModel<typeof applications> & { oidcClient?: OidcClient | null };
 export type OidcClient = InferSelectModel<typeof oidcClients>;

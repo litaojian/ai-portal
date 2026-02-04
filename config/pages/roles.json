@@ -1,0 +1,132 @@
+{
+    "$schema": "https://ai-portal.com/schemas/page-config.json",
+    "meta": {
+        "key": "roles",
+        "title": "角色管理",
+        "description": "定义系统角色及权限",
+        "icon": "Shield",
+        "api": "/api/rest/roles"
+    },
+    "model": {
+        "fields": {
+            "id": {
+                "label": "ID",
+                "type": "text",
+                "hidden": true,
+                "primaryKey": true
+            },
+            "name": {
+                "label": "角色名称",
+                "type": "text",
+                "validation": {
+                    "required": true
+                }
+            },
+            "code": {
+                "label": "角色代码",
+                "type": "text",
+                "validation": {
+                    "required": true,
+                    "pattern": "^[A-Z0-9_]+$",
+                    "message": "代码只能包含大写字母、数字和下划线"
+                }
+            },
+            "description": {
+                "label": "描述",
+                "type": "textarea"
+            },
+            "status": {
+                "label": "状态",
+                "type": "select",
+                "options": [
+                    {
+                        "label": "启用",
+                        "value": "enabled",
+                        "color": "green"
+                    },
+                    {
+                        "label": "禁用",
+                        "value": "disabled",
+                        "color": "gray"
+                    }
+                ],
+                "defaultValue": "enabled"
+            }
+        }
+    },
+    "views": {
+        "search": {
+            "fields": [
+                {
+                    "key": "name",
+                    "placeholder": "角色名称"
+                },
+                {
+                    "key": "code",
+                    "placeholder": "角色代码"
+                },
+                {
+                    "key": "status"
+                }
+            ]
+        },
+        "table": {
+            "size": "small",
+            "rownum": true,
+            "columns": [
+                {
+                    "key": "name",
+                    "width": 150
+                },
+                {
+                    "key": "code",
+                    "width": 150,
+                    "copyable": true
+                },
+                {
+                    "key": "description"
+                },
+                {
+                    "key": "status",
+                    "component": "badge",
+                    "width": 100
+                }
+            ],
+            "actions": {
+                "row": [
+                    {
+                        "action": "edit"
+                    },
+                    {
+                        "action": "delete"
+                    }
+                ],
+                "toolbar": [
+                    {
+                        "title": "新增角色",
+                        "action": "create"
+                    }
+                ]
+            },
+            "pagination": {
+                "enabled": true,
+                "pageSize": 10
+            }
+        },
+        "form": {
+            "layout": "grid",
+            "columns": 1,
+            "sections": [
+                {
+                    "title": "角色信息",
+                    "fields": [
+                        "name",
+                        "code",
+                        "status",
+                        "description"
+                    ]
+                }
+            ]
+        }
+    }
+}
