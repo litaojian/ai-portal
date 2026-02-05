@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { ConfigService } from '@/lib/config-service';
 import { PageConfig } from '@/lib/schemas/page-config';
-import { DynamicTable } from './dynamic-table'; 
+import { DynamicTable } from './dynamic-table';
 import DynamicForm from './dynamic-form';
 import { DynamicSearch } from './dynamic-search';
 import { useRouter } from 'next/navigation';
@@ -19,17 +19,17 @@ interface PageBuilderProps {
 
 // Stub functions for missing implementations
 const deleteEntity = async (id: string) => {
-    console.warn("deleteEntity not implemented", id);
+  console.warn("deleteEntity not implemented", id);
 };
 
 const handleCustomAction = async (action: string, data: any) => {
-    console.warn("handleCustomAction not implemented", action, data);
+  console.warn("handleCustomAction not implemented", action, data);
 };
 
 export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBuilderProps) {
   const [config, setConfig] = useState<PageConfig | null>(null);
   const [loading, setLoading] = useState(true);
-  
+
   // List View State
   const [listData, setListData] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
@@ -47,7 +47,7 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
 
   useEffect(() => {
     if (config && mode === 'list') {
-        loadListData();
+      loadListData();
     }
   }, [config, mode, pagination, searchParams]);
 
@@ -58,7 +58,7 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
     setConfig(pageConfig);
     // Initialize pageSize from config if available
     if (pageConfig?.views.table.pagination?.pageSize) {
-        setPagination(prev => ({ ...prev, pageSize: pageConfig.views.table.pagination!.pageSize! }));
+      setPagination(prev => ({ ...prev, pageSize: pageConfig.views.table.pagination!.pageSize! }));
     }
     setLoading(false);
   };
@@ -66,22 +66,22 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
   const loadListData = async () => {
     if (!config) return;
     try {
-        const dataService = BizDataService.getInstance();
-        const res = await dataService.fetchAll(config.meta.key, {
-            page: pagination.pageIndex + 1,
-            pageSize: pagination.pageSize,
-            ...searchParams
-        }, config.meta.api);
-        
-        if (Array.isArray(res)) {
-            setListData(res);
-            setTotal(res.length); // Fallback if API returns array
-        } else if (res.data) {
-            setListData(res.data);
-            setTotal(res.total || 0);
-        }
+      const dataService = BizDataService.getInstance();
+      const res = await dataService.fetchAll(config.meta.key, {
+        page: pagination.pageIndex + 1,
+        pageSize: pagination.pageSize,
+        ...searchParams
+      }, config.meta.api);
+
+      if (Array.isArray(res)) {
+        setListData(res);
+        setTotal(res.length); // Fallback if API returns array
+      } else if (res.data) {
+        setListData(res.data);
+        setTotal(res.total || 0);
+      }
     } catch (error) {
-        console.error("Failed to load list data", error);
+      console.error("Failed to load list data", error);
     }
   };
 
@@ -98,16 +98,16 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
   const handleFormSubmit = async (data: any) => {
     if (!config) return;
     try {
-        const dataService = BizDataService.getInstance();
-        if (mode === 'create') {
-            await dataService.create(config.meta.key, data, config.meta.api);
-        } else if (mode === 'edit' && entityId) {
-            await dataService.update(config.meta.key, entityId, data, config.meta.api);
-        }
-        router.push(`/portal/${pageId}`);
+      const dataService = BizDataService.getInstance();
+      if (mode === 'create') {
+        await dataService.create(config.meta.key, data, config.meta.api);
+      } else if (mode === 'edit' && entityId) {
+        await dataService.update(config.meta.key, entityId, data, config.meta.api);
+      }
+      router.push(`/portal/${pageId}`);
     } catch (error) {
-        console.error("Form submission failed", error);
-        // Add toast or error handling here
+      console.error("Form submission failed", error);
+      // Add toast or error handling here
     }
   };
 
@@ -124,9 +124,9 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
       case 'delete':
         if (confirm('确定要删除吗？')) {
           // Implement delete logic with BizDataService
-           const dataService = BizDataService.getInstance();
-           await dataService.delete(config.meta.key, data.id, config.meta.api);
-           loadListData(); // Reload after delete
+          const dataService = BizDataService.getInstance();
+          await dataService.delete(config.meta.key, data.id, config.meta.api);
+          loadListData(); // Reload after delete
         }
         break;
       default:
@@ -145,71 +145,66 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
     <Card className="w-full shadow-sm overflow-hidden min-w-0">
       <CardContent className="p-4 overflow-hidden min-w-0">
         {mode === 'list' && (
-            <>
-                <div className="space-y-4 min-w-0">
-                    <DynamicSearch 
-                        config={config} 
-                        onSearch={handleSearch} 
-                        onReset={handleReset}
-                    />
-                    
-                    <div className="flex items-center justify-end gap-2 border-b pb-4">
-                        {config.views.table.actions?.toolbar?.map((item) => {
-                            const action = typeof item === 'string' ? item : item.action;
-                            const title = typeof item === 'string' ? item : item.title;
-                            const isPrimary = action === 'create';
-                            
-                            let Icon = null;
-                            if (action === 'create') Icon = Plus;
-                            if (action === 'import') Icon = Upload;
-                            if (action === 'export') Icon = Download;
+          <>
+            <div className="space-y-4 min-w-0">
+              <DynamicSearch
+                config={config}
+                onSearch={handleSearch}
+                onReset={handleReset}
+              />
 
-                            return (
-                                <button
-                                    key={action}
-                                    onClick={() => handleAction(action)}
-                                    className={`inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-8 px-3 py-2 ${
-                                        isPrimary 
-                                            ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow" 
-                                            : "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground"
-                                    }`}
-                                >
-                                    {Icon && <Icon className="mr-2 h-3.5 w-3.5" />}
-                                    {title}
-                                </button>
-                            );
-                        })}
-                    </div>
+              <div className="flex items-center justify-end gap-2 border-b pb-4">
+                {config.views.table.actions?.toolbar?.map((item) => {
+                  const action = typeof item === 'string' ? item : item.action;
+                  const title = typeof item === 'string' ? item : item.title;
 
-                    <DynamicTable
-                        config={config}
-                        data={listData}
-                        total={total}
-                        pagination={pagination}
-                        onPaginationChange={setPagination}
-                        onAction={handleAction}
-                    />
-                </div>
-            </>
+                  let Icon = null;
+                  if (action === 'create') Icon = Plus;
+                  if (action === 'import') Icon = Upload;
+                  if (action === 'export') Icon = Download;
+
+                  return (
+                    <button
+                      key={action}
+                      onClick={() => handleAction(action)}
+                      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-8 px-3 py-2 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground"
+                    >
+                      {Icon && <Icon className="mr-2 h-3.5 w-3.5" />}
+                      {title}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <DynamicTable
+                config={config}
+                data={listData}
+                total={total}
+                pagination={pagination}
+                onPaginationChange={setPagination}
+                onAction={handleAction}
+              />
+            </div>
+          </>
         )}
 
         {mode === 'create' && (
-            <DynamicForm
+          <DynamicForm
             config={config}
             mode="create"
             onSubmit={handleFormSubmit}
             onCancel={handleCancel}
-            />
+          />
         )}
 
         {mode === 'edit' && entityId && (
-            <DynamicForm
+          <DynamicForm
             config={config}
             mode="edit"
             entityId={entityId}
             onSubmit={handleFormSubmit}
             onCancel={handleCancel}
-            />
+          />
         )}
       </CardContent>
     </Card>

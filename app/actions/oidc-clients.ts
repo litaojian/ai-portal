@@ -18,17 +18,25 @@ const oidcClientSchema = z.object({
 });
 
 export async function getOidcClients(page = 1, limit = 10) {
-  const skip = (page - 1) * limit;
-  const [data, totalCount] = await Promise.all([
-    db.query.oidcClients.findMany({
-      limit,
-      offset: skip,
-      orderBy: [desc(oidcClients.createdAt)],
-    }),
-    db.select({ count: count() }).from(oidcClients),
-  ]);
+  try {
+    const skip = (page - 1) * limit;
+    const [data, totalCount] = await Promise.all([
+      db.query.oidcClients.findMany({
+        limit,
+        offset: skip,
+        orderBy: [desc(oidcClients.createdAt)],
+      }),
+      db.select({ count: count() }).from(oidcClients),
+    ]);
 
-  return { data, total: totalCount[0].count, page, limit, totalPages: Math.ceil(totalCount[0].count / limit) };
+    return { data, total: totalCount[0].count, page, limit, totalPages: Math.ceil(totalCount[0].count / limit) };
+  } catch (error: any) {
+    // If table doesn't exist, return empty data
+    if (error?.code === 'ER_NO_SUCH_TABLE' || error?.errno === 1146) {
+      return { data: [], total: 0, page, limit, totalPages: 0 };
+    }
+    throw error;
+  }
 }
 
 export async function createOidcClient(formData: z.infer<typeof oidcClientSchema>) {

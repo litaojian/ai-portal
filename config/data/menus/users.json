@@ -1,19 +1,34 @@
 {
-    "title": "用户",
+    "title": "用户权限",
     "url": "/portal",
-    "icon": "IconShoppingCart",
+    "icon": "IconSettings",
     "order": 2,
     "isActive": true,
     "items": [
         {
             "title": "用户管理",
-            "url": "/portal/users",
-            "icon": "IconListDetails"
+            "url": "/portal/admin/users",
+            "icon": "IconUsers"
         },
         {
             "title": "角色管理",
-            "url": "/portal/roles",
-            "icon": "IconListDetails"
+            "url": "/portal/admin/roles",
+            "icon": "IconUserShield"
+        },
+        {
+            "title": "应用管理",
+            "url": "/portal/admin/applications",
+            "icon": "IconApps"
+        },
+        {
+            "title": "OIDC客户端",
+            "url": "/oidc/clients",
+            "icon": "IconKey"
+        },
+        {
+            "title": "菜单管理",
+            "url": "/portal/admin/menus",
+            "icon": "IconBolt"
         }
     ]
 }

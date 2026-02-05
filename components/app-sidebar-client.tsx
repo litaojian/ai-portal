@@ -21,8 +21,10 @@ import {
   IconBolt,
   IconShoppingCart,
   IconUserShield,
+  IconShield,
   IconKey,
   IconDeviceDesktop,
+  IconActivityHeartbeat
 } from "@tabler/icons-react"
 
 import { NavApps } from "@/components/nav-apps"
@@ -60,7 +62,9 @@ const iconMap: Record<string, any> = {
   IconShoppingCart,
   IconUserShield,
   IconKey,
+  IconShield,
   IconDeviceDesktop,
+  IconActivityHeartbeat,
 }
 
 interface AppSidebarClientProps extends React.ComponentProps<typeof Sidebar> {

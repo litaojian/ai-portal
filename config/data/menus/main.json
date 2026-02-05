@@ -1,10 +1,19 @@
 {
-    "title":"工作台",
+    "title": "工作台",
     "url": "/dashboard",
     "icon": "IconDeviceDesktop",
     "order": 1,
     "isActive": true,
-    "items":[
-        { "title": "仪表盘",  "url": "/dashboard", "icon": "IconDashboard" }
+    "items": [
+        {
+            "title": "数据看板",
+            "url": "/dashboard",
+            "icon": "IconDashboard"
+        },
+        {
+            "title": "监控中心",
+            "url": "#",
+            "icon": "IconActivityHeartbeat"
+        }
     ]
 }

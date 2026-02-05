@@ -1,7 +1,7 @@
 {
     "$schema": "https://ai-portal.com/schemas/page-config.json",
     "meta": {
-        "key": "applications",
+        "key": "admin/applications",
         "title": "应用管理",
         "description": "管理接入系统的应用",
         "icon": "AppWindow",

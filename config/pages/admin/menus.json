@@ -1,0 +1,155 @@
+{
+    "$schema": "https://ai-portal.com/schemas/page-config.json",
+    "meta": {
+        "key": "admin/menus",
+        "title": "菜单管理",
+        "description": "管理系统导航菜单",
+        "icon": "LayoutList",
+        "api": "/api/rest/menus"
+    },
+    "model": {
+        "fields": {
+            "id": {
+                "label": "ID",
+                "type": "text",
+                "hidden": true,
+                "primaryKey": true
+            },
+            "title": {
+                "label": "菜单标题",
+                "type": "text",
+                "validation": {
+                    "required": true,
+                    "min": 2
+                }
+            },
+            "url": {
+                "label": "链接地址",
+                "type": "text",
+                "defaultValue": "#"
+            },
+            "icon": {
+                "label": "图标",
+                "type": "text"
+            },
+            "group": {
+                "label": "分组",
+                "type": "select",
+                "options": [
+                    {
+                        "label": "主菜单",
+                        "value": "main",
+                        "color": "blue"
+                    },
+                    {
+                        "label": "云服务",
+                        "value": "clouds",
+                        "color": "purple"
+                    },
+                    {
+                        "label": "其他",
+                        "value": "other",
+                        "color": "gray"
+                    }
+                ],
+                "defaultValue": "main"
+            },
+            "order": {
+                "label": "排序",
+                "type": "number",
+                "defaultValue": 0
+            },
+            "parentId": {
+                "label": "父菜单",
+                "type": "text",
+                "hidden": true
+            },
+            "createdAt": {
+                "label": "创建时间",
+                "type": "date",
+                "readonly": true
+            }
+        }
+    },
+    "views": {
+        "search": {
+            "fields": [
+                {
+                    "key": "title",
+                    "placeholder": "搜索菜单标题"
+                },
+                {
+                    "key": "group"
+                }
+            ]
+        },
+        "table": {
+            "size": "small",
+            "rownum": true,
+            "columns": [
+                {
+                    "key": "title",
+                    "sortable": true,
+                    "width": 200
+                },
+                {
+                    "key": "url",
+                    "copyable": true
+                },
+                {
+                    "key": "icon",
+                    "width": 100
+                },
+                {
+                    "key": "group",
+                    "component": "badge",
+                    "width": 100
+                },
+                {
+                    "key": "order",
+                    "width": 80
+                },
+                {
+                    "key": "createdAt",
+                    "width": 180
+                }
+            ],
+            "actions": {
+                "row": [
+                    {
+                        "action": "edit"
+                    },
+                    {
+                        "action": "delete"
+                    }
+                ],
+                "toolbar": [
+                    {
+                        "title": "新增菜单",
+                        "action": "create"
+                    }
+                ]
+            },
+            "pagination": {
+                "enabled": true,
+                "pageSize": 10
+            }
+        },
+        "form": {
+            "layout": "grid",
+            "columns": 2,
+            "sections": [
+                {
+                    "title": "基本信息",
+                    "fields": [
+                        "title",
+                        "url",
+                        "icon",
+                        "group",
+                        "order"
+                    ]
+                }
+            ]
+        }
+    }
+}

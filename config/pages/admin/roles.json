@@ -1,11 +1,11 @@
 {
     "$schema": "https://ai-portal.com/schemas/page-config.json",
     "meta": {
-        "key": "users",
-        "title": "用户管理",
-        "description": "管理系统用户及其角色分配",
-        "icon": "Users",
-        "api": "/api/rest/users"
+        "key": "admin/roles",
+        "title": "角色管理",
+        "description": "定义系统角色及权限",
+        "icon": "Shield",
+        "api": "/api/rest/roles"
     },
     "model": {
         "fields": {
@@ -16,46 +16,41 @@
                 "primaryKey": true
             },
             "name": {
-                "label": "用户名",
+                "label": "角色名称",
+                "type": "text",
+                "validation": {
+                    "required": true
+                }
+            },
+            "code": {
+                "label": "角色代码",
                 "type": "text",
                 "validation": {
                     "required": true,
-                    "min": 2
+                    "pattern": "^[A-Z0-9_]+$",
+                    "message": "代码只能包含大写字母、数字和下划线"
                 }
             },
-            "email": {
-                "label": "邮箱",
-                "type": "text",
-                "validation": {
-                    "required": true,
-                    "email": true
-                }
+            "description": {
+                "label": "描述",
+                "type": "textarea"
             },
-            "image": {
-                "label": "头像URL",
-                "type": "text"
-            },
-            "role": {
-                "label": "角色",
+            "status": {
+                "label": "状态",
                 "type": "select",
                 "options": [
                     {
-                        "label": "管理员",
-                        "value": "ADMIN",
-                        "color": "red"
+                        "label": "启用",
+                        "value": "enabled",
+                        "color": "green"
                     },
                     {
-                        "label": "用户",
-                        "value": "USER",
-                        "color": "blue"
+                        "label": "禁用",
+                        "value": "disabled",
+                        "color": "gray"
                     }
                 ],
-                "defaultValue": "USER"
-            },
-            "createdAt": {
-                "label": "创建时间",
-                "type": "date",
-                "readonly": true
+                "defaultValue": "enabled"
             }
         }
     },
@@ -64,14 +59,14 @@
             "fields": [
                 {
                     "key": "name",
-                    "placeholder": "搜索用户名"
+                    "placeholder": "角色名称"
                 },
                 {
-                    "key": "email",
-                    "placeholder": "搜索邮箱"
+                    "key": "code",
+                    "placeholder": "角色代码"
                 },
                 {
-                    "key": "role"
+                    "key": "status"
                 }
             ]
         },
@@ -81,19 +76,20 @@
             "columns": [
                 {
                     "key": "name",
-                    "sortable": true
+                    "width": 150
                 },
                 {
-                    "key": "email",
+                    "key": "code",
+                    "width": 150,
                     "copyable": true
                 },
                 {
-                    "key": "role",
-                    "component": "badge"
+                    "key": "description"
                 },
                 {
-                    "key": "createdAt",
-                    "width": 180
+                    "key": "status",
+                    "component": "badge",
+                    "width": 100
                 }
             ],
             "actions": {
@@ -107,7 +103,7 @@
                 ],
                 "toolbar": [
                     {
-                        "title": "新增用户",
+                        "title": "新增角色",
                         "action": "create"
                     }
                 ]
@@ -122,12 +118,12 @@
             "columns": 1,
             "sections": [
                 {
-                    "title": "基本信息",
+                    "title": "角色信息",
                     "fields": [
                         "name",
-                        "email",
-                        "role",
-                        "image"
+                        "code",
+                        "status",
+                        "description"
                     ]
                 }
             ]

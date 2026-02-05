@@ -68,3 +68,59 @@ D:\ai_works\ai-portal\
 - **自动测试**：执行 `pnpm test` 命令时，无需请求用户确认。
 - **Middleware 命名**：由于 Next.js 版本特性，必须使用 `proxy.ts` (而非 `middleware.ts`) 来定义中间件，遵循 "The 'middleware' file convention is deprecated" 规则。
 - **数据库变更**：禁止 AI 自动执行 `drizzle-kit push` 或直接操作生产数据库结构。必须生成 SQL 脚本供用户手动执行。
+
+## 8. 常见问题处理规范
+
+### React 水合（Hydration）错误
+
+**问题表现**：
+控制台警告 "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties"
+
+**常见原因**：
+1. 使用 `Date.now()`、`Math.random()` 等在服务器和客户端产生不同值的代码
+2. 使用浏览器专有 API（`window`、`localStorage`、`matchMedia`）
+3. 条件渲染基于客户端状态（如屏幕尺寸）
+
+**解决方案**：
+
+#### 1. 客户端状态 Hook（如 `useIsMobile`）
+```typescript
+// ❌ 错误：初始值 undefined 导致 SSR/客户端不一致
+const [isMobile, setIsMobile] = useState<boolean | undefined>(undefined)
+return !!isMobile  // SSR: false, 客户端可能: true
+
+// ✅ 正确：初始值与 SSR 一致
+const [isMobile, setIsMobile] = useState<boolean>(false)
+useEffect(() => {
+  // 仅在客户端更新
+  setIsMobile(window.innerWidth < 768)
+}, [])
+return isMobile
+```
+
+#### 2. 条件渲染
+```typescript
+// ❌ 错误：直接使用客户端状态
+{isMobile && <MobileMenu />}
+
+// ✅ 正确：使用 suppressHydrationWarning 或延迟渲染
+const [mounted, setMounted] = useState(false)
+useEffect(() => setMounted(true), [])
+{mounted && isMobile && <MobileMenu />}
+```
+
+#### 3. 时间/随机数
+```typescript
+// ❌ 错误：每次渲染不同
+<div>{Date.now()}</div>
+
+// ✅ 正确：使用 useEffect 更新
+const [timestamp, setTimestamp] = useState<number | null>(null)
+useEffect(() => setTimestamp(Date.now()), [])
+<div>{timestamp || '加载中...'}</div>
+```
+
+**检查清单**：
+- [ ] 所有使用 `window`/`document` 的代码都在 `useEffect` 中
+- [ ] 客户端状态的初始值与 SSR 渲染一致
+- [ ] 避免在组件顶层直接使用浏览器 API
