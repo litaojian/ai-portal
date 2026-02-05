@@ -8,9 +8,9 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "3000:3000"
+      - "${WEB_PORT}:3000"
     environment:
-      - DATABASE_URL=mysql://root:password@db:3306/ai_portal
+      - DATABASE_URL=mysql://root:${MYSQL_ROOT_PASSWORD}@db:3306/ai-portal
       - NEXTAUTH_URL=http://localhost:3000
       - NEXTAUTH_SECRET=changeme
     depends_on:
@@ -21,10 +21,10 @@ services:
     image: mysql:8.4
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: ai_portal
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ai-portal
     ports:
-      - "3306:3306"
+      - "${DB_PORT}:3306"
     volumes:
       - db_data:/var/lib/mysql
 
