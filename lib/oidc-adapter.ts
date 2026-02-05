@@ -77,6 +77,7 @@ export class DrizzleOidcAdapter implements Adapter {
         client_uri: client.clientUri || undefined,
         logo_uri: client.logoUri || undefined,
         redirect_uris: parseJson(client.redirectUris),
+        post_logout_redirect_uris: parseJson(client.postLogoutRedirectUris) || [],
         grant_types: parseJson(client.grantTypes),
         response_types: parseJson(client.responseTypes),
         scope: client.scope,

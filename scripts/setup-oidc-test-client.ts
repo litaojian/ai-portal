@@ -11,6 +11,7 @@ async function main() {
   const clientId = "oidc-test-client";
   const clientSecret = "test-secret";
   const redirectUri = "http://localhost:3001/callback";
+  const postLogoutRedirectUri = "http://localhost:3001/";
 
   // 1. 检查是否存在
   const existing = await db.query.oidcClients.findFirst({
@@ -18,26 +19,27 @@ async function main() {
   });
 
   if (existing) {
-    console.log("⚠️ 测试客户端已存在，跳过创建。");
-    console.log(`Client ID: ${clientId}`);
-    console.log(`Client Secret: ${clientSecret}`);
+    console.log("⚠️ 测试客户端已存在，正在更新配置...");
+    await db.update(oidcClients)
+      .set({
+        clientSecret,
+        redirectUris: [redirectUri],
+        postLogoutRedirectUris: [postLogoutRedirectUri],
+        updatedAt: new Date(),
+      })
+      .where(eq(oidcClients.clientId, clientId));
+    console.log("✅ 测试客户端配置更新成功！");
     process.exit(0);
   }
 
-  // 2. 创建应用关联 (可选，为了外键约束，这里简单处理，如果 schema 允许 appId 为空则跳过，
-  // 但根据 schema definition: applicationId references applications.id)
-  // 让我们先检查 schema，applicationId 是可以为空的吗？
-  // schema.ts: applicationId: varchar... references ... { onDelete: "cascade" }
-  // 如果没有 notNull()，则是可空的。
-  // 查看 schema 定义: applicationId: varchar... (没有 .notNull()) -> 可空。
-
-  // 3. 插入 Client
+  // 2. 插入 Client
   try {
     await db.insert(oidcClients).values({
       clientId,
       clientSecret,
       clientName: "OIDC 流程测试应用",
       redirectUris: [redirectUri], // JSON
+      postLogoutRedirectUris: [postLogoutRedirectUri], // JSON
       grantTypes: ["authorization_code", "refresh_token"], // JSON
       responseTypes: ["code"], // JSON
       scope: "openid profile email",
@@ -47,6 +49,7 @@ async function main() {
     console.log("✅ 测试客户端注册成功！");
     console.log(`Client ID: ${clientId}`);
     console.log(`Redirect URI: ${redirectUri}`);
+    console.log(`Post Logout Redirect URI: ${postLogoutRedirectUri}`);
   } catch (error) {
     console.error("❌ 注册失败:", error);
   }

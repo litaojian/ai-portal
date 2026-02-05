@@ -126,6 +126,7 @@ export async function initializeSystem(input: InitializeSystemInput) {
                         \`clientUri\` varchar(255) DEFAULT NULL,
                         \`logoUri\` varchar(255) DEFAULT NULL,
                         \`redirectUris\` json NOT NULL,
+                        \`postLogoutRedirectUris\` json DEFAULT NULL,
                         \`grantTypes\` json NOT NULL,
                         \`responseTypes\` json NOT NULL,
                         \`scope\` varchar(255) DEFAULT 'openid profile email',

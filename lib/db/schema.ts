@@ -129,6 +129,7 @@ export const oidcClients = mysqlTable("oidc_client", {
     clientUri: varchar("clientUri", { length: 255 }),
     logoUri: varchar("logoUri", { length: 255 }),
     redirectUris: json("redirectUris").notNull(), // Changed to JSON
+    postLogoutRedirectUris: json("postLogoutRedirectUris"), // New field
     grantTypes: json("grantTypes").notNull(), // Changed to JSON
     responseTypes: json("responseTypes").notNull(), // Changed to JSON
     scope: varchar("scope", { length: 255 }).default("openid profile email"),
