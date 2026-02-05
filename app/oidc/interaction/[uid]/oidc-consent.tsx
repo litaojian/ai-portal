@@ -5,19 +5,36 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+
 export function OidcConsent({ uid, client, scopes }: { uid: string, client: string, scopes: string }) {
   const [loading, setLoading] = useState(false);
 
   const handleAllow = async () => {
     setLoading(true);
-    const url = await submitConsent(uid);
-    window.location.href = url;
+    try {
+      const url = await submitConsent(uid);
+      console.log("ltj Redirecting to:", url);
+      //const result = await fetch(url);
+      //console.log("ltj Fetch result:", result);
+
+      window.location.href = url;
+    } catch (error: any) {
+      toast.error(error.message || "Consent failed");
+      setLoading(false);
+    }
   };
 
   const handleDeny = async () => {
     setLoading(true);
-    const url = await abortInteraction(uid);
-    window.location.href = url;
+    try {
+      const url = await abortInteraction(uid);
+      window.location.href = url;
+    } catch (error: any) {
+      toast.error(error.message || "Abort failed");
+      setLoading(false);
+    }
   };
 
   return (
@@ -35,8 +52,14 @@ export function OidcConsent({ uid, client, scopes }: { uid: string, client: stri
         </ul>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
-        <Button variant="outline" onClick={handleDeny} disabled={loading}>Deny</Button>
-        <Button onClick={handleAllow} disabled={loading}>Authorize</Button>
+        <Button variant="outline" onClick={handleDeny} disabled={loading}>
+          {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+          Deny
+        </Button>
+        <Button onClick={handleAllow} disabled={loading}>
+          {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+          Authorize
+        </Button>
       </CardFooter>
     </Card>
   );

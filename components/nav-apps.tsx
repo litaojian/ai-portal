@@ -53,11 +53,9 @@ export function NavApps({
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton asChild isActive={subItem.isActive}>
-                        <a href={subItem.url}>
-                          {subItem.icon && <subItem.icon />}
-                          <span>{subItem.title}</span>
-                        </a>
+                      <SidebarMenuSubButton href={subItem.url} isActive={subItem.isActive}>
+                        {subItem.icon && <subItem.icon />}
+                        <span>{subItem.title}</span>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}

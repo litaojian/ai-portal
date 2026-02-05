@@ -16,32 +16,59 @@ export class DrizzleOidcAdapter implements Adapter {
     }
 
     const expiresAt = expiresIn ? new Date(Date.now() + expiresIn * 1000) : null;
-
-    await db.insert(oidcPayloads).values({
+    const data = {
       id,
       type: this.name,
       payload: payload,
       grantId: payload.grantId,
       userCode: payload.userCode,
-      uid: payload.uid,
+      uid: payload.uid || id,
       expiresAt,
       updatedAt: new Date(),
-    }).onDuplicateKeyUpdate({
-      set: {
-        payload: payload,
-        expiresAt,
-        updatedAt: new Date(),
-      }
+    };
+
+    console.log(`[OIDC Adapter] Upserting ${this.name} id=${id} uid=${payload.uid}`, {
+      keys: Object.keys(payload),
+      returnTo: payload.returnTo,
+      redirectUri: (payload.params as any)?.redirect_uri
     });
+
+    // Special logging for Grant to debug payload issue
+    if (this.name === "Grant") {
+      console.log(`[OIDC Adapter] Grant FULL PAYLOAD:`, JSON.stringify(payload, null, 2));
+    }
+
+    try {
+      // 使用先删除后插入的方式，确保在某些 MySQL 环境下的稳定性
+      await db.delete(oidcPayloads).where(eq(oidcPayloads.id, id));
+      await db.insert(oidcPayloads).values(data);
+    } catch (err) {
+      console.error(`[OIDC Adapter] Upsert failed for ${this.name} id=${id}`, err);
+      throw err;
+    }
   }
 
   async find(id: string) {
+    console.log(`[OIDC Adapter] Finding ${this.name} id=${id}`);
     if (this.name === "Client") {
       const client = await db.query.oidcClients.findFirst({
         where: eq(oidcClients.clientId, id),
       });
 
-      if (!client) return undefined;
+      if (!client) {
+        return undefined;
+      }
+
+      const parseJson = (val: any) => {
+        if (typeof val === 'string') {
+          try {
+            return JSON.parse(val);
+          } catch (e) {
+            return val;
+          }
+        }
+        return val;
+      };
 
       const result: any = {
         client_id: client.clientId,
@@ -49,16 +76,14 @@ export class DrizzleOidcAdapter implements Adapter {
         client_name: client.clientName || undefined,
         client_uri: client.clientUri || undefined,
         logo_uri: client.logoUri || undefined,
-        redirect_uris: client.redirectUris, // Already parsed
-        grant_types: client.grantTypes,
-        response_types: client.responseTypes,
+        redirect_uris: parseJson(client.redirectUris),
+        grant_types: parseJson(client.grantTypes),
+        response_types: parseJson(client.responseTypes),
         scope: client.scope,
         token_endpoint_auth_method: client.tokenEndpointAuthMethod,
       };
 
       Object.keys(result).forEach(key => result[key] === undefined && delete result[key]);
-
-      console.log(`[OIDC Adapter] Found client: ${id}`, result);
       return result;
     }
 
@@ -66,16 +91,29 @@ export class DrizzleOidcAdapter implements Adapter {
       where: eq(oidcPayloads.id, id),
     });
 
-    if (!doc) return undefined;
+    if (!doc) {
+      return undefined;
+    }
 
     if (doc.expiresAt && doc.expiresAt < new Date()) {
       return undefined;
     }
 
-    return {
-      ...(doc.payload as any),
+    let payload = doc.payload;
+    if (typeof payload === 'string') {
+      try {
+        payload = JSON.parse(payload);
+      } catch (e) {
+        console.error(`[OIDC Adapter] Failed to parse payload for ${id}:`, e);
+      }
+    }
+
+    const result = {
+      ...(payload as any),
       ...(doc.consumedAt ? { consumed: true } : undefined),
     };
+
+    return result;
   }
 
   async findByUserCode(userCode: string) {
