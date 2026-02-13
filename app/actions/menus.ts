@@ -11,17 +11,20 @@ export async function getMenus() {
     const configMenus = await getMenusFromConfig();
 
     // Mapping rules:
-    // - main.json -> navMain
-    // - second.json -> navSecondary
-    // - others -> navApps
+    // - second.json -> navSecondary (if exists)
+    // - EVERYTHING ELSE -> navMain (sorted by order)
 
-    const navMain = configMenus.filter(m => m.id === "main");
+    const navMain = configMenus.filter(m => m.id !== "second");
 
     // For secondary, we want the items INSIDE the second.json config
     const secondMenuConfig = configMenus.find(m => m.id === "second");
     const navSecondary = secondMenuConfig?.items || [];
 
-    const navApps = configMenus.filter(m => m.id !== "main" && m.id !== "second");
+    // navApps is now empty or can be removed if not used, 
+    // but to keep type compatibility we return empty array or just distinct if needed.
+    // The previous logic tried to separate 'navApps', but the UI only renders navMain.
+    // So we move them to navMain.
+    const navApps: any[] = []; // Explicitly empty as they are now in navMain
 
     // 2. Fetch from Database (Optional: Keep clouds from DB or remove if fully file-based)
     // For now, I will keep 'clouds' from DB as it wasn't mentioned in the override, 

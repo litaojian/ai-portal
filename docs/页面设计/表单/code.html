@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Concise Business Form Page</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13a4ec",
+                        "background-light": "#ffffff",
+                        "background-dark": "#0f172a",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "PingFang SC", "Microsoft YaHei", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.375rem",
+                        "xl": "0.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer base {
+            body { @apply antialiased; }
+            input, select, textarea { @apply focus:ring-0 focus:ring-offset-0; }
+        }
+        .form-label-width {
+            width: 140px;
+            flex-shrink: 0;
+        }
+        .progress-indicator {
+            height: 2px;
+            background: #e2e8f0;
+            width: 100%;
+            position: relative;
+        }
+        .progress-fill {
+            height: 2px;
+            background: #13a4ec;
+            width: 33.33%;
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-background-dark font-display text-slate-700 dark:text-slate-300 min-h-screen">
+<div class="fixed top-0 left-0 w-full z-[60]">
+<div class="progress-indicator dark:bg-slate-800">
+<div class="progress-fill"></div>
+</div>
+</div>
+<div class="relative flex flex-col w-full min-h-screen">
+<header class="flex items-center justify-between px-6 py-3 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 sticky top-0.5 z-50">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<div class="size-7 bg-primary flex items-center justify-center rounded text-white">
+<span class="material-symbols-outlined text-lg">dashboard</span>
+</div>
+<h1 class="text-base font-bold tracking-tight text-slate-900 dark:text-white">企业管理门户</h1>
+</div>
+<nav class="hidden md:flex items-center gap-5">
+<a class="text-xs font-medium text-slate-500 hover:text-primary transition-colors" href="#">首页</a>
+<a class="text-xs font-semibold text-primary" href="#">工作台</a>
+<a class="text-xs font-medium text-slate-500 hover:text-primary transition-colors" href="#">数据看板</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="size-8 rounded-full overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPBxAy3nZHS18iG33mOD4-yUqi8ybg2mnyoFHU1daixPHpdOKy543B6QAhR5kx9HRWJzHH-wWBmQMRIOJHfnH5y_G-etI4Zn-GyD4kd7Fq_Tr2d7-DqaHe7CkCw6yBmrDQT0y_aL4NuL1NIb4kwRFW-SQqjQuIVGJCXJHwTgE60dl-RJFuiIELQtm3SmkGybi91Yq_ZyKWhY8MMEsOCyCvUHvPaecDH9lmgFepctyF-cJFB-X8aQJocg2_LLkQb5KBX3-3Hxy7W_Z8"/>
+</div>
+</div>
+</header>
+<main class="flex-1 max-w-[800px] mx-auto w-full px-6 py-8">
+<div class="mb-8">
+<h2 class="text-xl font-bold text-slate-900 dark:text-white mb-1">创建新销售订单</h2>
+<p class="text-xs text-slate-400">请准确填写订单信息，带 * 为必填项。</p>
+</div>
+<div class="space-y-10">
+<section>
+<div class="flex items-center gap-3 mb-5">
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">基本信息</h3>
+<div class="flex-1 h-px bg-slate-100 dark:bg-slate-800"></div>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-4">
+<label class="form-label-width text-sm text-slate-600 dark:text-slate-400">
+                            订单名称 <span class="text-red-500">*</span>
+</label>
+<input class="flex-1 text-sm bg-transparent border-slate-200 dark:border-slate-800 rounded px-3 py-1.5 focus:border-primary transition-all" placeholder="请输入订单名称" type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<label class="form-label-width text-sm text-slate-600 dark:text-slate-400">
+                            客户名称
+                        </label>
+<div class="flex-1 relative">
+<select class="w-full text-sm bg-transparent border-slate-200 dark:border-slate-800 rounded px-3 py-1.5 appearance-none focus:border-primary transition-all">
+<option>请选择合作客户</option>
+<option>科技有限公司</option>
+<option>环球贸易集团</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-lg">expand_more</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<label class="form-label-width text-sm text-slate-600 dark:text-slate-400">
+                            期望交付日期
+                        </label>
+<input class="flex-1 text-sm bg-transparent border-slate-200 dark:border-slate-800 rounded px-3 py-1.5 focus:border-primary transition-all" type="date"/>
+</div>
+<div class="flex items-center gap-4">
+<label class="form-label-width text-sm text-slate-600 dark:text-slate-400">
+                            项目优先级
+                        </label>
+<div class="flex items-center gap-6">
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="w-4 h-4 text-primary border-slate-300 focus:ring-0" name="priority" type="radio"/>
+<span class="text-sm">普通</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input checked="" class="w-4 h-4 text-primary border-slate-300 focus:ring-0" name="priority" type="radio"/>
+<span class="text-sm">紧急</span>
+</label>
+</div>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center gap-3 mb-5">
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">详细说明</h3>
+<div class="flex-1 h-px bg-slate-100 dark:bg-slate-800"></div>
+</div>
+<div class="space-y-4">
+<div class="flex gap-4">
+<label class="form-label-width text-sm text-slate-600 dark:text-slate-400 pt-1.5">
+                            需求描述
+                        </label>
+<textarea class="flex-1 text-sm bg-transparent border-slate-200 dark:border-slate-800 rounded p-3 min-h-[80px] focus:border-primary transition-all" placeholder="请详细描述订单的特殊要求..."></textarea>
+</div>
+<div class="flex items-center gap-4">
+<label class="form-label-width text-sm text-slate-600 dark:text-slate-400">
+                            附件资料
+                        </label>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-3 py-1.5 border border-slate-200 dark:border-slate-800 rounded hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-lg">upload_file</span>
+<span class="text-sm">选择文件</span>
+</button>
+<span class="text-xs text-slate-400">支持 PDF, JPG, PNG (最大 10MB)</span>
+</div>
+</div>
+</div>
+</section>
+<div class="flex gap-3 px-4 py-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-800">
+<span class="material-symbols-outlined text-primary text-xl">info</span>
+<p class="text-xs text-slate-500 leading-normal">
+<strong>提示：</strong> 您填写的订单信息将在提交后进入自动初筛流程。如需稍后继续填写，请点击“存为草稿”。
+                </p>
+</div>
+</div>
+</main>
+<footer class="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm border-t border-slate-100 dark:border-slate-800 px-6 py-3 z-50">
+<div class="max-w-[800px] mx-auto flex items-center justify-between">
+<button class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs font-medium transition-colors">
+                放弃编辑
+            </button>
+<div class="flex items-center gap-3">
+<button class="px-5 py-1.5 rounded border border-slate-200 dark:border-slate-700 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                    取消
+                </button>
+<button class="px-5 py-1.5 rounded border border-primary/30 text-primary text-xs font-semibold hover:bg-primary/5 transition-colors">
+                    存为草稿
+                </button>
+<button class="px-8 py-1.5 rounded bg-primary text-white text-xs font-bold hover:opacity-90 transition-all">
+                    提交审核
+                </button>
+</div>
+</div>
+</footer>
+</div>
+
+</body></html>

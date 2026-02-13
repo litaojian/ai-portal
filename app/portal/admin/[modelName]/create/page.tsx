@@ -1,5 +1,9 @@
 import { getPageConfig } from "@/lib/page-config-loader";
 import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { SiteHeader } from "@/components/site-header";
+
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -26,6 +30,8 @@ export default async function AdminDynamicCreatePage({ params }: PageProps) {
     const { modelName } = await params;
     const configKey = `admin/${modelName}`;
     const config = await getPageConfig(configKey);
+    const session = await getServerSession(authOptions);
+
 
     if (!config) {
         return notFound();
@@ -42,27 +48,16 @@ export default async function AdminDynamicCreatePage({ params }: PageProps) {
         >
             <AppSidebar variant="inset" />
             <SidebarInset>
-                <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-                    <div className="flex items-center gap-2 px-4">
-                        <SidebarTrigger className="-ml-1" />
-                        <Separator orientation="vertical" className="mr-2 h-4" />
-                        <Breadcrumb>
-                            <BreadcrumbList>
-                                <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href="/">首页</BreadcrumbLink>
-                                </BreadcrumbItem>
-                                <BreadcrumbSeparator className="hidden md:block" />
-                                <BreadcrumbItem className="hidden md:block">
-                                    <BreadcrumbLink href={`/portal/admin/${modelName}`}>{config.meta.title}</BreadcrumbLink>
-                                </BreadcrumbItem>
-                                <BreadcrumbSeparator className="hidden md:block" />
-                                <BreadcrumbItem>
-                                    <BreadcrumbPage>新建</BreadcrumbPage>
-                                </BreadcrumbItem>
-                            </BreadcrumbList>
-                        </Breadcrumb>
-                    </div>
-                </header>
+
+                <SiteHeader
+                    user={session?.user}
+                    breadcrumbs={[
+                        { label: "首页", href: "/" },
+                        { label: config.meta.title, href: `/portal/admin/${modelName}` },
+                        { label: "新建" }
+                    ]}
+                />
+
                 <div className="flex flex-1 flex-col gap-4 p-4 md:p-8">
                     <PageBuilder pageId={configKey} mode="create" />
                 </div>

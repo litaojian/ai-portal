@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Streamlined Order Management View V3</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#1890ff",
+                        "background-light": "#f0f2f5",
+                        "background-dark": "#0f172a",
+                    },
+                    fontFamily: {
+                        display: ["PingFang SC", "Microsoft YaHei", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "6px",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark transition-colors duration-200">
+<div class="flex h-screen overflow-hidden">
+<aside class="w-16 flex flex-col items-center py-4 bg-[#001529] text-white/70 space-y-6 z-20">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center text-white mb-4">
+<span class="material-icons text-xl">grid_view</span>
+</div>
+<nav class="flex flex-col space-y-4">
+<button class="p-2 hover:bg-white/10 rounded-lg transition-colors text-white"><span class="material-icons">dashboard</span></button>
+<button class="p-2 hover:bg-white/10 rounded-lg transition-colors"><span class="material-icons">shopping_cart</span></button>
+<button class="p-2 hover:bg-white/10 rounded-lg transition-colors"><span class="material-icons">inventory_2</span></button>
+<button class="p-2 hover:bg-white/10 rounded-lg transition-colors"><span class="material-icons">groups</span></button>
+<button class="p-2 hover:bg-white/10 rounded-lg transition-colors"><span class="material-icons">analytics</span></button>
+<button class="p-2 hover:bg-white/10 rounded-lg transition-colors"><span class="material-icons">settings</span></button>
+</nav>
+<div class="mt-auto flex flex-col space-y-4">
+<button class="p-2 hover:bg-white/10 rounded-lg transition-colors" id="themeToggle">
+<span class="material-icons">dark_mode</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-slate-500 overflow-hidden ring-2 ring-white/20">
+<img alt="Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6muGGUMjW7S0G2F0TMtvQrqt6bnW50yoUOb9OSC_h7xn2io4vq7EHrXl9zUIh9XwmSDpKFZObPSL1LHW2j16dmEI4rEOEOHa9caaFK31w_nbzgXAtFaJ3lLQCg7PB5CulBsvpvop6ixJcNhFfgZMUC8WILhqZL5FSSEtW2iDoFIy4BlVPW5htrTMQSy8NG_5aVeXiYvv7YGYE0kbbrFLck7dPV6eOPYY2W8zvLDLRQSQm-tQ0e_mZlGKuT1TByTaJOiUgV62_LRGP"/>
+</div>
+</div>
+</aside>
+<div class="flex-1 flex flex-col min-w-0">
+<header class="h-14 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6">
+<div class="flex items-center space-x-4">
+<nav class="flex text-sm text-slate-500 dark:text-slate-400 items-center">
+<span class="hover:text-primary cursor-pointer">首页</span>
+<span class="mx-2">/</span>
+<span class="hover:text-primary cursor-pointer">销售管理</span>
+<span class="mx-2">/</span>
+<span class="text-slate-900 dark:text-slate-100 font-medium">销售订单</span>
+</nav>
+</div>
+<div class="flex items-center space-x-4">
+<div class="relative group">
+<span class="material-icons text-slate-400 hover:text-primary cursor-pointer">notifications</span>
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-slate-900"></span>
+</div>
+<span class="material-icons text-slate-400 hover:text-primary cursor-pointer">help_outline</span>
+</div>
+</header>
+<div class="flex-1 flex flex-col overflow-hidden">
+<section class="flex-1 flex flex-col bg-slate-50 dark:bg-background-dark p-6 overflow-hidden">
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 mb-6 shadow-sm">
+<div class="flex items-end justify-between">
+<div class="flex flex-wrap items-end gap-4 flex-1">
+<div class="w-48">
+<label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">订单编号</label>
+<input class="w-full h-9 text-sm rounded border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:ring-primary focus:border-primary" placeholder="输入订单号..." type="text"/>
+</div>
+<div class="w-56">
+<label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">客户名称</label>
+<select class="w-full h-9 text-sm rounded border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 focus:ring-primary focus:border-primary">
+<option>全部客户</option>
+<option>上海实业有限公司</option>
+<option>北京科技有限公司</option>
+</select>
+</div>
+<div class="w-64">
+<label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1.5">日期范围</label>
+<div class="flex items-center space-x-1">
+<input class="w-full h-9 text-sm rounded border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200" type="date"/>
+<span class="text-slate-400">-</span>
+<input class="w-full h-9 text-sm rounded border-slate-300 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200" type="date"/>
+</div>
+</div>
+<div class="flex items-center h-9 space-x-4 mb-0.5 px-2">
+<label class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-300 cursor-pointer">
+<input class="rounded text-primary focus:ring-primary dark:bg-slate-800 border-slate-300 dark:border-slate-700" type="checkbox"/>
+<span>进行中</span>
+</label>
+<label class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-300 cursor-pointer">
+<input checked="" class="rounded text-primary focus:ring-primary dark:bg-slate-800 border-slate-300 dark:border-slate-700" type="checkbox"/>
+<span>已完成</span>
+</label>
+<label class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-300 cursor-pointer">
+<input class="rounded text-primary focus:ring-primary dark:bg-slate-800 border-slate-300 dark:border-slate-700" type="checkbox"/>
+<span>已取消</span>
+</label>
+</div>
+</div>
+<div class="flex items-center space-x-3 ml-4">
+<button class="h-9 px-4 bg-primary text-white rounded text-sm font-medium shadow-sm hover:bg-blue-600 transition-colors">查询</button>
+<button class="h-9 px-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">重置</button>
+<button class="h-9 px-2 text-slate-400 hover:text-primary transition-colors flex items-center" title="更多筛选">
+<span class="material-icons">filter_list</span>
+<span class="material-icons text-sm ml-0.5">expand_more</span>
+</button>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center mb-6">
+<h1 class="text-xl font-semibold text-slate-800 dark:text-slate-100">订单列表 <span class="text-sm font-normal text-slate-500 ml-2">共 42 条记录</span></h1>
+<div class="flex items-center space-x-3">
+<button class="flex items-center px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-sm text-slate-700 dark:text-slate-200 hover:shadow-sm transition-all">
+<span class="material-icons text-sm mr-2">print</span> 打印
+                        </button>
+<button class="flex items-center px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-sm text-slate-700 dark:text-slate-200 hover:shadow-sm transition-all">
+<span class="material-icons text-sm mr-2">file_download</span> 导出
+                        </button>
+<button class="flex items-center px-4 py-2 bg-primary text-white rounded text-sm font-medium shadow-sm hover:shadow-md transition-all">
+<span class="material-icons text-sm mr-2">add</span> 新增订单
+                        </button>
+</div>
+</div>
+<div class="flex-1 bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden">
+<div class="flex-1 overflow-auto custom-scrollbar">
+<table class="w-full text-left border-collapse min-w-[800px]">
+<thead class="bg-slate-50 dark:bg-slate-800/50 sticky top-0 z-10 border-b border-slate-200 dark:border-slate-800">
+<tr>
+<th class="px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider w-10">
+<input class="rounded border-slate-300 dark:border-slate-700 dark:bg-slate-800 text-primary" type="checkbox"/>
+</th>
+<th class="px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">单据编号</th>
+<th class="px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">单据日期</th>
+<th class="px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">客户名称</th>
+<th class="px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">总金额 (¥)</th>
+<th class="px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">销售人员</th>
+<th class="px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">状态</th>
+<th class="px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center">操作</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors group">
+<td class="px-4 py-4"><input class="rounded border-slate-300 dark:border-slate-700 dark:bg-slate-800 text-primary" type="checkbox"/></td>
+<td class="px-4 py-4 text-sm font-medium text-primary hover:underline cursor-pointer">SO20260208-0001</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">2026-02-08</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">上海华兴贸易有限公司</td>
+<td class="px-4 py-4 text-sm text-slate-900 dark:text-slate-100 text-right font-mono">12,450.00</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">张晓明</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">已完成</span>
+</td>
+<td class="px-4 py-4 text-center">
+<button class="text-slate-400 hover:text-primary"><span class="material-icons text-sm">more_horiz</span></button>
+</td>
+</tr>
+<tr class="bg-slate-50/30 dark:bg-slate-800/10 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors group">
+<td class="px-4 py-4"><input class="rounded border-slate-300 dark:border-slate-700 dark:bg-slate-800 text-primary" type="checkbox"/></td>
+<td class="px-4 py-4 text-sm font-medium text-primary hover:underline cursor-pointer">SO20260208-0002</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">2026-02-08</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">北京信捷达科技有限公司</td>
+<td class="px-4 py-4 text-sm text-slate-900 dark:text-slate-100 text-right font-mono">5,800.00</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">李涛</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">进行中</span>
+</td>
+<td class="px-4 py-4 text-center">
+<button class="text-slate-400 hover:text-primary"><span class="material-icons text-sm">more_horiz</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors group">
+<td class="px-4 py-4"><input class="rounded border-slate-300 dark:border-slate-700 dark:bg-slate-800 text-primary" type="checkbox"/></td>
+<td class="px-4 py-4 text-sm font-medium text-primary hover:underline cursor-pointer">SO20260207-0098</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">2026-02-07</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">深圳越海全球物流</td>
+<td class="px-4 py-4 text-sm text-slate-900 dark:text-slate-100 text-right font-mono">82,100.50</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">陈志远</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400">已完成</span>
+</td>
+<td class="px-4 py-4 text-center">
+<button class="text-slate-400 hover:text-primary"><span class="material-icons text-sm">more_horiz</span></button>
+</td>
+</tr>
+<tr class="bg-slate-50/30 dark:bg-slate-800/10 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors group">
+<td class="px-4 py-4"><input class="rounded border-slate-300 dark:border-slate-700 dark:bg-slate-800 text-primary" type="checkbox"/></td>
+<td class="px-4 py-4 text-sm font-medium text-primary hover:underline cursor-pointer">SO20260207-0095</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">2026-02-07</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">成都鼎盛建设集团</td>
+<td class="px-4 py-4 text-sm text-slate-900 dark:text-slate-100 text-right font-mono">3,400.00</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">李涛</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400">已取消</span>
+</td>
+<td class="px-4 py-4 text-center">
+<button class="text-slate-400 hover:text-primary"><span class="material-icons text-sm">more_horiz</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors group">
+<td class="px-4 py-4"><input class="rounded border-slate-300 dark:border-slate-700 dark:bg-slate-800 text-primary" type="checkbox"/></td>
+<td class="px-4 py-4 text-sm font-medium text-primary hover:underline cursor-pointer">SO20260206-0042</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">2026-02-06</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">广州易通电子商务</td>
+<td class="px-4 py-4 text-sm text-slate-900 dark:text-slate-100 text-right font-mono">15,900.00</td>
+<td class="px-4 py-4 text-sm text-slate-600 dark:text-slate-300">张晓明</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">进行中</span>
+</td>
+<td class="px-4 py-4 text-center">
+<button class="text-slate-400 hover:text-primary"><span class="material-icons text-sm">more_horiz</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="h-14 px-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-slate-900">
+<div class="text-xs text-slate-500 dark:text-slate-400">显示 1 到 10 条，共 42 条</div>
+<div class="flex space-x-1">
+<button class="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30">
+<span class="material-icons text-base">chevron_left</span>
+</button>
+<button class="px-3 py-1 text-xs rounded bg-primary text-white font-medium">1</button>
+<button class="px-3 py-1 text-xs rounded hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-400">2</button>
+<button class="px-3 py-1 text-xs rounded hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-400">3</button>
+<button class="px-3 py-1 text-xs rounded hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-400">4</button>
+<button class="px-3 py-1 text-xs rounded hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-400">5</button>
+<button class="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800">
+<span class="material-icons text-base">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</div>
+<script>
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const themeIcon = themeToggle.querySelector('.material-icons');
+    themeToggle.addEventListener('click', () => {
+        if (html.classList.contains('dark')) {
+            html.classList.remove('dark');
+            themeIcon.textContent = 'dark_mode';
+        } else {
+            html.classList.add('dark');
+            themeIcon.textContent = 'light_mode';
+        }
+    });
+</script>
+
+</body></html>

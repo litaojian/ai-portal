@@ -169,113 +169,113 @@ export function DynamicTable({
 
     dynamicColumns.push(...dataColumns);
 
-        // 4. Add Actions Column
-        if (config.views.table.actions?.row && config.views.table.actions.row.length > 0) {
-            dynamicColumns.push({
-                id: "actions",
-                header: "操作",
-                            cell: ({ row }) => {
-                                const checkCondition = (conditions: any) => {
-                                    if (!conditions) return true;
-                                    return Object.entries(conditions).every(([key, cond]: [string, any]) => {
-                                        const rowValue = row.getValue(key);
-                                        
-                                        // Handle simple values (backwards compatibility)
-                                        if (typeof cond !== 'object' || Array.isArray(cond)) {
-                                            if (Array.isArray(cond)) {
-                                                return cond.includes(rowValue as any);
-                                            }
-                                            return rowValue === cond;
-                                        }
-                
-                                        // Handle complex objects with operators
-                                        const { operator, value } = cond;
-                                        switch (operator) {
-                                            case 'in':
-                                                return Array.isArray(value) && value.includes(rowValue);
-                                            case 'nin':
-                                                return Array.isArray(value) && !value.includes(rowValue);
-                                            case 'eq':
-                                                return rowValue === value;
-                                            case 'ne':
-                                                return rowValue !== value;
-                                            case 'gt':
-                                                return Number(rowValue) > Number(value);
-                                            case 'lt':
-                                                return Number(rowValue) < Number(value);
-                                            default:
-                                                return true;
-                                        }
-                                    });
-                                };
-                
-                                                return (
-                
-                                                    <div className="flex items-center justify-end gap-1">
-                
-                                                        {config.views.table.actions?.row?.map((item) => {
-                
-                                                            const action = typeof item === 'string' ? item : item.action;
-                
-                                                            const conditions = typeof item === 'string' ? undefined : item.conditions;
-                
-                                                            
-                
-                                                            if (!checkCondition(conditions)) return null;
-                
-                                
-                
-                                                            let Icon = Eye;
-                
-                                                            let colorClass = "text-muted-foreground hover:text-primary";
-                
-                                                            if (action === 'edit') Icon = Pencil;
-                
-                                                            if (action === 'delete') {
-                
-                                                                 Icon = Trash2;
-                
-                                                                 colorClass = "text-muted-foreground hover:text-destructive";
-                
-                                                            }
-                
-                                                            
-                
-                                                            return (
-                
-                                                                <Button
-                
-                                                                    key={action}
-                
-                                                                    variant="ghost"
-                
-                                                                    size="icon"
-                
-                                                                    className={cn("h-7 w-7", colorClass)}
-                
-                                                                    onClick={() => onAction?.(action, row.original)}
-                
-                                                                >
-                
-                                                                    <Icon className="h-3.5 w-3.5" />
-                
-                                                                </Button>
-                
-                                                            );
-                
-                                                        })}
-                
-                                                    </div>
-                
-                                                );
-                
-                                            },
-                
-                                            meta: { align: 'right' }
-                
-                                        });
-                
-                                    }
+    // 4. Add Actions Column
+    if (config.views.table.actions?.row && config.views.table.actions.row.length > 0) {
+      dynamicColumns.push({
+        id: "actions",
+        header: "操作",
+        cell: ({ row }) => {
+          const checkCondition = (conditions: any) => {
+            if (!conditions) return true;
+            return Object.entries(conditions).every(([key, cond]: [string, any]) => {
+              const rowValue = row.getValue(key);
+
+              // Handle simple values (backwards compatibility)
+              if (typeof cond !== 'object' || Array.isArray(cond)) {
+                if (Array.isArray(cond)) {
+                  return cond.includes(rowValue as any);
+                }
+                return rowValue === cond;
+              }
+
+              // Handle complex objects with operators
+              const { operator, value } = cond;
+              switch (operator) {
+                case 'in':
+                  return Array.isArray(value) && value.includes(rowValue);
+                case 'nin':
+                  return Array.isArray(value) && !value.includes(rowValue);
+                case 'eq':
+                  return rowValue === value;
+                case 'ne':
+                  return rowValue !== value;
+                case 'gt':
+                  return Number(rowValue) > Number(value);
+                case 'lt':
+                  return Number(rowValue) < Number(value);
+                default:
+                  return true;
+              }
+            });
+          };
+
+          return (
+
+            <div className="flex items-center justify-end gap-1">
+
+              {config.views.table.actions?.row?.map((item) => {
+
+                const action = typeof item === 'string' ? item : item.action;
+
+                const conditions = typeof item === 'string' ? undefined : item.conditions;
+
+
+
+                if (!checkCondition(conditions)) return null;
+
+
+
+                let Icon = Eye;
+
+                let colorClass = "text-muted-foreground hover:text-primary";
+
+                if (action === 'edit') Icon = Pencil;
+
+                if (action === 'delete') {
+
+                  Icon = Trash2;
+
+                  colorClass = "text-muted-foreground hover:text-destructive";
+
+                }
+
+
+
+                return (
+
+                  <Button
+
+                    key={action}
+
+                    variant="ghost"
+
+                    size="icon"
+
+                    className={cn("h-7 w-7", colorClass)}
+
+                    onClick={() => onAction?.(action, row.original)}
+
+                  >
+
+                    <Icon className="h-3.5 w-3.5" />
+
+                  </Button>
+
+                );
+
+              })}
+
+            </div>
+
+          );
+
+        },
+
+        meta: { align: 'right' }
+
+      });
+
+    }
     return dynamicColumns;
   }, [config, onAction, data]);
 
@@ -296,69 +296,141 @@ export function DynamicTable({
     onRowSelectionChange: setRowSelection,
   });
 
-    return (
+  return (
 
-      <div className="space-y-4 min-w-0 w-full">
+    <div className="h-full flex flex-col min-w-0 w-full">
 
-        <div className="rounded-md border overflow-hidden">
+      <div className="flex-1 overflow-auto min-h-0 border-b">
 
-          <Table>
+        <Table>
 
-            <TableHeader className="bg-muted/50">
+          <TableHeader className="bg-muted/50">
 
-              {table.getHeaderGroups().map((headerGroup) => (
+            {table.getHeaderGroups().map((headerGroup) => (
 
-                <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id}>
 
-                  {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map((header) => {
 
-                    const align = (header.column.columnDef.meta as any)?.align || 'left';
+                  const align = (header.column.columnDef.meta as any)?.align || 'left';
+
+                  const style: React.CSSProperties = {
+
+                    width: header.getSize() !== 150 ? `${header.getSize()}px` : 'auto',
+
+                    minWidth: header.column.columnDef.minSize ? `${header.column.columnDef.minSize}px` : undefined,
+
+                    maxWidth: header.column.columnDef.maxSize ? `${header.column.columnDef.maxSize}px` : undefined,
+
+                  };
+
+
+
+                  return (
+
+                    <TableHead
+
+                      key={header.id}
+
+                      style={style}
+
+                      className={cn(
+
+                        isSmall ? "h-8 py-1" : "h-10",
+
+                        align === 'center' && "text-center",
+
+                        align === 'right' && "text-right"
+
+                      )}
+
+                    >
+
+                      {header.isPlaceholder
+
+                        ? null
+
+                        : flexRender(
+
+                          header.column.columnDef.header,
+
+                          header.getContext()
+
+                        )}
+
+                    </TableHead>
+
+                  );
+
+                })}
+
+              </TableRow>
+
+            ))}
+
+          </TableHeader>
+
+          <TableBody>
+
+            {table.getRowModel().rows?.length ? (
+
+              table.getRowModel().rows.map((row) => (
+
+                <TableRow
+
+                  key={row.id}
+
+                  data-state={row.getIsSelected() && "selected"}
+
+                  className="hover:bg-muted/30 transition-colors"
+
+                >
+
+                  {row.getVisibleCells().map((cell) => {
+
+                    const align = (cell.column.columnDef.meta as any)?.align || 'left';
 
                     const style: React.CSSProperties = {
 
-                      width: header.getSize() !== 150 ? `${header.getSize()}px` : 'auto',
+                      width: cell.column.getSize() !== 150 ? `${cell.column.getSize()}px` : 'auto',
 
-                      minWidth: header.column.columnDef.minSize ? `${header.column.columnDef.minSize}px` : undefined,
+                      minWidth: cell.column.columnDef.minSize ? `${cell.column.columnDef.minSize}px` : undefined,
 
-                      maxWidth: header.column.columnDef.maxSize ? `${header.column.columnDef.maxSize}px` : undefined,
+                      maxWidth: cell.column.columnDef.maxSize ? `${cell.column.columnDef.maxSize}px` : undefined,
 
                     };
 
-                    
+
 
                     return (
 
-                      <TableHead 
+                      <TableCell
 
-                        key={header.id}
+                        key={cell.id}
 
                         style={style}
 
                         className={cn(
 
-                          isSmall ? "h-8 py-1" : "h-10",
+                          isSmall ? "py-1 px-2 text-xs" : "py-3",
 
                           align === 'center' && "text-center",
 
-                          align === 'right' && "text-right"
+                          align === 'right' && "text-right font-tabular-nums"
 
                         )}
 
                       >
 
-                        {header.isPlaceholder
+                        {flexRender(
 
-                          ? null
+                          cell.column.columnDef.cell,
 
-                          : flexRender(
+                          cell.getContext()
 
-                              header.column.columnDef.header,
+                        )}
 
-                              header.getContext()
-
-                            )}
-
-                      </TableHead>
+                      </TableCell>
 
                     );
 
@@ -366,101 +438,29 @@ export function DynamicTable({
 
                 </TableRow>
 
-              ))}
+              ))
 
-            </TableHeader>
+            ) : (
 
-            <TableBody>
+              <TableRow>
 
-              {table.getRowModel().rows?.length ? (
+                <TableCell
 
-                table.getRowModel().rows.map((row) => (
+                  colSpan={columns.length}
 
-                  <TableRow
+                  className="h-24 text-center"
 
-                    key={row.id}
+                >
 
-                    data-state={row.getIsSelected() && "selected"}
+                  暂无数据
 
-                    className="hover:bg-muted/30 transition-colors"
+                </TableCell>
 
-                  >
+              </TableRow>
 
-                    {row.getVisibleCells().map((cell) => {
+            )}
 
-                      const align = (cell.column.columnDef.meta as any)?.align || 'left';
-
-                      const style: React.CSSProperties = {
-
-                        width: cell.column.getSize() !== 150 ? `${cell.column.getSize()}px` : 'auto',
-
-                        minWidth: cell.column.columnDef.minSize ? `${cell.column.columnDef.minSize}px` : undefined,
-
-                        maxWidth: cell.column.columnDef.maxSize ? `${cell.column.columnDef.maxSize}px` : undefined,
-
-                      };
-
-  
-
-                      return (
-
-                        <TableCell 
-
-                          key={cell.id}
-
-                          style={style}
-
-                          className={cn(
-
-                            isSmall ? "py-1 px-2 text-xs" : "py-3",
-
-                            align === 'center' && "text-center",
-
-                            align === 'right' && "text-right font-tabular-nums"
-
-                          )}
-
-                        >
-
-                          {flexRender(
-
-                            cell.column.columnDef.cell,
-
-                            cell.getContext()
-
-                          )}
-
-                        </TableCell>
-
-                      );
-
-                    })}
-
-                  </TableRow>
-
-                ))
-
-              ) : (
-
-                <TableRow>
-
-                  <TableCell
-
-                    colSpan={columns.length}
-
-                    className="h-24 text-center"
-
-                  >
-
-                    暂无数据
-
-                  </TableCell>
-
-                </TableRow>
-
-              )}
-
-            </TableBody>
+          </TableBody>
           {config.views.table.summary && data.length > 0 && (
             <TableFooter className="border-t-2 border-primary/20 bg-muted/30">
               <TableRow className="hover:bg-transparent">
@@ -490,7 +490,7 @@ export function DynamicTable({
           )}
         </Table>
       </div>
-      <div className="flex items-center justify-between px-2">
+      <div className="flex items-center justify-between px-2 py-2 border-t shrink-0">
         <div className="text-xs text-muted-foreground">
           共 <strong>{total}</strong> 条
         </div>

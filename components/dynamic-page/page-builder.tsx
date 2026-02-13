@@ -10,6 +10,13 @@ import { useRouter } from 'next/navigation';
 import { BizDataService } from '@/lib/biz-data-service';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, Upload, Download } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 
 interface PageBuilderProps {
   pageId: string;
@@ -38,6 +45,12 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
     pageSize: 10
   });
   const [searchParams, setSearchParams] = useState<Record<string, any>>({});
+
+  // Dialog State
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogMode, setDialogMode] = useState<'create' | 'edit'>('create');
+  const [currentEntityId, setCurrentEntityId] = useState<string | undefined>(undefined);
+
 
   const router = useRouter();
 
@@ -99,12 +112,13 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
     if (!config) return;
     try {
       const dataService = BizDataService.getInstance();
-      if (mode === 'create') {
+      if (dialogMode === 'create') {
         await dataService.create(config.meta.key, data, config.meta.api);
-      } else if (mode === 'edit' && entityId) {
-        await dataService.update(config.meta.key, entityId, data, config.meta.api);
+      } else if (dialogMode === 'edit' && currentEntityId) {
+        await dataService.update(config.meta.key, currentEntityId, data, config.meta.api);
       }
-      router.push(`/portal/${pageId}`);
+      setDialogOpen(false);
+      loadListData(); // Refresh list
     } catch (error) {
       console.error("Form submission failed", error);
       // Add toast or error handling here
@@ -116,10 +130,14 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
 
     switch (action) {
       case 'create':
-        router.push(`/portal/${pageId}/create`);
+        setDialogMode('create');
+        setCurrentEntityId(undefined);
+        setDialogOpen(true);
         break;
       case 'edit':
-        router.push(`/portal/${pageId}/edit/${data.id}`);
+        setDialogMode('edit');
+        setCurrentEntityId(data.id);
+        setDialogOpen(true);
         break;
       case 'delete':
         if (confirm('确定要删除吗？')) {
@@ -142,40 +160,51 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
   if (!config) return <div>页面配置不存在</div>;
 
   return (
-    <Card className="w-full shadow-sm overflow-hidden min-w-0">
-      <CardContent className="p-4 overflow-hidden min-w-0">
-        {mode === 'list' && (
-          <>
-            <div className="space-y-4 min-w-0">
-              <DynamicSearch
-                config={config}
-                onSearch={handleSearch}
-                onReset={handleReset}
-              />
+    <div className="h-full flex flex-col space-y-4">
+      {/* Search Area */}
+      {config.views.search?.fields && config.views.search.fields.length > 0 && (
+        <div className="bg-background border rounded-lg p-3 shadow-sm">
+          <DynamicSearch
+            config={config}
+            onSearch={handleSearch}
+            onReset={handleReset}
+          />
+        </div>
+      )}
 
-              <div className="flex items-center justify-end gap-2 border-b pb-4">
-                {config.views.table.actions?.toolbar?.map((item) => {
-                  const action = typeof item === 'string' ? item : item.action;
-                  const title = typeof item === 'string' ? item : item.title;
+      {/* Toolbar & Table Area */}
+      <Card className="flex-1 min-h-0 flex flex-col shadow-sm px-6 pb-6 pt-3">
+        <CardContent className="p-0 flex-1 flex flex-col min-h-0">
+          {/* Toolbar */}
+          <div className="flex items-center justify-between px-4 py-2 border-b shrink-0">
+            <div className="font-medium text-lg">{config.meta.title}列表</div>
+            <div className="flex items-center gap-2">
+              {config.views.table.actions?.toolbar?.map((item) => {
+                const action = typeof item === 'string' ? item : item.action;
+                const title = typeof item === 'string' ? item : item.title;
 
-                  let Icon = null;
-                  if (action === 'create') Icon = Plus;
-                  if (action === 'import') Icon = Upload;
-                  if (action === 'export') Icon = Download;
+                let Icon = null;
+                if (action === 'create') Icon = Plus;
+                if (action === 'import') Icon = Upload;
+                if (action === 'export') Icon = Download;
 
-                  return (
-                    <button
-                      key={action}
-                      onClick={() => handleAction(action)}
-                      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-8 px-3 py-2 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground"
-                    >
-                      {Icon && <Icon className="mr-2 h-3.5 w-3.5" />}
-                      {title}
-                    </button>
-                  );
-                })}
-              </div>
+                return (
+                  <button
+                    key={action}
+                    onClick={() => handleAction(action)}
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-8 px-3 py-2 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground"
+                  >
+                    {Icon && <Icon className="mr-2 h-3.5 w-3.5" />}
+                    {title}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
+          {/* Table */}
+          <div className="flex-1 min-h-0 relative">
+            <div className="absolute inset-0">
               <DynamicTable
                 config={config}
                 data={listData}
@@ -185,28 +214,26 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
                 onAction={handleAction}
               />
             </div>
-          </>
-        )}
-
-        {mode === 'create' && (
+          </div>
+        </CardContent>
+      </Card>
+      {/* Dialog for Create/Edit */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {dialogMode === 'create' ? `新建${config.meta.title}` : `编辑${config.meta.title}`}
+            </DialogTitle>
+          </DialogHeader>
           <DynamicForm
             config={config}
-            mode="create"
+            mode={dialogMode}
+            entityId={currentEntityId}
             onSubmit={handleFormSubmit}
-            onCancel={handleCancel}
+            onCancel={() => setDialogOpen(false)}
           />
-        )}
-
-        {mode === 'edit' && entityId && (
-          <DynamicForm
-            config={config}
-            mode="edit"
-            entityId={entityId}
-            onSubmit={handleFormSubmit}
-            onCancel={handleCancel}
-          />
-        )}
-      </CardContent>
-    </Card>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }

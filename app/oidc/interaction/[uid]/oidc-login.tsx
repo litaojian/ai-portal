@@ -44,7 +44,7 @@ export function OidcLogin({ uid }: { uid: string }) {
   };
 
   return (
-    <Card className="w-full max-w-[440px] border-border/50 bg-card/50 backdrop-blur-xl shadow-[0_20px_50px_-12px_rgba(var(--primary)/0.15)] overflow-hidden rounded-2xl relative">
+    <Card className="w-full max-w-[640px] border-border/50 bg-card/50 backdrop-blur-xl shadow-[0_20px_50px_-12px_rgba(var(--primary)/0.15)] overflow-hidden rounded-2xl relative">
       {/* 顶部装饰条 */}
       <div className="absolute top-0 left-0 w-full h-1 bg-primary/20" />
 

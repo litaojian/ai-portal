@@ -42,7 +42,7 @@ export function DynamicSearch({ config, onSearch, onReset }: DynamicSearchProps)
   };
 
   return (
-    <form onSubmit={handleSearch} className="mb-4">
+    <form onSubmit={handleSearch}>
       <div className="flex flex-wrap items-end gap-4">
         {config.views.search.fields.map((searchField) => {
           const fieldDef = config.model.fields[searchField.key];
@@ -53,7 +53,7 @@ export function DynamicSearch({ config, onSearch, onReset }: DynamicSearchProps)
               <label className="text-xs font-medium text-muted-foreground whitespace-nowrap block">
                 {searchField.label || fieldDef.label}
               </label>
-              
+
               {fieldDef.type === 'select' ? (
                 <Select
                   value={values[searchField.key] || "all"}
@@ -72,7 +72,7 @@ export function DynamicSearch({ config, onSearch, onReset }: DynamicSearchProps)
                   </SelectContent>
                 </Select>
               ) : fieldDef.type === 'date' ? (
-                 <Input
+                <Input
                   type="date"
                   className="!h-8 w-full !text-xs !px-2"
                   value={values[searchField.key] || ""}
@@ -89,7 +89,7 @@ export function DynamicSearch({ config, onSearch, onReset }: DynamicSearchProps)
             </div>
           );
         })}
-        
+
         <div className="flex items-center gap-2 ml-auto">
           <Button type="submit" size="sm" className="h-8 px-4">
             <Search className="mr-2 h-3.5 w-3.5" />

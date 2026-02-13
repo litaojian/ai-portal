@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>企业自定义小组件门户 - V3 优化版</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0066FF",
+                        "accent": "#6366f1",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "PingFang SC", "Microsoft YaHei", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.375rem", "lg": "0.75rem", "xl": "1rem", "2xl": "1.5rem" },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer components {
+            .glass-card {
+                @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)];
+            }
+            .dark .glass-card {
+                @apply bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 shadow-2xl;
+            }
+            .drag-handle {
+                cursor: grab;
+            }
+            .drag-handle:active {
+                cursor: grabbing;
+            }
+            .subtle-gradient {
+                background: radial-gradient(circle at 0% 0%, #f1f5f9 0%, #f8fafc 100%);
+            }
+            .dark .subtle-gradient {
+                background: radial-gradient(circle at 0% 0%, #1e293b 0%, #0f172a 100%);
+            }
+        }
+    </style>
+</head>
+<body class="subtle-gradient font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex h-screen flex-col overflow-hidden">
+<header class="flex items-center justify-between border-b border-slate-200/60 dark:border-slate-800/60 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md px-8 py-3.5 z-50">
+<div class="flex items-center gap-10">
+<div class="flex items-center gap-3">
+<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent text-white shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">space_dashboard</span>
+</div>
+<div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">智能工作门户</h2>
+<p class="text-[10px] text-slate-500 font-bold tracking-[0.1em] uppercase">Enterprise Portal V3</p>
+</div>
+</div>
+<div class="hidden md:flex items-center bg-slate-100/80 dark:bg-slate-800/80 rounded-full px-4 py-2 w-80 group transition-all focus-within:ring-2 ring-primary/20">
+<span class="material-symbols-outlined text-slate-400 text-[20px]">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-slate-400" placeholder="搜索应用、文档或任务..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1.5 bg-slate-100/50 dark:bg-slate-800/50 p-1 rounded-full">
+<button class="flex items-center justify-center rounded-full h-8 w-8 text-slate-500 hover:bg-white hover:text-primary dark:hover:bg-slate-700 transition-all">
+<span class="material-symbols-outlined text-[18px]">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-full h-8 w-8 text-slate-500 hover:bg-white hover:text-primary dark:hover:bg-slate-700 transition-all">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+</button>
+</div>
+<div class="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold leading-none">王晓华</p>
+<p class="text-[10px] text-slate-400 mt-1 uppercase">高级管理员</p>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 ring-2 ring-primary/10 shadow-sm" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD1IMD0CY-NotQbrGl8Ccx9C6cU7dxdeY7Cpd78bSE88KuZiQOuC3ciXCLCDUqchfnoMIXN-3GPdHIGNl6SBh_mdkNNNqJ9tyaYbNmtWI5qpEq4c2rUiUNyuqmomeuqhNVSPqefkIHNg3aKU_nNSIgm9d66yjtsB_vXh4krBoUSslZzoYb0FmqPSiva95yNum8Vr2JmFse-dnYDod_go7fvowsOOS19rGXEJ3CY18uWsxp2u5DGM8bLuBz86xr9HFlQMo2gcA4iMvt4");'></div>
+</div>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto p-8 relative">
+<div class="max-w-[1400px] mx-auto">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h1 class="text-2xl font-bold text-slate-900 dark:text-white">个人工作台</h1>
+<p class="text-slate-500 text-sm mt-1">欢迎回来，这是您自定义的今日视图。</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 bg-white dark:bg-slate-800 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-semibold hover:shadow-md transition-all">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+                        布局设置
+                    </button>
+<button class="flex items-center gap-2 bg-primary px-5 py-2 rounded-lg text-white text-sm font-semibold hover:bg-primary/90 transition-all shadow-xl shadow-primary/20">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        添加组件
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-6">
+<div class="col-span-12 lg:col-span-8 glass-card rounded-2xl p-6 flex flex-col">
+<div class="flex items-center justify-between mb-6 drag-handle">
+<div class="flex items-center gap-2">
+<div class="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+<span class="material-symbols-outlined text-primary text-[20px]">trending_up</span>
+</div>
+<h3 class="font-bold text-slate-800 dark:text-slate-100">销售趋势分析</h3>
+</div>
+<div class="flex items-center gap-3">
+<select class="bg-slate-50 dark:bg-slate-800 border-none text-xs font-semibold rounded-md py-1 px-3 focus:ring-1 ring-primary/30">
+<option>最近 7 天</option>
+<option>最近 30 天</option>
+</select>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-slate-600">more_horiz</span>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex items-baseline gap-4 mb-8">
+<div>
+<p class="text-xs text-slate-400 font-bold uppercase mb-1">总营收 (CNY)</p>
+<span class="text-3xl font-bold tracking-tight">¥ 842,500.00</span>
+</div>
+<span class="bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 font-bold text-xs px-2 py-1 rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+                                14.2%
+                            </span>
+</div>
+<div class="h-[200px] w-full relative">
+<svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 800 200">
+<defs>
+<linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#0066FF" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#0066FF" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+<path d="M0 160 Q 50 140, 100 150 T 200 100 T 300 120 T 400 60 T 500 80 T 600 40 T 700 70 T 800 20" fill="none" stroke="#0066FF" stroke-linecap="round" stroke-width="3"></path>
+<path d="M0 160 Q 50 140, 100 150 T 200 100 T 300 120 T 400 60 T 500 80 T 600 40 T 700 70 T 800 20 V 200 H 0 Z" fill="url(#chartGradient)"></path>
+</svg>
+<div class="flex justify-between mt-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+<span>周一</span><span>周二</span><span>周三</span><span>周四</span><span>周五</span><span>周六</span><span>周日</span>
+</div>
+</div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-4 glass-card rounded-2xl p-6">
+<div class="flex items-center justify-between mb-6 drag-handle">
+<div class="flex items-center gap-2">
+<div class="p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
+<span class="material-symbols-outlined text-accent text-[20px]">grid_view</span>
+</div>
+<h3 class="font-bold text-slate-800 dark:text-slate-100">常用应用</h3>
+</div>
+<button class="text-xs font-bold text-primary hover:underline">编辑</button>
+</div>
+<div class="grid grid-cols-3 gap-y-6">
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-2xl bg-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]">mail</span>
+</div>
+<span class="text-xs font-bold">邮件系统</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-2xl bg-amber-500 text-white flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]">folder_open</span>
+</div>
+<span class="text-xs font-bold">云盘</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-2xl bg-emerald-500 text-white flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]">video_chat</span>
+</div>
+<span class="text-xs font-bold">视频会议</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-2xl bg-rose-500 text-white flex items-center justify-center shadow-lg shadow-rose-500/20 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]">account_balance_wallet</span>
+</div>
+<span class="text-xs font-bold">财务报销</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-2xl bg-purple-500 text-white flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[28px]">description</span>
+</div>
+<span class="text-xs font-bold">共享文档</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-300 hover:border-primary hover:text-primary transition-all">
+<span class="material-symbols-outlined">add</span>
+</div>
+<span class="text-xs font-bold text-slate-400">添加</span>
+</div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-7 glass-card rounded-2xl p-6">
+<div class="flex items-center justify-between mb-6 drag-handle">
+<div class="flex items-center gap-2">
+<div class="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+<span class="material-symbols-outlined text-orange-500 text-[20px]">assignment_turned_in</span>
+</div>
+<h3 class="font-bold text-slate-800 dark:text-slate-100">待办审批</h3>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded-full">全部同意</button>
+</div>
+</div>
+<div class="space-y-3">
+<div class="group flex items-center justify-between p-4 rounded-xl bg-slate-50/50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 hover:border-primary/50 transition-all cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-cover shadow-sm" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDmmZSLGZiV7wl09Qan3Z9VA3W9FZN7rLsGF-KEa1f7yx5tScFjYzDe8YkQxyxdD_pUlLgG2JtKwizcIgBa_UlhNdClmdO5eBrqR3lPbW3Hu9Q1zxrGPhtR03Dlc0hlRAYo1m1bjALFUgentFMVS_M-YoPTsDMUKkR0-t4VUrWV8WwIVLAIUgmXAJFRGFsHrrDMVGZu2ysIPPJT19mEbxDf2C6Icw3N8aYujtGAMJrIh8UFKp5tTRmgVJXjF1FTg2vq4iSbR3OK4B4K");'></div>
+<div>
+<h4 class="text-sm font-bold">Q3 季度预算申请</h4>
+<p class="text-xs text-slate-400 mt-0.5">申请人：市场部 - 李雷 · 2小时前</p>
+</div>
+</div>
+<div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg"><span class="material-symbols-outlined text-[20px]">close</span></button>
+<button class="p-1.5 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg"><span class="material-symbols-outlined text-[20px]">check</span></button>
+</div>
+</div>
+<div class="group flex items-center justify-between p-4 rounded-xl bg-slate-50/50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 hover:border-primary/50 transition-all cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-cover shadow-sm" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAl9CJkx3mqaRiCjuegXxTpOdV0kl8Q9ogY9gvH_zQ1wu1jhiirWKSxNHC7e6EOserHwCHzkVf0ZMiXGjgjfQplFMmGFUIhznxwq_Jq3VNbF_T1yvnj-lTqKpdElwUybmAU-JaQ-J3RPY7QwAn8_tUtKOBYbPq1EKzLKX3kauauehF4NCWIEuwt0feR9w4pHc0lPDN2ifRqh1jcB7vJdJqtp0vfCMIULmsjr21yTH6Jil5GP6Z-GWfXbp_6N8qxjinH9Vj9wNDNHlyY");'></div>
+<div>
+<h4 class="text-sm font-bold">新员工入职账号授权</h4>
+<p class="text-xs text-slate-400 mt-0.5">申请人：技术部 - 韩梅梅 · 5小时前</p>
+</div>
+</div>
+<div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg"><span class="material-symbols-outlined text-[20px]">close</span></button>
+<button class="p-1.5 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg"><span class="material-symbols-outlined text-[20px]">check</span></button>
+</div>
+</div>
+<div class="group flex items-center justify-between p-4 rounded-xl bg-slate-50/50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 hover:border-primary/50 transition-all cursor-pointer opacity-80">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400 text-[20px]">flight</span>
+</div>
+<div>
+<h4 class="text-sm font-bold">出差申请 - 上海</h4>
+<p class="text-xs text-slate-400 mt-0.5">申请人：销售部 - 张三 · 昨日</p>
+</div>
+</div>
+<div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg"><span class="material-symbols-outlined text-[20px]">close</span></button>
+<button class="p-1.5 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg"><span class="material-symbols-outlined text-[20px]">check</span></button>
+</div>
+</div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-5 glass-card rounded-2xl p-6">
+<div class="flex items-center justify-between mb-6 drag-handle">
+<div class="flex items-center gap-2">
+<div class="p-2 bg-pink-50 dark:bg-pink-900/20 rounded-lg">
+<span class="material-symbols-outlined text-pink-500 text-[20px]">calendar_today</span>
+</div>
+<h3 class="font-bold text-slate-800 dark:text-slate-100">日程安排</h3>
+</div>
+<span class="text-xs font-bold text-slate-500 uppercase">2024年 6月</span>
+</div>
+<div class="flex-1">
+<div class="grid grid-cols-7 mb-4 text-center">
+<div class="text-[10px] font-bold text-slate-400">日</div>
+<div class="text-[10px] font-bold text-slate-400">一</div>
+<div class="text-[10px] font-bold text-slate-400">二</div>
+<div class="text-[10px] font-bold text-slate-400">三</div>
+<div class="text-[10px] font-bold text-slate-400">四</div>
+<div class="text-[10px] font-bold text-slate-400">五</div>
+<div class="text-[10px] font-bold text-slate-400">六</div>
+</div>
+<div class="grid grid-cols-7 gap-y-1">
+<div class="aspect-square flex items-center justify-center text-xs text-slate-300">26</div>
+<div class="aspect-square flex items-center justify-center text-xs text-slate-300">27</div>
+<div class="aspect-square flex items-center justify-center text-xs text-slate-300">28</div>
+<div class="aspect-square flex items-center justify-center text-xs text-slate-300">29</div>
+<div class="aspect-square flex items-center justify-center text-xs text-slate-300">30</div>
+<div class="aspect-square flex items-center justify-center text-xs text-slate-300">31</div>
+<div class="aspect-square flex items-center justify-center text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer">1</div>
+<div class="aspect-square flex flex-col items-center justify-center text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer">2<div class="w-1 h-1 bg-primary rounded-full mt-1"></div></div>
+<div class="aspect-square flex items-center justify-center text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer">3</div>
+<div class="aspect-square flex items-center justify-center text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer">4</div>
+<div class="aspect-square flex items-center justify-center text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer">5</div>
+<div class="aspect-square flex items-center justify-center text-xs font-bold bg-primary text-white rounded-lg cursor-pointer shadow-lg shadow-primary/30">6</div>
+<div class="aspect-square flex items-center justify-center text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer">7</div>
+<div class="aspect-square flex items-center justify-center text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer">8</div>
+</div>
+</div>
+<div class="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">今日会议</p>
+<div class="flex items-start gap-3 p-3 rounded-xl bg-primary/5 dark:bg-primary/10 border border-primary/10">
+<div class="mt-1 size-2 rounded-full bg-primary animate-pulse"></div>
+<div>
+<p class="text-xs font-bold">产品战略研讨会</p>
+<p class="text-[10px] text-slate-500 font-medium mt-1">10:30 AM - 12:00 PM · 会议室 A01</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+<div class="flex items-center gap-1.5 glass-card px-4 py-2.5 rounded-2xl border-white/50 shadow-2xl">
+<button class="p-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all group" title="仪表盘">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400 group-hover:text-primary">space_dashboard</span>
+</button>
+<div class="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-1.5"></div>
+<button class="p-2.5 bg-primary text-white rounded-xl transition-all shadow-lg shadow-primary/30" title="添加新组件">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<button class="p-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all group" title="布局锁定">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400 group-hover:text-primary">lock_open</span>
+</button>
+<button class="p-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all group" title="搜索">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400 group-hover:text-primary">search</span>
+</button>
+<button class="p-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all group" title="截图">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400 group-hover:text-primary">camera</span>
+</button>
+</div>
+</div>
+</div>
+
+</body></html>
