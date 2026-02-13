@@ -11,8 +11,16 @@
         "run",
         "dev"
       ],
+      "port": 9229,
+      "console": "integratedTerminal",
       "skipFiles": [
-        "<node_internals>/**"
+        "<node_internals>/**",
+        "node_modules/**"
+      ],
+      "sourceMaps": true,
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**"
       ],
       "serverReadyAction": {
         "action": "debugWithChrome",
