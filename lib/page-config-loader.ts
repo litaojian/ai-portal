@@ -6,8 +6,11 @@ const CONFIG_DIR = path.join(process.cwd(), 'config', 'pages');
 
 export async function getPageConfig(modelName: string): Promise<PageConfig | null> {
   try {
-    // Support subdirectories in modelName (e.g., 'admin/users')
-    const filePath = path.join(CONFIG_DIR, `${modelName}.json`);
+    // Sanitize modelName to remove traversal attempts
+    // Sanitize modelName to remove traversal attempts
+    const safeModelName = modelName.replace(/(\.\.(\/|\\|$))+/g, '');
+    const filePath = path.join(CONFIG_DIR, `${safeModelName}.json`);
+
     const fileContent = await fs.readFile(filePath, 'utf-8');
     const rawConfig = JSON.parse(fileContent);
 

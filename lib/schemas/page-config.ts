@@ -81,6 +81,17 @@ export const SearchFieldSchema = z.object({
   label: z.string().optional(),
   placeholder: z.string().optional(),
   component: z.string().optional(), // 如 'date-range'
+  type: FieldTypeSchema.optional(), // Allow overriding type in search
+  defaultValue: z.any().optional(),
+
+  // Custom options for select types in search (overrides model definition)
+  options: z.array(SelectOptionSchema).optional(),
+  remoteOptions: z.object({
+    api: z.string(),
+    labelKey: z.string(),
+    valueKey: z.string(),
+  }).optional(),
+  required: z.boolean().optional(),
 });
 
 export const FormSectionSchema = z.object({

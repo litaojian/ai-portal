@@ -1,10 +1,14 @@
 {
-    "title":"订单",
+    "title": "订单",
     "url": "#",
     "icon": "IconShoppingCart",
     "order": 2,
     "isActive": true,
-    "items":[
-        { "title": "订单管理",  "url": "/orders", "icon": "IconListDetails" }
+    "items": [
+        {
+            "title": "订单管理",
+            "url": "/portal/sales/orders",
+            "icon": "IconListDetails"
+        }
     ]
 }

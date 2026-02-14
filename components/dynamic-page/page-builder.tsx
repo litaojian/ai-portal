@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { BizDataService } from '@/lib/biz-data-service';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, Upload, Download } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -76,8 +77,13 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
     setLoading(false);
   };
 
+  const [dataLoading, setDataLoading] = useState(false);
+
+  // ... (previous useEffects)
+
   const loadListData = async () => {
     if (!config) return;
+    setDataLoading(true);
     try {
       const dataService = BizDataService.getInstance();
       const res = await dataService.fetchAll(config.meta.key, {
@@ -95,6 +101,8 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
       }
     } catch (error) {
       console.error("Failed to load list data", error);
+    } finally {
+      setDataLoading(false);
     }
   };
 
@@ -125,30 +133,54 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
     }
   };
 
+
+  const [actionLoading, setActionLoading] = useState(false);
+  const [currentAction, setCurrentAction] = useState<string | null>(null);
+
+  // ... (previous useEffects)
+
+  // ...
+
   const handleAction = async (action: string, data?: any) => {
     if (!config) return;
 
-    switch (action) {
-      case 'create':
-        setDialogMode('create');
-        setCurrentEntityId(undefined);
-        setDialogOpen(true);
-        break;
-      case 'edit':
-        setDialogMode('edit');
-        setCurrentEntityId(data.id);
-        setDialogOpen(true);
-        break;
-      case 'delete':
-        if (confirm('确定要删除吗？')) {
-          // Implement delete logic with BizDataService
-          const dataService = BizDataService.getInstance();
-          await dataService.delete(config.meta.key, data.id, config.meta.api);
-          loadListData(); // Reload after delete
-        }
-        break;
-      default:
-        await handleCustomAction(action, data);
+    setCurrentAction(action);
+    // Only set loading for async actions that might take time. 
+    // Dialog openers are instant, so checking first.
+    if (['create', 'edit'].includes(action)) {
+      // Instant actions
+    } else {
+      setActionLoading(true);
+    }
+
+    try {
+      switch (action) {
+        case 'create':
+          setDialogMode('create');
+          setCurrentEntityId(undefined);
+          setDialogOpen(true);
+          break;
+        case 'edit':
+          setDialogMode('edit');
+          setCurrentEntityId(data.id);
+          setDialogOpen(true);
+          break;
+        case 'delete':
+          if (confirm('确定要删除吗？')) {
+            // Implement delete logic with BizDataService
+            const dataService = BizDataService.getInstance();
+            await dataService.delete(config.meta.key, data.id, config.meta.api);
+            loadListData(); // Reload after delete
+          }
+          break;
+        default:
+          await handleCustomAction(action, data);
+      }
+    } catch (e) {
+      console.error("Action failed", e);
+    } finally {
+      setActionLoading(false);
+      setCurrentAction(null);
     }
   };
 
@@ -168,6 +200,7 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
             config={config}
             onSearch={handleSearch}
             onReset={handleReset}
+            loading={dataLoading}
           />
         </div>
       )}
@@ -189,14 +222,17 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
                 if (action === 'export') Icon = Download;
 
                 return (
-                  <button
+                  <Button
                     key={action}
                     onClick={() => handleAction(action)}
-                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-8 px-3 py-2 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground"
+                    variant="outline"
+                    size="sm"
+                    className="h-8 shadow-sm"
+                    loading={actionLoading && currentAction === action}
                   >
                     {Icon && <Icon className="mr-2 h-3.5 w-3.5" />}
                     {title}
-                  </button>
+                  </Button>
                 );
               })}
             </div>

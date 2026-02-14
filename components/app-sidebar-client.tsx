@@ -24,7 +24,8 @@ import {
   IconShield,
   IconKey,
   IconDeviceDesktop,
-  IconActivityHeartbeat
+  IconActivityHeartbeat,
+  IconFile
 } from "@tabler/icons-react"
 
 import {
@@ -69,6 +70,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   IconShield,
   IconDeviceDesktop,
   IconActivityHeartbeat,
+  IconFile,
 }
 
 interface MenuItem {
@@ -101,10 +103,12 @@ export function AppSidebarClient({ menuData, ...props }: AppSidebarClientProps) 
     if (!items) return [];
     return items.map((item) => ({
       ...item,
-      icon: typeof item.icon === 'string' && iconMap[item.icon] ? iconMap[item.icon] : item.icon as React.ComponentType<{ className?: string }> | undefined,
+      icon: typeof item.icon === 'string' && iconMap[item.icon] ? iconMap[item.icon] : (typeof item.icon === 'string' && item.icon === 'IconFile' ? IconFile : item.icon as React.ComponentType<{ className?: string }> | undefined),
       items: item.items ? processItems(item.items) : undefined,
     }));
   };
+
+
 
   const navMain = React.useMemo(() => processItems(menuData?.navMain || []), [menuData]);
 

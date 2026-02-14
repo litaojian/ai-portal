@@ -3,40 +3,58 @@ import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { SiteHeader } from "@/components/site-header";
-
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
 import {
     SidebarInset,
     SidebarProvider,
-    SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import PageBuilder from "@/components/dynamic-page/page-builder";
 
 interface PageProps {
-    params: Promise<any>;
+    params: Promise<{ slug: string[] }>;
     searchParams: Promise<any>;
 }
 
-export default async function AdminDynamicListPage({ params }: PageProps) {
-    const { modelName } = await params;
-    // Construct the full config key with admin prefix
-    const configKey = `admin/${modelName}`;
+const SECTION_MAP: Record<string, string> = {
+    admin: "系统管理",
+    sales: "销售管理",
+    hr: "人事管理",
+    project: "项目管理",
+};
+
+export default async function PortalDynamicPage({ params }: PageProps) {
+    const { slug } = await params;
+
+    // Safety check
+    if (!slug || slug.length === 0) {
+        return notFound();
+    }
+
+    // Construct config key (e.g., "sales/orders" or just "orders")
+    const configKey = slug.join('/');
     const config = await getPageConfig(configKey);
     const session = await getServerSession(authOptions);
-
 
     if (!config) {
         return notFound();
     }
+
+    // Build breadcrumbs dynamically
+    const breadcrumbs = [
+        { label: "首页", href: "/" }
+    ];
+
+    // If there are multiple segments, try to map the first one (Section/Module)
+    if (slug.length > 1) {
+        const sectionKey = slug[0];
+        const sectionLabel = SECTION_MAP[sectionKey] || sectionKey.charAt(0).toUpperCase() + sectionKey.slice(1);
+
+        // We link the section to nothing for now, or could link to a dashboard if it exists
+        breadcrumbs.push({ label: sectionLabel, href: "#" }); // or `/portal/${sectionKey}` if checking existence
+    }
+
+    // Final breadcrumb is the page title
+    breadcrumbs.push({ label: config.meta.title, href: "#" });
 
     return (
         <SidebarProvider
@@ -49,13 +67,9 @@ export default async function AdminDynamicListPage({ params }: PageProps) {
         >
             <AppSidebar variant="inset" />
             <SidebarInset>
-
                 <SiteHeader
                     user={session?.user}
-                    breadcrumbs={[
-                        { label: "首页", href: "/" },
-                        { label: config.meta.title }
-                    ]}
+                    breadcrumbs={breadcrumbs}
                 />
 
                 <div className="flex flex-1 flex-col gap-2 p-2 md:p-4">

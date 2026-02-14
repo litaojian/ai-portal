@@ -1,0 +1,142 @@
+{
+    "$schema": "https://ai-portal.com/schemas/page-config.json",
+    "meta": {
+        "key": "accbook/daily-reports",
+        "title": "交易日报",
+        "description": "查看每日交易统计报表",
+        "icon": "FileText",
+        "api": "/api/integration/logs/{dataSource}/dailyReport"
+    },
+    "model": {
+        "fields": {
+            "dataSource": {
+                "type": "text",
+                "label": "数据源"
+            },
+            "date": {
+                "type": "date",
+                "label": "日期"
+            },
+            "channel_name": {
+                "type": "text",
+                "label": "渠道"
+            },
+            "model_name": {
+                "type": "text",
+                "label": "模型"
+            },
+            "total_quotas": {
+                "label": "总配额",
+                "type": "number",
+                "format": "currency"
+            },
+            "total_count": {
+                "label": "总请求数",
+                "type": "number"
+            },
+            "total_prompt_tokens": {
+                "label": "提问Tokens",
+                "type": "number"
+            },
+            "total_completion_tokens": {
+                "label": "回答Tokens",
+                "type": "number"
+            },
+            "usage_input": {
+                "type": "number",
+                "label": "输入Usage"
+            },
+            "usage_output": {
+                "type": "number",
+                "label": "输出Usage"
+            },
+            "cost_input": {
+                "type": "number",
+                "label": "输入成本"
+            },
+            "cost_output": {
+                "type": "number",
+                "label": "输出成本"
+            },
+            "total_cost": {
+                "type": "number",
+                "label": "总成本"
+            },
+            "currency": {
+                "type": "text",
+                "label": "币种"
+            }
+        }
+    },
+    "views": {
+        "search": {
+            "fields": [
+                {
+                    "key": "beginDate",
+                    "label": "开始日期",
+                    "type": "date",
+                    "defaultValue": "yesterday"
+                },
+                {
+                    "key": "endDate",
+                    "label": "结束日期",
+                    "type": "date",
+                    "defaultValue": "yesterday"
+                },
+                {
+                    "key": "dataSource",
+                    "label": "数据源",
+                    "type": "select",
+                    "required": true,
+                    "remoteOptions": {
+                        "api": "/api/integration/logs/sources",
+                        "labelKey": "name",
+                        "valueKey": "code"
+                    }
+                }
+            ]
+        },
+        "table": {
+            "size": "small",
+            "rownum": true,
+            "columns": [
+                {
+                    "key": "username",
+                    "sortable": true
+                },
+                {
+                    "key": "channel_name",
+                    "sortable": true
+                },
+                {
+                    "key": "model_name",
+                    "sortable": true
+                },
+                {
+                    "key": "total_quotas",
+                    "sortable": true,
+                    "summaryType": "sum"
+                },
+                {
+                    "key": "total_count",
+                    "sortable": true,
+                    "summaryType": "sum"
+                },
+                {
+                    "key": "total_prompt_tokens",
+                    "sortable": true,
+                    "summaryType": "sum"
+                },
+                {
+                    "key": "total_completion_tokens",
+                    "sortable": true,
+                    "summaryType": "sum"
+                }
+            ],
+            "pagination": {
+                "enabled": true,
+                "pageSize": 50
+            }
+        }
+    }
+}

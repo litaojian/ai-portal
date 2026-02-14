@@ -11,6 +11,11 @@
             "icon": "IconDashboard"
         },
         {
+            "title": "交易日报",
+            "url": "/portal/accbook/daily-reports",
+            "icon": "IconFile"
+        },
+        {
             "title": "监控中心",
             "url": "#",
             "icon": "IconActivityHeartbeat"
