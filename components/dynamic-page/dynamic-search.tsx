@@ -11,7 +11,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, X } from "lucide-react";
+import { Search, X, CalendarIcon } from "lucide-react";
+import { format, addDays } from "date-fns";
+import { zhCN } from "date-fns/locale";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { DateRange } from "react-day-picker";
 
 interface DynamicSearchProps {
   config: PageConfig;
@@ -34,7 +44,21 @@ export function DynamicSearch({ config, onSearch, onReset, loading }: DynamicSea
     config.views.search.fields.forEach(field => {
       // Handle Default Value
       if (field.defaultValue !== undefined) {
-        if (field.defaultValue === 'yesterday') {
+        if (field.type === 'date-range' && Array.isArray(field.defaultValue)) {
+          const [startStr, endStr] = field.defaultValue;
+          const range: DateRange = { from: undefined, to: undefined };
+
+          const parseDateKeyword = (kw: string) => {
+            if (kw === 'yesterday') return new Date(Date.now() - 86400000);
+            if (kw === 'today') return new Date();
+            return new Date(kw);
+          };
+
+          if (startStr) range.from = parseDateKeyword(startStr);
+          if (endStr) range.to = parseDateKeyword(endStr);
+
+          defaults[field.key] = range;
+        } else if (field.defaultValue === 'yesterday') {
           const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
           defaults[field.key] = yesterday;
         } else if (field.defaultValue === 'today') {
@@ -61,8 +85,10 @@ export function DynamicSearch({ config, onSearch, onReset, loading }: DynamicSea
 
               // Auto-select first option if required and no default value
               if (field.required && !defaults[field.key] && options.length > 0) {
+                const firstOpt = options[0];
+                const isString = typeof firstOpt === 'string';
                 const valueKey = field.remoteOptions?.valueKey || 'value';
-                const firstVal = options[0][valueKey] || options[0].value;
+                const firstVal = isString ? firstOpt : (firstOpt[valueKey] || firstOpt.value);
                 // We need to update 'values' state eventually.
                 // Since we are inside useEffect, we can't easily update 'defaults' local var used below.
                 // But we can update the state directly.
@@ -105,7 +131,22 @@ export function DynamicSearch({ config, onSearch, onReset, loading }: DynamicSea
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    onSearch(values);
+    // Process values: flatten date-ranges
+    const processedValues = { ...values };
+
+    config.views.search?.fields.forEach(field => {
+      if (field.type === 'date-range' && field.names && field.names.length === 2) {
+        const range = values[field.key] as DateRange | undefined;
+        if (range) {
+          if (range.from) processedValues[field.names[0]] = format(range.from, 'yyyy-MM-dd');
+          if (range.to) processedValues[field.names[1]] = format(range.to, 'yyyy-MM-dd');
+        }
+        // Remove the composite key from output
+        delete processedValues[field.key];
+      }
+    });
+
+    onSearch(processedValues);
   };
 
   const handleReset = () => {
@@ -144,8 +185,15 @@ export function DynamicSearch({ config, onSearch, onReset, loading }: DynamicSea
           // Determine options: remote > search config > model config
           const options = remoteOptions[searchField.key] || searchField.options || fieldDef.options;
 
+          // Width handling
+          let widthClass = "w-[180px]";
+          if (searchField.width === 'sm') widthClass = "w-[120px]";
+          if (searchField.width === 'md') widthClass = "w-[240px]";
+          if (searchField.width === 'lg') widthClass = "w-[320px]";
+          if (searchField.width === 'xl') widthClass = "w-[400px]";
+
           return (
-            <div key={searchField.key} className="flex flex-col gap-1 w-[180px]">
+            <div key={searchField.key} className={`flex flex-col gap-1 ${widthClass}`}>
               <label className="text-xs font-medium text-muted-foreground whitespace-nowrap block">
                 {searchField.label || fieldDef.label}
               </label>
@@ -160,11 +208,16 @@ export function DynamicSearch({ config, onSearch, onReset, loading }: DynamicSea
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all" className="text-xs">全部</SelectItem>
-                    {options?.map((opt: any) => (
-                      <SelectItem key={String(opt.value || opt[searchField.remoteOptions?.valueKey || 'value'])} value={String(opt.value || opt[searchField.remoteOptions?.valueKey || 'value'])} className="text-xs">
-                        {opt.label || opt[searchField.remoteOptions?.labelKey || 'label']}
-                      </SelectItem>
-                    ))}
+                    {options?.map((opt: any) => {
+                      const isString = typeof opt === 'string';
+                      const value = isString ? opt : (opt.value || opt[searchField.remoteOptions?.valueKey || 'value']);
+                      const label = isString ? opt : (opt.label || opt[searchField.remoteOptions?.labelKey || 'label']);
+                      return (
+                        <SelectItem key={String(value)} value={String(value)} className="text-xs">
+                          {label}
+                        </SelectItem>
+                      );
+                    })}
                   </SelectContent>
                 </Select>
               ) : (fieldDef.type === 'date' || searchField.type === 'date') ? (
@@ -174,6 +227,44 @@ export function DynamicSearch({ config, onSearch, onReset, loading }: DynamicSea
                   value={values[searchField.key] || ""}
                   onChange={(e) => handleChange(searchField.key, e.target.value)}
                 />
+              ) : (fieldDef.type === 'date-range' || searchField.type === 'date-range') ? (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      id={searchField.key}
+                      variant={"outline"}
+                      className={cn(
+                        "w-full h-8 justify-start text-left font-normal px-2 text-xs",
+                        !values[searchField.key] && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-3 w-3" />
+                      {values[searchField.key]?.from ? (
+                        values[searchField.key].to ? (
+                          <>
+                            {format(values[searchField.key].from, "y年M月d日", { locale: zhCN })} -{" "}
+                            {format(values[searchField.key].to, "y年M月d日", { locale: zhCN })}
+                          </>
+                        ) : (
+                          format(values[searchField.key].from, "y年M月d日", { locale: zhCN })
+                        )
+                      ) : (
+                        <span>选择日期范围</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      initialFocus
+                      mode="range"
+                      defaultMonth={values[searchField.key]?.from}
+                      selected={values[searchField.key]}
+                      onSelect={(val) => handleChange(searchField.key, val)}
+                      numberOfMonths={2}
+                      locale={zhCN}
+                    />
+                  </PopoverContent>
+                </Popover>
               ) : (
                 <Input
                   placeholder={searchField.placeholder || `请输入`}

@@ -5,7 +5,7 @@
         "title": "交易日报",
         "description": "查看每日交易统计报表",
         "icon": "FileText",
-        "api": "/api/integration/logs/{dataSource}/dailyReport"
+        "api": "/api/integration/reports/query"
     },
     "model": {
         "fields": {
@@ -16,6 +16,10 @@
             "date": {
                 "type": "date",
                 "label": "日期"
+            },
+            "username": {
+                "type": "text",
+                "label": "用户"
             },
             "channel_name": {
                 "type": "text",
@@ -72,16 +76,18 @@
         "search": {
             "fields": [
                 {
-                    "key": "beginDate",
-                    "label": "开始日期",
-                    "type": "date",
-                    "defaultValue": "yesterday"
-                },
-                {
-                    "key": "endDate",
-                    "label": "结束日期",
-                    "type": "date",
-                    "defaultValue": "yesterday"
+                    "key": "dateRange",
+                    "label": "日期范围",
+                    "type": "date-range",
+                    "width": "md",
+                    "names": [
+                        "beginDate",
+                        "endDate"
+                    ],
+                    "defaultValue": [
+                        "yesterday",
+                        "yesterday"
+                    ]
                 },
                 {
                     "key": "dataSource",
@@ -91,7 +97,7 @@
                     "remoteOptions": {
                         "api": "/api/integration/logs/sources",
                         "labelKey": "name",
-                        "valueKey": "code"
+                        "valueKey": "name"
                     }
                 }
             ]

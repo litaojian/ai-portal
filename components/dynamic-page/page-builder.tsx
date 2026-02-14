@@ -86,6 +86,22 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
     setDataLoading(true);
     try {
       const dataService = BizDataService.getInstance();
+      // Check for missing path parameters
+      if (config.meta.api && config.meta.api.includes('{')) {
+        const matches = config.meta.api.match(/\{(\w+)\}/g);
+        if (matches) {
+          const missingParams = matches.filter(m => {
+            const key = m.slice(1, -1);
+            return !searchParams[key];
+          });
+          if (missingParams.length > 0) {
+            console.log(`[PageBuilder] Skip fetch, missing params: ${missingParams.join(', ')}`);
+            setDataLoading(false);
+            return;
+          }
+        }
+      }
+
       const res = await dataService.fetchAll(config.meta.key, {
         page: pagination.pageIndex + 1,
         pageSize: pagination.pageSize,

@@ -5,6 +5,7 @@ export const FieldTypeSchema = z.enum([
   "text",
   "number",
   "date",
+  "date-range",
   "datetime",
   "select",
   "boolean",
@@ -80,9 +81,13 @@ export const SearchFieldSchema = z.object({
   key: z.string(),
   label: z.string().optional(),
   placeholder: z.string().optional(),
+  width: z.string().optional(), // 'sm' | 'md' | 'lg' | 'xl' or custom class
   component: z.string().optional(), // 如 'date-range'
   type: FieldTypeSchema.optional(), // Allow overriding type in search
   defaultValue: z.any().optional(),
+
+  // For date-range, map to separate start/end fields
+  names: z.array(z.string()).optional(),
 
   // Custom options for select types in search (overrides model definition)
   options: z.array(SelectOptionSchema).optional(),
