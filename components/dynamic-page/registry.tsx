@@ -20,21 +20,25 @@ const TextRenderer = ({ value }: CellRendererProps) => {
 };
 
 const NumberRenderer = ({ value, field }: CellRendererProps) => {
-  if (typeof value !== "number") return <span className="text-muted-foreground">-</span>;
-  
+  if (value === null || value === undefined || value === "") {
+    return <span className="text-muted-foreground">-</span>;
+  }
+  const num = typeof value === "number" ? value : Number(value);
+  if (isNaN(num)) return <span className="text-muted-foreground">-</span>;
+
   if (field.format === "currency") {
     return (
       <span className="font-mono">
-        {new Intl.NumberFormat("zh-CN", { style: "currency", currency: "CNY" }).format(value)}
+        {new Intl.NumberFormat("zh-CN", { style: "currency", currency: "CNY" }).format(num)}
       </span>
     );
   }
-  
+
   if (field.format === "percentage") {
-    return <span>{(value * 100).toFixed(2)}%</span>;
+    return <span>{(num * 100).toFixed(2)}%</span>;
   }
 
-  return <span>{value}</span>;
+  return <span>{num}</span>;
 };
 
 const DateRenderer = ({ value }: CellRendererProps) => {

@@ -42,7 +42,7 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <Link href="/dashboard">
+            <Link href="/portal/llm/models">
               <Button size="lg" className="h-11 px-8 rounded-full shadow-lg shadow-primary/20 gap-2 text-base">
                 开始使用 <ArrowRight className="h-4 w-4" />
               </Button>

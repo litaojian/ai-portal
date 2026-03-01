@@ -17,6 +17,7 @@ interface PageProps {
 
 const SECTION_MAP: Record<string, string> = {
     admin: "系统管理",
+    llm: "AI大模型",
     sales: "销售管理",
     hr: "人事管理",
     project: "项目管理",

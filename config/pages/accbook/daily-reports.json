@@ -13,11 +13,11 @@
                 "type": "text",
                 "label": "数据源"
             },
-            "date": {
+            "report_date": {
                 "type": "date",
                 "label": "日期"
             },
-            "username": {
+            "user_name": {
                 "type": "text",
                 "label": "用户"
             },
@@ -30,20 +30,20 @@
                 "label": "模型"
             },
             "total_quotas": {
-                "label": "总配额",
+                "label": "消费额度",
                 "type": "number",
-                "format": "currency"
+                "format": "number"
             },
             "total_count": {
                 "label": "总请求数",
                 "type": "number"
             },
             "total_prompt_tokens": {
-                "label": "提问Tokens",
+                "label": "输入",
                 "type": "number"
             },
             "total_completion_tokens": {
-                "label": "回答Tokens",
+                "label": "输出",
                 "type": "number"
             },
             "usage_input": {
@@ -54,17 +54,13 @@
                 "type": "number",
                 "label": "输出Usage"
             },
-            "cost_input": {
-                "type": "number",
-                "label": "输入成本"
-            },
-            "cost_output": {
-                "type": "number",
-                "label": "输出成本"
-            },
             "total_cost": {
                 "type": "number",
-                "label": "总成本"
+                "label": "成本"
+            },
+            "total_amount": {
+                "type": "number",
+                "label": "收入"
             },
             "currency": {
                 "type": "text",
@@ -107,7 +103,11 @@
             "rownum": true,
             "columns": [
                 {
-                    "key": "username",
+                    "key": "report_date",
+                    "sortable": true
+                },
+                {
+                    "key": "user_name",
                     "sortable": true
                 },
                 {
@@ -129,12 +129,12 @@
                     "summaryType": "sum"
                 },
                 {
-                    "key": "total_prompt_tokens",
-                    "sortable": true,
+                    "key": "total_amount",
+                    "sortable": false,
                     "summaryType": "sum"
                 },
                 {
-                    "key": "total_completion_tokens",
+                    "key": "total_cost",
                     "sortable": true,
                     "summaryType": "sum"
                 }

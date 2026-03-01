@@ -1,14 +1,13 @@
 {
     "title": "工作台",
-    "url": "/dashboard",
     "icon": "IconDeviceDesktop",
     "order": 1,
     "isActive": true,
     "items": [
         {
-            "title": "数据看板",
-            "url": "/dashboard",
-            "icon": "IconDashboard"
+            "title": "模型广场",
+            "url": "/portal/llm/models",
+            "icon": "IconFile"
         },
         {
             "title": "交易日报",

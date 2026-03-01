@@ -57,6 +57,14 @@ export async function GET(
         }
 
         const data = await response.json();
+
+        // Normalize Go API envelope: { success: true, data: ... } → unwrap to data
+        // This converts { success, data: { data:[], total:N } } → { data:[], total:N }
+        // and { success, data: [...] } → [...] so PageBuilder can handle all formats uniformly
+        if (data && typeof data === 'object' && data.success === true && data.data !== undefined) {
+            return NextResponse.json(data.data);
+        }
+
         return NextResponse.json(data);
 
     } catch (error) {
