@@ -5,7 +5,8 @@
         "title": "模型",
         "description": "模型广场",
         "icon": "Shield",
-        "api": "/api/integration/models/query"
+        "api": "/api/integration/pricing?_site=https://pinova.ai/api"
+        
     },
     "model": {
         "fields": {
@@ -15,42 +16,34 @@
                 "hidden": true,
                 "primaryKey": true
             },
-            "name": {
+            "model_name": {
                 "label": "模型名称",
                 "type": "text",
                 "validation": {
                     "required": true
                 }
             },
-            "code": {
-                "label": "模型代码",
-                "type": "text",
-                "validation": {
-                    "required": true,
-                    "pattern": "^[A-Z0-9_]+$",
-                    "message": "代码只能包含大写字母、数字和下划线"
-                }
+            "quota_type": {
+                "label": "计费方式",
+                "type": "select",
+                "options": [
+                    {
+                        "label": "按量计费",
+                        "value": 0
+                    },
+                    {
+                        "label": "按次计费",
+                        "value": 1
+                    }
+                ]
             },
             "description": {
                 "label": "描述",
                 "type": "textarea"
             },
-            "status": {
-                "label": "状态",
-                "type": "select",
-                "options": [
-                    {
-                        "label": "启用",
-                        "value": "enabled",
-                        "color": "green"
-                    },
-                    {
-                        "label": "禁用",
-                        "value": "disabled",
-                        "color": "gray"
-                    }
-                ],
-                "defaultValue": "enabled"
+            "supported_endpoint_types": {
+                "label": "支持的端点类型",
+                "type": "text"
             }
         }
     },
@@ -62,10 +55,6 @@
                     "placeholder": "模型名称"
                 },
                 {
-                    "key": "code",
-                    "placeholder": "模型代码"
-                },
-                {
                     "key": "status"
                 }
             ]
@@ -75,42 +64,38 @@
             "rownum": true,
             "columns": [
                 {
-                    "key": "name",
+                    "key": "model_name",
                     "width": 150
                 },
                 {
-                    "key": "code",
-                    "width": 150,
-                    "copyable": true
+                    "key": "supported_endpoint_types"
                 },
                 {
-                    "key": "description"
+                    "key": "quota_type"
                 },
                 {
-                    "key": "status",
-                    "component": "badge",
-                    "width": 100
+                    "key": "model_price"
+                },
+                {
+                    "key": "model_ratio"
+                },
+                {
+                    "key": "completion_ratio"
                 }
             ],
             "actions": {
                 "row": [
                     {
-                        "action": "edit"
-                    },
-                    {
-                        "action": "delete"
+                        "action": "view"
                     }
                 ],
                 "toolbar": [
-                    {
-                        "title": "新增模型",
-                        "action": "create"
-                    }
                 ]
             },
             "pagination": {
                 "enabled": true,
-                "pageSize": 10
+                "pageSize": 10,
+                "mode": "client"
             }
         },
         "form": {
@@ -118,7 +103,7 @@
             "columns": 1,
             "sections": [
                 {
-                    "title": "角色信息",
+                    "title": "模型信息",
                     "fields": [
                         "name",
                         "code",

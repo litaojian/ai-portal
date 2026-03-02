@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { ConfigService } from '@/lib/config-service';
 import { PageConfig } from '@/lib/schemas/page-config';
 import { DynamicTable } from './dynamic-table';
@@ -46,6 +46,7 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
     pageSize: 10
   });
   const [searchParams, setSearchParams] = useState<Record<string, any>>({});
+  const fullDataCacheRef = useRef<any[]>([]);
 
   // Dialog State
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -60,10 +61,24 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
   }, [pageId]);
 
   useEffect(() => {
-    if (config && mode === 'list') {
+    if (!config || mode !== 'list') return;
+    if (config.views.table.pagination?.mode === 'client') {
+      loadFullData();
+    } else {
       loadListData();
     }
-  }, [config, mode, pagination, searchParams]);
+  }, [config, mode, searchParams]);
+
+  useEffect(() => {
+    if (!config || mode !== 'list') return;
+    if (config.views.table.pagination?.mode === 'client') {
+      const { pageIndex, pageSize } = pagination;
+      const start = pageIndex * pageSize;
+      setListData(fullDataCacheRef.current.slice(start, start + pageSize));
+    } else {
+      loadListData();
+    }
+  }, [pagination]);
 
   const loadConfig = async () => {
     setLoading(true);
@@ -80,6 +95,25 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
   const [dataLoading, setDataLoading] = useState(false);
 
   // ... (previous useEffects)
+
+  const loadFullData = async () => {
+    if (!config) return;
+    setDataLoading(true);
+    try {
+      const dataService = BizDataService.getInstance();
+      const res = await dataService.fetchAll(config.meta.key, { ...searchParams }, config.meta.api);
+      const allData = Array.isArray(res) ? res : (res.data || []);
+      fullDataCacheRef.current = allData;
+      setTotal(allData.length);
+      const { pageIndex, pageSize } = pagination;
+      const start = pageIndex * pageSize;
+      setListData(allData.slice(start, start + pageSize));
+    } catch (error) {
+      console.error("Failed to load data", error);
+    } finally {
+      setDataLoading(false);
+    }
+  };
 
   const loadListData = async () => {
     if (!config) return;

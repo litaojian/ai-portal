@@ -80,7 +80,9 @@ export class BizDataService {
     }
 
     const urlStr = this.getUrl(modelName, '', basePath, params);
-    const url = `${urlStr}?${query.toString()}`;
+    const queryString = query.toString();
+    const separator = urlStr.includes('?') ? '&' : '?';
+    const url = queryString ? `${urlStr}${separator}${queryString}` : urlStr;
     const response = await fetch(url);
 
     if (!response.ok) {

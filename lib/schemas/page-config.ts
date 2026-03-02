@@ -164,6 +164,7 @@ export const PageConfigSchema = z.object({
       pagination: z.object({
         enabled: z.boolean().optional(),
         pageSize: z.number().optional(),
+        mode: z.enum(['server', 'client']).optional(),
       }).optional(),
     }),
     form: z.object({

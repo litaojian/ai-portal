@@ -35,16 +35,32 @@ export async function GET(
     const { path } = await params;
     const searchParams = request.nextUrl.searchParams;
 
+    // Extract _site override, remove it from forwarded query params
+    const siteOverride = searchParams.get('_site');
+    const forwardParams = new URLSearchParams(searchParams);
+    forwardParams.delete('_site');
+    const queryString = forwardParams.toString();
+
     // Construct upstream URL
-    // path is an array, e.g. ['logs', 'sources'] -> /api/logs/sources
     const upstreamPath = path.join('/');
-    const queryString = searchParams.toString();
-    const url = `${GO_API_URL}/api/${upstreamPath}${queryString ? `?${queryString}` : ''}`;
+    let url: string;
+    let headers: Record<string, string>;
+
+    if (siteOverride) {
+        // External site: use _site as base, no internal auth headers
+        const cleanSite = siteOverride.replace(/\/$/, '');
+        url = `${cleanSite}/${upstreamPath}${queryString ? `?${queryString}` : ''}`;
+        headers = { 'Content-Type': 'application/json' };
+    } else {
+        // Internal Go API: add signature auth headers
+        url = `${GO_API_URL}/api/${upstreamPath}${queryString ? `?${queryString}` : ''}`;
+        headers = getAuthHeaders();
+    }
     console.log(`[Integration Proxy] Proxying to: ${url}`);
 
     try {
         const response = await fetch(url, {
-            headers: getAuthHeaders(),
+            headers,
             cache: "no-store"
         });
 
