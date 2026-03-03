@@ -1,9 +1,11 @@
 // services/config-service.ts
 import { PageConfig } from '@/lib/schemas/page-config';
+import { ActionDialogConfig } from '@/lib/schemas/dynamic-dialog-config';
 
 export class ConfigService {
   private static instance: ConfigService;
   private configs: Map<string, PageConfig> = new Map();
+  private viewDialogConfigs: Map<string, ActionDialogConfig> = new Map();
   private configPath = 'config/pages'; // Fixed path to match actual directory
 
   static getInstance(): ConfigService {
@@ -45,5 +47,20 @@ export class ConfigService {
   getFieldConfig(pageId: string, fieldId: string) {
     const config = this.configs.get(pageId);
     return config?.model.fields[fieldId];
+  }
+
+  async loadActionDialogConfig(configPath: string): Promise<ActionDialogConfig | null> {
+    if (this.viewDialogConfigs.has(configPath)) {
+      return this.viewDialogConfigs.get(configPath)!;
+    }
+
+    try {
+      const config = await import(`@/config/pages/${configPath}.json`);
+      this.viewDialogConfigs.set(configPath, config.default);
+      return config.default;
+    } catch (error) {
+      console.error(`Failed to load view dialog config for ${configPath}:`, error);
+      return null;
+    }
   }
 }

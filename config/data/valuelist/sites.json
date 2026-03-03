@@ -1,0 +1,17 @@
+[
+  {
+    "label": "pinova",
+    "value": "http://20.246.88.31:8081",
+    "extra": { "api_token": "abc123" }
+  },
+  {
+    "label": "csp",
+    "value": "http://csp.burncloud.com",
+    "extra": { "api_token": "abc566" }
+  },
+  {
+    "label": "digitalcloud",
+    "value": "https://www.digitalcloud.asia",
+    "extra": { "api_token": "abc1678" }
+  }
+]

@@ -91,3 +91,48 @@ export async function GET(
         );
     }
 }
+
+export async function POST(
+    request: NextRequest,
+    { params }: { params: Promise<{ path: string[] }> }
+) {
+    const { path } = await params;
+    const upstreamPath = path.join('/');
+    const url = `${GO_API_URL}/api/${upstreamPath}`;
+    const headers = getAuthHeaders();
+
+    console.log(`[Integration Proxy] POST proxying to: ${url}`);
+
+    try {
+        const body = await request.text();
+        const response = await fetch(url, {
+            method: 'POST',
+            headers,
+            body,
+            cache: "no-store"
+        });
+
+        if (!response.ok) {
+            console.error(`[Integration Proxy] Upstream error: ${response.status} ${response.statusText}`);
+            return NextResponse.json(
+                { error: `Upstream error: ${response.statusText}`, success: false },
+                { status: response.status }
+            );
+        }
+
+        const data = await response.json();
+
+        if (data && typeof data === 'object' && data.success === true && data.data !== undefined) {
+            return NextResponse.json(data.data);
+        }
+
+        return NextResponse.json(data);
+
+    } catch (error) {
+        console.error("[Integration Proxy] Internal Error:", error);
+        return NextResponse.json(
+            { error: "Internal Server Error", success: false },
+            { status: 500 }
+        );
+    }
+}

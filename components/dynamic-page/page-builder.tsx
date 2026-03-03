@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { ConfigService } from '@/lib/config-service';
 import { PageConfig } from '@/lib/schemas/page-config';
 import { DynamicTable } from './dynamic-table';
 import DynamicForm from './dynamic-form';
 import { DynamicSearch } from './dynamic-search';
-import { useRouter } from 'next/navigation';
+
 import { BizDataService } from '@/lib/biz-data-service';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Plus, Upload, Download } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +17,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { DynamicDialog } from './dynamic-dialog';
+import { ActionDialogConfig } from '@/lib/schemas/dynamic-dialog-config';
 
 
 interface PageBuilderProps {
@@ -26,15 +28,11 @@ interface PageBuilderProps {
 }
 
 // Stub functions for missing implementations
-const deleteEntity = async (id: string) => {
-  console.warn("deleteEntity not implemented", id);
-};
-
 const handleCustomAction = async (action: string, data: any) => {
   console.warn("handleCustomAction not implemented", action, data);
 };
 
-export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBuilderProps) {
+export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps) {
   const [config, setConfig] = useState<PageConfig | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -48,20 +46,23 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
   const [searchParams, setSearchParams] = useState<Record<string, any>>({});
   const fullDataCacheRef = useRef<any[]>([]);
 
-  // Dialog State
+  // Create/Edit Dialog State
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState<'create' | 'edit'>('create');
   const [currentEntityId, setCurrentEntityId] = useState<string | undefined>(undefined);
 
+  // Action Dialog State
+  const [actionDialogOpen, setActionDialogOpen] = useState(false);
+  const [actionDialogData, setActionDialogData] = useState<Record<string, any> | null>(null);
+  const [actionDialogConfig, setActionDialogConfig] = useState<ActionDialogConfig | null>(null);
 
-  const router = useRouter();
 
   useEffect(() => {
     loadConfig();
   }, [pageId]);
 
   useEffect(() => {
-    if (!config || mode !== 'list') return;
+    if (!config || mode !== 'list' || config.meta.default_view === 'form') return;
     if (config.views.table.pagination?.mode === 'client') {
       loadFullData();
     } else {
@@ -70,7 +71,7 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
   }, [config, mode, searchParams]);
 
   useEffect(() => {
-    if (!config || mode !== 'list') return;
+    if (!config || mode !== 'list' || config.meta.default_view === 'form') return;
     if (config.views.table.pagination?.mode === 'client') {
       const { pageIndex, pageSize } = pagination;
       const start = pageIndex * pageSize;
@@ -86,7 +87,7 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
     const pageConfig = await configService.loadConfig(pageId);
     setConfig(pageConfig);
     // Initialize pageSize from config if available
-    if (pageConfig?.views.table.pagination?.pageSize) {
+    if (pageConfig?.views.table?.pagination?.pageSize) {
       setPagination(prev => ({ ...prev, pageSize: pageConfig.views.table.pagination!.pageSize! }));
     }
     setLoading(false);
@@ -191,13 +192,13 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
 
   // ...
 
-  const handleAction = async (action: string, data?: any) => {
+  const handleAction = async (action: string, data?: any, actionDef?: Record<string, any>) => {
     if (!config) return;
 
     setCurrentAction(action);
     // Only set loading for async actions that might take time. 
     // Dialog openers are instant, so checking first.
-    if (['create', 'edit'].includes(action)) {
+    if (['create', 'edit', 'showDialog'].includes(action)) {
       // Instant actions
     } else {
       setActionLoading(true);
@@ -215,6 +216,19 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
           setCurrentEntityId(data.id);
           setDialogOpen(true);
           break;
+        case 'showDialog': {
+          const dialogConfigPath = actionDef?.dialogConfig as string | undefined;
+          if (dialogConfigPath) {
+            const configService = ConfigService.getInstance();
+            const viewCfg = await configService.loadActionDialogConfig(dialogConfigPath);
+            if (viewCfg) {
+              setActionDialogConfig(viewCfg);
+              setActionDialogData(data);
+              setActionDialogOpen(true);
+            }
+          }
+          break;
+        }
         case 'delete':
           if (confirm('确定要删除吗？')) {
             // Implement delete logic with BizDataService
@@ -234,12 +248,23 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
     }
   };
 
-  const handleCancel = () => {
-    router.push(`/portal/${pageId}`);
-  };
-
   if (loading) return <div>加载中...</div>;
   if (!config) return <div>页面配置不存在</div>;
+
+  if (config.meta.default_view === 'form') {
+    return (
+      <Card className="shadow-sm">
+        <CardContent className="p-6">
+          <DynamicForm
+            config={config}
+            mode="create"
+            onSubmit={handleFormSubmit}
+            onCancel={() => {}}
+          />
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <div className="h-full flex flex-col space-y-4">
@@ -318,6 +343,24 @@ export default function PageBuilder({ pageId, mode = 'list', entityId }: PageBui
             onSubmit={handleFormSubmit}
             onCancel={() => setDialogOpen(false)}
           />
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog for View/Detail */}
+      <Dialog open={actionDialogOpen} onOpenChange={setActionDialogOpen}>
+        <DialogContent className={`${actionDialogConfig?.width ?? 'max-w-2xl'} max-h-[90vh] overflow-y-auto`}>
+          <DialogHeader>
+            <DialogTitle>
+              {actionDialogConfig?.title ?? `${config.meta.title}详情`}
+            </DialogTitle>
+          </DialogHeader>
+          {actionDialogConfig && actionDialogData && (
+            <DynamicDialog
+              formConfig={actionDialogConfig}
+              pageConfig={config}
+              data={actionDialogData}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </div>

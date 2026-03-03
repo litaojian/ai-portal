@@ -8,10 +8,11 @@ export const FieldTypeSchema = z.enum([
   "date-range",
   "datetime",
   "select",
+  "radio",
+  "combobox",
   "boolean",
   "textarea",
   "json",
-  // 可以在此扩展更多类型，如 'image', 'user-picker' 等
 ]);
 
 export const ValidationSchema = z.object({
@@ -33,10 +34,18 @@ export const FieldSchema = z.object({
   type: FieldTypeSchema,
   hidden: z.boolean().optional(),
   primaryKey: z.boolean().optional(),
-  options: z.array(SelectOptionSchema).optional(), // 仅 select 类型有效
-  format: z.string().optional(), // 如 'currency', 'percentage'
+  options: z.array(SelectOptionSchema).optional(),
+  format: z.string().optional(),
   defaultValue: z.any().optional(),
   validation: ValidationSchema.optional(),
+  datasource: z.string().optional(), // for combobox: remote options API path
+  labelKey: z.string().optional(),   // combobox: which field in response to use as label
+  valueKey: z.string().optional(),   // combobox: which field in response to use as value
+  displayFields: z.array(z.object({
+    key: z.string(),
+    label: z.string().optional(),
+    width: z.string().optional(),    // e.g. "w-24", "flex-1"
+  })).optional(),                    // combobox: columns to show in dropdown
 });
 
 // --- 视图配置 ---
@@ -57,6 +66,7 @@ const RowActionSchema = z.union([
     action: z.string(),
     title: z.string().optional(),
     icon: z.string().optional(),
+    dialogConfig: z.string().optional(), // Path to view dialog config JSON (relative to config/pages/)
     conditions: z.record(z.string(), ConditionValueSchema).optional(),
   })
 ]);
@@ -103,11 +113,14 @@ export const FormSectionSchema = z.object({
   title: z.string().optional(),
   fields: z.array(
     z.union([
-      z.string(), // 简写，直接引用 key
+      z.string(),
       z.object({
         key: z.string(),
+        label: z.string().optional(),
         colSpan: z.number().optional(),
         component: z.string().optional(),
+        type: z.string().optional(),       // view-level type override (e.g. "combobox")
+        datasource: z.string().optional(), // view-level datasource override
       }),
     ])
   ),
@@ -130,6 +143,7 @@ export const PageConfigSchema = z.object({
     description: z.string().optional(),
     icon: z.string().optional(),
     api: z.string().optional(),
+    default_view: z.enum(["list", "form"]).optional(),
   }),
   permissions: PermissionConfigSchema.optional(),
   model: z.object({
@@ -170,6 +184,8 @@ export const PageConfigSchema = z.object({
     form: z.object({
       layout: z.enum(["stack", "grid"]).optional(),
       columns: z.number().optional(),
+      labelLayout: z.enum(["vertical", "horizontal"]).optional(), // label position
+      labelWidth: z.string().optional(), // e.g. "w-24", "w-32" (horizontal only)
       sections: z.array(FormSectionSchema),
     }).optional(),
   }),

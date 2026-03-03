@@ -41,9 +41,47 @@
                 "label": "描述",
                 "type": "textarea"
             },
+            "model_price": {
+                "label": "固定价格",
+                "type": "number"
+            },
+            "model_ratio": {
+                "label": "输入倍率",
+                "type": "number"
+            },
+            "completion_ratio": {
+                "label": "输出倍率",
+                "type": "number"
+            },
             "supported_endpoint_types": {
                 "label": "支持的端点类型",
                 "type": "text"
+            },
+            "request_body": {
+                "label": "请求参数",
+                "type": "text"
+            },
+            "response_data": {
+                "label": "响应结果",
+                "type": "text"
+            },
+            "site_name": {
+                "label": "站点",
+                "type": "select",
+                "options": [
+                    {
+                        "label": "pinova:8080",
+                        "value": "http://20.246.88.31:8080"
+                    },
+                    {
+                        "label": "pinova:8081",
+                        "value": "http://20.246.88.31:8081"
+                    },
+                    {
+                        "label": "digitalcloud",
+                        "value": "https://www.digitalcloud.asia"
+                    }
+                ]                
             }
         }
     },
@@ -51,11 +89,12 @@
         "search": {
             "fields": [
                 {
-                    "key": "name",
-                    "placeholder": "模型名称"
+                    "key": "site_name",
+                    "placeholder": "站点名称"
                 },
                 {
-                    "key": "status"
+                    "key": "model_name",
+                    "placeholder": "模型名称"
                 }
             ]
         },
@@ -86,7 +125,14 @@
             "actions": {
                 "row": [
                     {
-                        "action": "view"
+                        "action": "showDialog",
+                        "title": "详情",
+                        "dialogConfig": "llm/viewActionDialog"
+                    },
+                    {
+                        "action": "showDialog",
+                        "title": "测试",
+                        "dialogConfig": "llm/testActionDialog"                        
                     }
                 ],
                 "toolbar": [

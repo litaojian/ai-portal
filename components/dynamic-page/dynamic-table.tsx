@@ -42,7 +42,7 @@ interface DynamicTableProps {
   total?: number;
   pagination?: PaginationState;
   onPaginationChange?: (pagination: PaginationState) => void;
-  onAction?: (action: string, data: any) => void;
+  onAction?: (action: string, data: any, actionDef?: Record<string, any>) => void;
 }
 
 export function DynamicTable({
@@ -213,54 +213,50 @@ export function DynamicTable({
 
             <div className="flex items-center justify-end gap-1">
 
-              {config.views.table.actions?.row?.map((item) => {
+              {config.views.table.actions?.row?.map((item, idx) => {
 
                 const action = typeof item === 'string' ? item : item.action;
-
+                const title = typeof item === 'string' ? undefined : item.title;
                 const conditions = typeof item === 'string' ? undefined : item.conditions;
-
-
 
                 if (!checkCondition(conditions)) return null;
 
-
-
                 let Icon = Eye;
-
                 let colorClass = "text-muted-foreground hover:text-primary";
 
                 if (action === 'edit') Icon = Pencil;
 
                 if (action === 'delete') {
-
                   Icon = Trash2;
-
                   colorClass = "text-muted-foreground hover:text-destructive";
-
                 }
 
+                const handleClick = () => onAction?.(action, row.original, typeof item === 'string' ? undefined : item);
 
+                if (title) {
+                  return (
+                    <Button
+                      key={idx}
+                      variant="ghost"
+                      size="sm"
+                      className={cn("h-7 px-2 text-xs", colorClass)}
+                      onClick={handleClick}
+                    >
+                      {title}
+                    </Button>
+                  );
+                }
 
                 return (
-
                   <Button
-
-                    key={action}
-
+                    key={idx}
                     variant="ghost"
-
                     size="icon"
-
                     className={cn("h-7 w-7", colorClass)}
-
-                    onClick={() => onAction?.(action, row.original)}
-
+                    onClick={handleClick}
                   >
-
                     <Icon className="h-3.5 w-3.5" />
-
                   </Button>
-
                 );
 
               })}

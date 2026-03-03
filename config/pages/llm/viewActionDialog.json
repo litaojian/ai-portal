@@ -1,0 +1,21 @@
+{
+  "title": "模型详情",
+  "width": "max-w-2xl",
+  "sections": [
+    {
+      "title": "基本信息",
+      "columns": 2,
+      "fields": ["model_name", "quota_type", "supported_endpoint_types"]
+    },
+    {
+      "title": "价格信息",
+      "columns": 3,
+      "fields": ["model_price", "model_ratio", "completion_ratio"]
+    },
+    {
+      "title": "描述",
+      "columns": 1,
+      "fields": ["description"]
+    }
+  ]
+}

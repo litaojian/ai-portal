@@ -1,0 +1,39 @@
+{
+  "title": "模型测试",
+  "width": "max-w-2xl",
+  "sections": [
+    {
+      "title": "模型信息",
+      "columns": 2,
+      "fields": [
+        "model_name",
+        "quota_type",
+        {
+          "key": "supported_endpoint_types",
+          "editable": true,
+          "type": "radio",
+          "placeholder": "openai"
+        }
+      ]
+    },
+    {
+      "title": "请求参数",
+      "columns": 1,
+      "fields": [
+        {
+          "key": "request_body",
+          "editable": true,
+          "type": "textarea"
+        }
+      ]
+    }
+  ],
+  "buttons": [
+    {
+      "label": "测试",
+      "api": "/api/integration/test/models",
+      "method": "POST",
+      "params": {}
+    }
+  ]
+}

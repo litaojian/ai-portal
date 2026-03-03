@@ -1,0 +1,139 @@
+{
+    "$schema": "https://ai-portal.com/schemas/page-config.json",
+    "meta": {
+        "key": "llm/testcase",
+        "title": "模型测试",
+        "description": "模型",
+        "icon": "Shield",
+        "api": "/api/rest/testcases",
+        "default_view": "form"
+    },
+    "model": {
+        "fields": {
+            "id": {
+                "label": "ID",
+                "type": "text",
+                "hidden": true,
+                "primaryKey": true
+            },
+            "site_name": {
+                "label": "API站点",
+                "type": "combobox",
+                "datasource": "/api/data/valuelist/sites",
+                "validation": {
+                    "required": true
+                }
+            },
+            "api_token": {
+                "label": "API令牌",
+                "type": "text"
+            },
+            "model_name": {
+                "label": "模型名称",
+                "type": "combobox",
+                "datasource": "/api/integration/pricing?_site=https://pinova.ai/api",
+                "validation": {
+                    "required": true
+                },
+                "labelKey": "model_name",
+                "valueKey": "model_name",
+                "displayFields": [
+                    { "key": "model_name", "label": "模型名称", "width": "flex-1" },
+                    { "key": "supported_endpoint_types", "label": "端点类型", "width": "w-24" }
+                ]
+            },
+            "endpoint_type": {
+                "label": "端点类型",
+                "type": "radio",
+                "options": [
+                    {
+                        "label": "OpenAI",
+                        "value": "openai"
+                    },
+                    {
+                        "label": "Anthropic",
+                        "value": "anthropic"
+                    }
+                ]
+            },
+            "request_body": {
+                "label": "请求参数",
+                "type": "textarea",
+                "rows": 3
+            },
+            "response_data": {
+                "label": "响应结果",
+                "type": "text"
+            }
+        }
+    },
+    "views": {
+        "search": {
+            "fields": [
+                {
+                    "key": "site_name",
+                    "placeholder": "站点名称"
+                },
+                {
+                    "key": "model_name",
+                    "placeholder": "模型名称"
+                }
+            ]
+        },
+        "table": {
+            "size": "small",
+            "rownum": true,
+            "columns": [
+                {
+                    "key": "site_name",
+                    "width": 150
+                },
+                {
+                    "key": "model_name",
+                    "width": 150
+                },
+                {
+                    "key": "endpoint_type"
+                },
+                {
+                    "key": "request_body"
+                }
+            ],
+            "actions": {
+                "row": [],
+                "toolbar": []
+            },
+            "pagination": {
+                "enabled": true,
+                "pageSize": 10,
+                "mode": "client"
+            }
+        },
+        "form": {
+            "layout": "grid",
+            "columns": 2,
+            "sections": [
+                {
+                    "title": "站点",
+                    "fields": [
+                        "site_name",
+                        "api_token"
+                    ]
+                },
+                {
+                    "title": "模型",
+                    "fields": [
+                        "model_name",
+                        "endpoint_type"
+                    ]
+                },
+                {
+                    "title": "请求",
+                    "fields": [
+                        "request_body"
+                    ]
+                }
+            ]
+        }
+    }
+}
