@@ -35,10 +35,11 @@ export async function GET(
     const { path } = await params;
     const searchParams = request.nextUrl.searchParams;
 
-    // Extract _site override, remove it from forwarded query params
-    const siteOverride = searchParams.get('_site');
+    // Extract site override (_site or site_url), remove it from forwarded query params
+    const siteOverride = searchParams.get('_site') || searchParams.get('site_url');
     const forwardParams = new URLSearchParams(searchParams);
     forwardParams.delete('_site');
+    forwardParams.delete('site_url');
     const queryString = forwardParams.toString();
 
     // Construct upstream URL
@@ -50,13 +51,13 @@ export async function GET(
         // External site: use _site as base, no internal auth headers
         const cleanSite = siteOverride.replace(/\/$/, '');
         url = `${cleanSite}/${upstreamPath}${queryString ? `?${queryString}` : ''}`;
-        headers = { 'Content-Type': 'application/json' };
+        headers = getAuthHeaders();
     } else {
         // Internal Go API: add signature auth headers
         url = `${GO_API_URL}/api/${upstreamPath}${queryString ? `?${queryString}` : ''}`;
         headers = getAuthHeaders();
     }
-    console.log(`[Integration Proxy] Proxying to: ${url}`);
+    console.log(`[Integration Proxy] Proxying to: ${url}, ${headers}`);
 
     try {
         const response = await fetch(url, {
@@ -98,17 +99,43 @@ export async function POST(
 ) {
     const { path } = await params;
     const upstreamPath = path.join('/');
-    const url = `${GO_API_URL}/api/${upstreamPath}`;
-    const headers = getAuthHeaders();
+    const bodyText = await request.text();
 
-    console.log(`[Integration Proxy] POST proxying to: ${url}`);
+    // Extract site_url from body to support external site routing
+    let siteOverride: string | null = null;
+    let forwardBody = bodyText;
+    if (bodyText) {
+        try {
+            const bodyJson = JSON.parse(bodyText);
+            if (bodyJson.site_url) {
+                siteOverride = bodyJson.site_url;
+                delete bodyJson.site_url;
+                forwardBody = JSON.stringify(bodyJson);
+            }
+        } catch {
+            // not JSON, forward as-is
+        }
+    }
+
+    let url: string;
+    let headers: Record<string, string>;
+
+    if (siteOverride) {
+        const cleanSite = siteOverride.replace(/\/$/, '');
+        url = `${cleanSite}/${upstreamPath}`;
+        headers = getAuthHeaders();
+    } else {
+        url = `${GO_API_URL}/api/${upstreamPath}`;
+        headers = getAuthHeaders();
+    }
+
+    console.log(`[Integration Proxy] POST proxying to: ${url}, ${headers}`);
 
     try {
-        const body = await request.text();
         const response = await fetch(url, {
             method: 'POST',
             headers,
-            body,
+            body: forwardBody,
             cache: "no-store"
         });
 

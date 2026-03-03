@@ -53,6 +53,14 @@
                 "label": "备注",
                 "placeholder": "请输入备注信息,如业务员",
                 "type": "text"
+            },
+            "site_url": {
+                "label": "API站点",
+                "type": "combobox",
+                "datasource": "/api/data/valuelist/newapidb",
+                "validation": {
+                    "required": true
+                }
             }
         }
     },
@@ -109,6 +117,7 @@
                 {
                     "title": "开户信息",
                     "fields": [
+                        "site_url",
                         "displayName",
                         "username",
                         "initialPassword",

@@ -19,6 +19,7 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(false);
   const [initialData, setInitialData] = useState<any>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (mode === 'edit' && entityId) {
@@ -63,10 +64,28 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
       ...prev,
       [fieldName]: value
     }));
+    if (errors[fieldName]) {
+      setErrors(prev => { const n = { ...prev }; delete n[fieldName]; return n; });
+    }
+  };
+
+  const validate = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    Object.entries(config.model.fields).forEach(([key, field]) => {
+      if (field.validation?.required) {
+        const value = formData[key];
+        if (value === undefined || value === null || value === '') {
+          newErrors[key] = `${field.label}不能为空`;
+        }
+      }
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
     setLoading(true);
     try {
       const result = await onSubmit(formData);
@@ -133,6 +152,7 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
         labelLayout={sectionLabelLayout || labelLayout}
         labelWidth={sectionLabelWidth || labelWidth}
         effectiveDatasource={effectiveDatasource}
+        error={errors[key]}
       />
     );
   };

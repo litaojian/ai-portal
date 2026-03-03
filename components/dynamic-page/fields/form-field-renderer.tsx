@@ -20,9 +20,10 @@ interface FormFieldRendererProps {
   labelLayout?: 'vertical' | 'horizontal';
   labelWidth?: string;
   effectiveDatasource?: string;
+  error?: string;
 }
 
-export default function FormFieldRenderer({ field, value, onChange, onExtraChange, disabled, placeholder, labelLayout = 'vertical', labelWidth, effectiveDatasource }: FormFieldRendererProps) {
+export default function FormFieldRenderer({ field, value, onChange, onExtraChange, disabled, placeholder, labelLayout = 'vertical', labelWidth, effectiveDatasource, error }: FormFieldRendererProps) {
   // Prefer field-level placeholder over the externally passed placeholder prop
   const effectivePlaceholder = field.placeholder ?? placeholder;
 
@@ -132,8 +133,12 @@ export default function FormFieldRenderer({ field, value, onChange, onExtraChang
     </label>
   );
 
-  const hintEl = field.validation?.message && (
+  const hintEl = !error && field.validation?.message && (
     <p className="text-[0.8rem] text-muted-foreground">{field.validation.message}</p>
+  );
+
+  const errorEl = error && (
+    <p className="text-[0.8rem] text-destructive">{error}</p>
   );
 
   if (labelLayout === 'horizontal') {
@@ -143,6 +148,7 @@ export default function FormFieldRenderer({ field, value, onChange, onExtraChang
         <div className="flex-1 space-y-1">
           {renderField()}
           {hintEl}
+          {errorEl}
         </div>
       </div>
     );
@@ -153,6 +159,7 @@ export default function FormFieldRenderer({ field, value, onChange, onExtraChang
       {labelEl}
       {renderField()}
       {hintEl}
+      {errorEl}
     </div>
   );
 }

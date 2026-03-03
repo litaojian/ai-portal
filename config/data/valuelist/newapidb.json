@@ -1,0 +1,10 @@
+[
+  {
+    "label": "pinova",
+    "value": "http://20.246.88.31:9602/api"
+  },
+  {
+    "label": "digitalcloud",
+    "value": "http://www.digitalcloud.asia:9602/api"
+  }
+]

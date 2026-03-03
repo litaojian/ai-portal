@@ -1,17 +1,17 @@
 [
   {
     "label": "pinova",
-    "value": "http://20.246.88.31:8081",
-    "extra": { "api_token": "abc123" }
+    "value": "http://20.246.88.31:8080",
+    "extra": { "api_token": "sk-aTuwyEXwK4YvxiQ4N0HQBSFT9Qw8kXFqNoxD0DSNOD6r2lvB" }
   },
   {
     "label": "csp",
     "value": "http://csp.burncloud.com",
-    "extra": { "api_token": "abc566" }
+    "extra": { "api_token": "sk-H5vvhCg4uyo0KRKq5T9F6ozTPsPzuEMTlgKTD4v23de6aVgj" }
   },
   {
     "label": "digitalcloud",
     "value": "https://www.digitalcloud.asia",
-    "extra": { "api_token": "abc1678" }
+    "extra": { "api_token": "sk-Kdyt2OOzHvQLVGqnmjORaF4AHX22gw5yyBmtTrKt5W2FvCql" }
   }
 ]
