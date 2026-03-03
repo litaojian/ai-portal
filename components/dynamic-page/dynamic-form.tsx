@@ -11,7 +11,7 @@ interface DynamicFormProps {
   config: PageConfig;
   mode: 'create' | 'edit';
   entityId?: string;
-  onSubmit: (data: any) => Promise<void>;
+  onSubmit: (data: any) => Promise<any>;
   onCancel?: () => void;
 }
 
@@ -41,20 +41,20 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
   const loadEntityData = async () => {
     const dataService = BizDataService.getInstance();
     try {
-        const data = await dataService.fetchOne(config.meta.key, entityId!, config.meta.api);
-        
-        // 确保编辑模式下，如果日期字段为空，也显示默认日期
-        const enrichedData = { ...data };
-        Object.entries(config.model.fields).forEach(([key, field]) => {
-            if ((field.type === 'date' || field.type === 'datetime') && !enrichedData[key]) {
-                enrichedData[key] = new Date().toISOString().split('T')[0];
-            }
-        });
+      const data = await dataService.fetchOne(config.meta.key, entityId!, config.meta.api);
 
-        setInitialData(enrichedData);
-        setFormData(enrichedData);
+      // 确保编辑模式下，如果日期字段为空，也显示默认日期
+      const enrichedData = { ...data };
+      Object.entries(config.model.fields).forEach(([key, field]) => {
+        if ((field.type === 'date' || field.type === 'datetime') && !enrichedData[key]) {
+          enrichedData[key] = new Date().toISOString().split('T')[0];
+        }
+      });
+
+      setInitialData(enrichedData);
+      setFormData(enrichedData);
     } catch (error) {
-        console.error("Failed to load entity data", error);
+      console.error("Failed to load entity data", error);
     }
   };
 
@@ -69,7 +69,10 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
     e.preventDefault();
     setLoading(true);
     try {
-      await onSubmit(formData);
+      const result = await onSubmit(formData);
+      if (result && typeof result === 'object') {
+        setFormData(result);
+      }
     } finally {
       setLoading(false);
     }
@@ -82,7 +85,7 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
 
   type SectionItem = string | { key: string; label?: string; type?: string; datasource?: string };
 
-  const renderField = (item: SectionItem) => {
+  const renderField = (item: SectionItem, sectionLabelLayout?: 'vertical' | 'horizontal', sectionLabelWidth?: string) => {
     const key = typeof item === 'string' ? item : item.key;
     const itemType = typeof item !== 'string' ? item.type : undefined;
     const itemDatasource = typeof item !== 'string' ? item.datasource : undefined;
@@ -94,16 +97,28 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
 
     const field: FieldDefinition = modelField
       ? {
-          ...modelField,
-          ...(itemLabel !== undefined && { label: itemLabel }),
-          ...(itemType !== undefined && { type: itemType as FieldDefinition['type'] }),
-          ...(itemDatasource !== undefined && { datasource: itemDatasource }),
-        }
+        ...modelField,
+        ...(itemLabel !== undefined && { label: itemLabel }),
+        ...(itemType !== undefined && { type: itemType as FieldDefinition['type'] }),
+        ...(itemDatasource !== undefined && { datasource: itemDatasource }),
+      }
       : {
-          label: itemLabel ?? key,
-          type: (itemType as FieldDefinition['type']) ?? 'text',
-          datasource: itemDatasource,
-        } as FieldDefinition;
+        label: itemLabel ?? key,
+        type: (itemType as FieldDefinition['type']) ?? 'text',
+        datasource: itemDatasource,
+      } as FieldDefinition;
+
+    // Resolve dynamic datasource if it contains variables like {{field_key}}
+    let effectiveDatasource = field.datasource;
+    if (effectiveDatasource && effectiveDatasource.includes('{{')) {
+      // Replace all occurrences of {{key}} with the corresponding value from formData
+      effectiveDatasource = effectiveDatasource.replace(/{{([^}]+)}}/g, (_, varName) => {
+        const val = formData[varName.trim()];
+        return val !== undefined && val !== null ? encodeURIComponent(String(val)) : '';
+      });
+      // If any variable was not found (resulting in an empty string replacement where expected), 
+      // you might want to return early or handle it. Currently, it evaluates to whatever string results.
+    }
 
     return (
       <FormFieldRenderer
@@ -114,9 +129,10 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
         onExtraChange={(extra) => {
           Object.entries(extra).forEach(([k, v]) => handleChange(k, v));
         }}
-        disabled={loading}
-        labelLayout={labelLayout}
-        labelWidth={labelWidth}
+        disabled={loading || field.disabled}
+        labelLayout={sectionLabelLayout || labelLayout}
+        labelWidth={sectionLabelWidth || labelWidth}
+        effectiveDatasource={effectiveDatasource}
       />
     );
   };
@@ -136,7 +152,19 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
               className="grid gap-4"
               style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
             >
-              {section.fields.map((item) => renderField(item))}
+              {section.fields.map((item, ii) => {
+                const colSpan = typeof item === 'object' ? (item as any).colSpan : 1;
+                return (
+                  <div
+                    key={ii}
+                    style={{
+                      gridColumn: colSpan > 1 ? `span ${colSpan} / span ${colSpan}` : 'auto'
+                    }}
+                  >
+                    {renderField(item, section.labelLayout, section.labelWidth)}
+                  </div>
+                );
+              })}
             </div>
           </div>
         ))
@@ -155,9 +183,15 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
             取消
           </Button>
         )}
-        <Button type="submit" disabled={loading}>
-          {loading ? '提交中...' : mode === 'create' ? '创建' : '更新'}
-        </Button>
+        {!formView?.submitButton?.hidden && (
+          <Button
+            type="submit"
+            disabled={loading}
+            variant={(formView?.submitButton?.variant as any) ?? 'default'}
+          >
+            {loading ? '提交中...' : (formView?.submitButton?.title ?? (mode === 'create' ? '创建' : '更新'))}
+          </Button>
+        )}
       </div>
     </form>
   );

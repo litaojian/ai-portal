@@ -26,6 +26,11 @@ export default withAuth(
       return NextResponse.next();
     }
 
+    // Fast path: if we already checked and it's initialized, skip checking again
+    if (req.cookies.has("system_initialized")) {
+      return NextResponse.next();
+    }
+
     // Check if system is initialized
     const isInitialized = await checkInitialization(req);
 
@@ -34,7 +39,14 @@ export default withAuth(
       return NextResponse.redirect(new URL("/setup", req.url));
     }
 
-    return NextResponse.next();
+    // If initialized, set a cookie to remember it
+    const response = NextResponse.next();
+    response.cookies.set("system_initialized", "true", {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+    });
+
+    return response;
   },
   {
     pages: {

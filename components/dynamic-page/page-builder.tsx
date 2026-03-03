@@ -9,13 +9,14 @@ import { DynamicSearch } from './dynamic-search';
 
 import { BizDataService } from '@/lib/biz-data-service';
 import { Card, CardContent } from '@/components/ui/card';
-import { Plus, Upload, Download } from 'lucide-react';
+import { Plus, Upload, Download, CheckCircle2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { DynamicDialog } from './dynamic-dialog';
 import { ActionDialogConfig } from '@/lib/schemas/dynamic-dialog-config';
@@ -56,13 +57,17 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
   const [actionDialogData, setActionDialogData] = useState<Record<string, any> | null>(null);
   const [actionDialogConfig, setActionDialogConfig] = useState<ActionDialogConfig | null>(null);
 
+  // Submit Result Dialog State (for standalone form pages)
+  const [resultDialogOpen, setResultDialogOpen] = useState(false);
+  const [submitResult, setSubmitResult] = useState<Record<string, any> | null>(null);
+
 
   useEffect(() => {
     loadConfig();
   }, [pageId]);
 
   useEffect(() => {
-    if (!config || mode !== 'list' || config.meta.default_view === 'form') return;
+    if (!config || mode !== 'list' || config.meta.defaultView === 'form') return;
     if (config.views.table.pagination?.mode === 'client') {
       loadFullData();
     } else {
@@ -71,7 +76,7 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
   }, [config, mode, searchParams]);
 
   useEffect(() => {
-    if (!config || mode !== 'list' || config.meta.default_view === 'form') return;
+    if (!config || mode !== 'list' || config.meta.defaultView === 'form') return;
     if (config.views.table.pagination?.mode === 'client') {
       const { pageIndex, pageSize } = pagination;
       const start = pageIndex * pageSize;
@@ -171,13 +176,24 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
     if (!config) return;
     try {
       const dataService = BizDataService.getInstance();
+      let res;
       if (dialogMode === 'create') {
-        await dataService.create(config.meta.key, data, config.meta.api);
+        res = await dataService.create(config.meta.key, data, config.meta.api);
       } else if (dialogMode === 'edit' && currentEntityId) {
-        await dataService.update(config.meta.key, currentEntityId, data, config.meta.api);
+        res = await dataService.update(config.meta.key, currentEntityId, data, config.meta.api);
       }
+
       setDialogOpen(false);
-      loadListData(); // Refresh list
+
+      // Show result dialog for standalone form pages
+      if (config.meta.defaultView === 'form' && res) {
+        setSubmitResult(res);
+        setResultDialogOpen(true);
+      } else if (config.meta.defaultView !== 'form') {
+        loadListData(); // Refresh list
+      }
+
+      return res;
     } catch (error) {
       console.error("Form submission failed", error);
       // Add toast or error handling here
@@ -251,18 +267,70 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
   if (loading) return <div>加载中...</div>;
   if (!config) return <div>页面配置不存在</div>;
 
-  if (config.meta.default_view === 'form') {
+  if (config.meta.defaultView === 'form') {
+    // Resolve submitResult config
+    const submitResultCfg = (config.views.form as any)?.submitResult as {
+      title?: string;
+      fields?: { key: string; label: string }[];
+    } | undefined;
+
+    // Build label map from model fields
+    const fieldLabelMap: Record<string, string> = {};
+    Object.entries(config.model.fields).forEach(([k, f]) => {
+      fieldLabelMap[k] = f.label ?? k;
+    });
+
     return (
-      <Card className="shadow-sm">
-        <CardContent className="p-6">
-          <DynamicForm
-            config={config}
-            mode="create"
-            onSubmit={handleFormSubmit}
-            onCancel={() => {}}
-          />
-        </CardContent>
-      </Card>
+      <>
+        <Card className="shadow-sm">
+          <CardContent className="p-6">
+            <DynamicForm
+              config={config}
+              mode="create"
+              onSubmit={handleFormSubmit}
+              onCancel={() => { }}
+            />
+          </CardContent>
+        </Card>
+
+        {/* Submit Result Dialog */}
+        <Dialog open={resultDialogOpen} onOpenChange={setResultDialogOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <CheckCircle2 className="h-5 w-5 text-green-500" />
+                {submitResultCfg?.title ?? '操作成功'}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="py-2">
+              {submitResult && (() => {
+                // Determine which fields to show
+                const entries = submitResultCfg?.fields
+                  ? submitResultCfg.fields
+                    .filter(f => submitResult[f.key] !== undefined && submitResult[f.key] !== null && submitResult[f.key] !== '')
+                    .map(f => ({ key: f.key, label: f.label }))
+                  : Object.keys(submitResult)
+                    .filter(k => submitResult[k] !== undefined && submitResult[k] !== null && submitResult[k] !== '')
+                    .map(k => ({ key: k, label: fieldLabelMap[k] ?? k }));
+
+                return (
+                  <div className="space-y-2">
+                    {entries.map(({ key, label }) => (
+                      <div key={key} className="flex items-start gap-2 text-sm">
+                        <span className="w-28 shrink-0 text-muted-foreground font-medium text-right">{label}：</span>
+                        <span className="break-all font-mono text-foreground">{String(submitResult[key])}</span>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
+            </div>
+            <DialogFooter>
+              <Button onClick={() => setResultDialogOpen(false)}>关闭</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </>
     );
   }
 

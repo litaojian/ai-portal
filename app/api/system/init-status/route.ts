@@ -55,9 +55,9 @@ export async function GET() {
         console.error("Init status check error:", error);
 
         return NextResponse.json({
-            initialized: false,
+            initialized: true,
             reason: "database_error",
-            message: "数据库检查失败，可能需要初始化"
+            message: "数据库检查失败,无法初始化"
         });
     }
 }

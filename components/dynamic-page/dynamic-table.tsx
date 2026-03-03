@@ -296,11 +296,11 @@ export function DynamicTable({
 
     <div className="h-full flex flex-col min-w-0 w-full">
 
-      <div className="flex-1 overflow-auto min-h-0 border-b">
+      <div className="flex-1 overflow-auto min-h-0 border-b relative">
 
-        <Table>
+        <Table containerClassName="overflow-visible" className="w-max min-w-full">
 
-          <TableHeader className="bg-muted/50">
+          <TableHeader className="bg-muted/50 sticky top-0 z-10 shadow-[0_1px_0_rgba(0,0,0,0.05)]">
 
             {table.getHeaderGroups().map((headerGroup) => (
 
@@ -458,7 +458,7 @@ export function DynamicTable({
 
           </TableBody>
           {config.views.table.summary && data.length > 0 && (
-            <TableFooter className="border-t-2 border-primary/20 bg-muted/30">
+            <TableFooter className="border-t-2 border-primary/20 bg-muted/30 sticky bottom-0 z-10 shadow-[0_-1px_0_rgba(0,0,0,0.05)]">
               <TableRow className="hover:bg-transparent">
                 {table.getVisibleLeafColumns().map((column) => {
                   const meta = column.columnDef.meta as any;

@@ -1,0 +1,151 @@
+{
+    "$schema": "https://ai-portal.com/schemas/page-config.json",
+    "meta": {
+        "key": "llm/accounts",
+        "title": "新开账号",
+        "description": "新开账号",
+        "icon": "Shield",
+        "api": "/api/integration/accounts",
+        "defaultView": "form"
+    },
+    "model": {
+        "fields": {
+            "id": {
+                "label": "ID",
+                "type": "text",
+                "hidden": true,
+                "primaryKey": true
+            },
+            "username": {
+                "label": "登录账号",
+                "placeholder": "请输入登录账号",
+                "type": "text",
+                "validation": {
+                    "required": true
+                }
+            },
+            "displayName": {
+                "label": "用户名称",
+                "placeholder": "请输入用户名称(中文)",
+                "type": "text",
+                "validation": {
+                    "required": true
+                }
+            },
+            "initialPassword": {
+                "label": "密码",
+                "type": "text",
+                "defaultValue": "123456123456qwe!@#",
+                "validation": {
+                    "required": true
+                }
+            },
+            "rechargeAmount": {
+                "label": "充值金额($)",
+                "placeholder": "请输入美元金额",
+                "type": "number",
+                "defaultValue": 100,
+                "validation": {
+                    "required": true
+                }
+            },
+            "remark": {
+                "label": "备注",
+                "placeholder": "请输入备注信息,如业务员",
+                "type": "text"
+            }
+        }
+    },
+    "views": {
+        "search": {
+            "fields": [
+                {
+                    "key": "username",
+                    "placeholder": "登录账号"
+                },
+                {
+                    "key": "displayName",
+                    "placeholder": "用户名称"
+                }
+            ]
+        },
+        "table": {
+            "size": "small",
+            "rownum": true,
+            "columns": [
+                {
+                    "key": "username",
+                    "width": 150
+                },
+                {
+                    "key": "displayName",
+                    "width": 150
+                },
+                {
+                    "key": "rechargeAmount",
+                    "width": 150
+                },
+                {
+                    "key": "tokenKey",
+                    "width": 150
+                }
+            ],
+            "actions": {
+                "row": [],
+                "toolbar": []
+            },
+            "pagination": {
+                "enabled": true,
+                "pageSize": 10,
+                "mode": "client"
+            }
+        },
+        "form": {
+            "layout": "grid",
+            "columns": 1,
+            "labelLayout": "horizontal",
+            "labelWidth": "w-24",
+            "sections": [
+                {
+                    "title": "开户信息",
+                    "fields": [
+                        "displayName",
+                        "username",
+                        "initialPassword",
+                        "rechargeAmount",
+                        "remark"
+                    ]
+                }
+            ],
+            "submitResult": {
+                "title": "开户成功",
+                "fields": [
+                    {
+                        "key": "displayName",
+                        "label": "用户名称"
+                    },
+                    {
+                        "key": "username",
+                        "label": "登录账号"
+                    },
+                    {
+                        "key": "initialPassword",
+                        "label": "初始密码"
+                    },
+                    {
+                        "key": "rechargeAmount",
+                        "label": "充值金额($)"
+                    },
+                    {
+                        "key": "tokenKey",
+                        "label": "API令牌"
+                    },
+                    {
+                        "key": "siteUrl",
+                        "label": "API站点"
+                    }
+                ]
+            }
+        }
+    }
+}

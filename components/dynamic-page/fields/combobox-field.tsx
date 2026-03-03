@@ -21,6 +21,7 @@ interface ComboboxFieldProps {
   onExtraChange?: (extra: Record<string, unknown>) => void;
   disabled?: boolean;
   placeholder?: string;
+  effectiveDatasource?: string; // Resolved URL with variables replaced
 }
 
 export default function ComboboxField({
@@ -30,39 +31,93 @@ export default function ComboboxField({
   onExtraChange,
   disabled,
   placeholder,
+  effectiveDatasource
 }: ComboboxFieldProps) {
   const [open, setOpen] = useState(false);
   const [searchInput, setSearchInput] = useState<string | null>(null);
   const [options, setOptions] = useState<ComboboxOption[]>([]);
-  const [fetching, setFetching] = useState(!!field.datasource);
+
+  // The actual URL to fetch from, prioritizing the dynamically resolved one
+  const fetchUrl = effectiveDatasource || field.datasource;
+  const isUrlReady = fetchUrl && !fetchUrl.includes('{{') && !fetchUrl.includes('}}');
+
+  const [fetching, setFetching] = useState(!!isUrlReady);
   const [activeIndex, setActiveIndex] = useState(-1);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const itemRefs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
-    if (!field.datasource) return;
-    fetch(field.datasource)
+    if (!isUrlReady) {
+      setOptions([]); // Clear options if dependencies are unbound
+      return;
+    }
+
+    setFetching(true);
+    fetch(fetchUrl)
       .then((r) => r.json())
       .then((data) => {
         const raw: Record<string, unknown>[] = Array.isArray(data) ? data : (data?.data ?? []);
         const lk = field.labelKey;
         const vk = field.valueKey;
         setOptions(
-          raw.map((item) => ({
-            label: String(lk ? item[lk] : (item['label'] ?? item['name'] ?? item)),
-            value: String(vk ? item[vk] : (item['value'] ?? item['id'] ?? item)),
-            extra: item['extra'] as Record<string, unknown> | undefined,
-            raw: item,
-          }))
+          raw.map((item) => {
+            const rawValue = vk ? item[vk] : (item['value'] ?? item['id'] ?? item);
+            const stringValue = (typeof rawValue === 'object' && rawValue !== null)
+              ? JSON.stringify(rawValue)
+              : String(rawValue);
+
+            return {
+              label: String(lk ? item[lk] : (item['label'] ?? item['name'] ?? item)),
+              value: stringValue,
+              extra: item['extra'] as Record<string, unknown> | undefined,
+              raw: item,
+            };
+          })
         );
         setFetching(false);
       })
       .catch((err) => {
-        console.error(err);
+        console.error("Combobox fetch err for", fetchUrl, err);
+        setOptions([]);
         setFetching(false);
       });
-  }, [field.datasource, field.labelKey, field.valueKey]);
+  }, [fetchUrl, isUrlReady, field.labelKey, field.valueKey]);
+
+  // Handle default value mapping on initialization
+  const [hasInitializedDefault, setHasInitializedDefault] = useState(false);
+
+  useEffect(() => {
+    if (fetching || hasInitializedDefault || !value || options.length === 0 || !onExtraChange) return;
+
+    const selectedOption = options.find((o) => o.value === String(value));
+    if (selectedOption) {
+      if (field.fieldMapping) {
+        const mapping = field.fieldMapping;
+        const extraData: Record<string, unknown> = {};
+        Object.entries(mapping).forEach(([srcKey, targetKey]) => {
+          const val = (selectedOption.extra && selectedOption.extra[srcKey] !== undefined)
+            ? selectedOption.extra[srcKey]
+            : selectedOption.raw[srcKey];
+
+          if (val !== undefined) {
+            if (typeof val === 'object' && val !== null) {
+              extraData[targetKey] = JSON.stringify(val, null, 2);
+            } else {
+              extraData[targetKey] = val;
+            }
+          }
+        });
+        if (Object.keys(extraData).length > 0) {
+          onExtraChange(extraData);
+        }
+      } else if (selectedOption.extra) {
+        onExtraChange(selectedOption.extra);
+      }
+      // Delay setting initialized so component completes render cycle without double fetching
+      setTimeout(() => setHasInitializedDefault(true), 0);
+    }
+  }, [fetching, value, options, onExtraChange, field.fieldMapping, hasInitializedDefault]);
 
   const selectedLabel = options.find((o) => o.value === String(value ?? ''))?.label ?? '';
   const inputValue = searchInput !== null ? searchInput : selectedLabel;
@@ -86,7 +141,33 @@ export default function ComboboxField({
 
   const handleSelect = (option: ComboboxOption) => {
     onChange(option.value);
-    if (onExtraChange && option.extra) onExtraChange(option.extra);
+
+    // Handle field mapping if defined
+    if (onExtraChange && field.fieldMapping) {
+      const mapping = field.fieldMapping;
+      const extraData: Record<string, unknown> = {};
+      Object.entries(mapping).forEach(([srcKey, targetKey]) => {
+        // First check in extra, then in raw
+        const val = (option.extra && option.extra[srcKey] !== undefined)
+          ? option.extra[srcKey]
+          : option.raw[srcKey];
+
+        if (val !== undefined) {
+          // If the value is an object, stringify it
+          if (typeof val === 'object' && val !== null) {
+            extraData[targetKey] = JSON.stringify(val, null, 2);
+          } else {
+            extraData[targetKey] = val;
+          }
+        }
+      });
+      if (Object.keys(extraData).length > 0) {
+        onExtraChange(extraData);
+      }
+    } else if (onExtraChange && option.extra) {
+      onExtraChange(option.extra);
+    }
+
     close();
   };
 

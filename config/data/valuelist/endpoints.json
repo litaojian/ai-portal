@@ -1,0 +1,44 @@
+[
+    {
+        "label": "文本生成 (Chat)",
+        "value": "chat",
+        "extra": {
+            "endpoint_url": "/v1/chat/completions"
+        }
+    },
+    {
+        "label": "普通文本 (Completions)",
+        "value": "completions",
+        "extra": {
+            "endpoint_url": "/v1/completions"
+        }
+    },
+    {
+        "label": "图片生成 (Images)",
+        "value": "images",
+        "extra": {
+            "endpoint_url": "/v1/images/generations"
+        }
+    },
+    {
+        "label": "视频生成 (Videos)",
+        "value": "videos",
+        "extra": {
+            "endpoint_url": "/v1/videos/generations"
+        }
+    },
+    {
+        "label": "音频转录 (Audio)",
+        "value": "audio",
+        "extra": {
+            "endpoint_url": "/v1/audio/transcriptions"
+        }
+    },
+    {
+        "label": "嵌入向量 (Embeddings)",
+        "value": "embeddings",
+        "extra": {
+            "endpoint_url": "/v1/embeddings"
+        }
+    }
+]

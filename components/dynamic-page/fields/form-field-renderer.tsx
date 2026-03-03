@@ -8,6 +8,7 @@ import DateField from './date-field';
 import BooleanField from './boolean-field';
 import RadioField from './radio-field';
 import ComboboxField from './combobox-field';
+import TextareaField from './textarea-field';
 
 interface FormFieldRendererProps {
   field: FieldDefinition;
@@ -18,20 +19,33 @@ interface FormFieldRendererProps {
   placeholder?: string;
   labelLayout?: 'vertical' | 'horizontal';
   labelWidth?: string;
+  effectiveDatasource?: string;
 }
 
-export default function FormFieldRenderer({ field, value, onChange, onExtraChange, disabled, placeholder, labelLayout = 'vertical', labelWidth }: FormFieldRendererProps) {
+export default function FormFieldRenderer({ field, value, onChange, onExtraChange, disabled, placeholder, labelLayout = 'vertical', labelWidth, effectiveDatasource }: FormFieldRendererProps) {
+  // Prefer field-level placeholder over the externally passed placeholder prop
+  const effectivePlaceholder = field.placeholder ?? placeholder;
+
   const renderField = () => {
     switch (field.type) {
       case 'text':
-      case 'textarea': // Fallback to text for now
         return (
           <TextField
             field={field}
             value={value}
             onChange={onChange}
             disabled={disabled}
-            placeholder={placeholder}
+            placeholder={effectivePlaceholder}
+          />
+        );
+      case 'textarea':
+        return (
+          <TextareaField
+            field={field}
+            value={value}
+            onChange={onChange}
+            disabled={disabled}
+            placeholder={effectivePlaceholder}
           />
         );
       case 'select':
@@ -41,7 +55,7 @@ export default function FormFieldRenderer({ field, value, onChange, onExtraChang
             value={value}
             onChange={onChange}
             disabled={disabled}
-            placeholder={placeholder}
+            placeholder={effectivePlaceholder}
           />
         );
       case 'date':
@@ -80,7 +94,8 @@ export default function FormFieldRenderer({ field, value, onChange, onExtraChang
             onChange={onChange}
             onExtraChange={onExtraChange}
             disabled={disabled}
-            placeholder={placeholder}
+            placeholder={effectivePlaceholder}
+            effectiveDatasource={effectiveDatasource}
           />
         );
       case 'number':
@@ -90,6 +105,7 @@ export default function FormFieldRenderer({ field, value, onChange, onExtraChang
             value={value || ''}
             onChange={(e) => onChange(Number(e.target.value))}
             disabled={disabled}
+            placeholder={effectivePlaceholder}
             className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
           />
         );
@@ -100,7 +116,7 @@ export default function FormFieldRenderer({ field, value, onChange, onExtraChang
             value={value}
             onChange={onChange}
             disabled={disabled}
-            placeholder={placeholder}
+            placeholder={effectivePlaceholder}
           />
         );
     }

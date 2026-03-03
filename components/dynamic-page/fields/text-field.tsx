@@ -14,8 +14,9 @@ export default function TextField({ field, value, onChange, disabled, placeholde
     <Input
       value={value || ""}
       onChange={(e) => onChange(e.target.value)}
-      disabled={disabled}
+      readOnly={disabled}
       placeholder={placeholder}
+      className={disabled ? "bg-muted cursor-not-allowed opacity-100" : ""}
     />
   );
 }

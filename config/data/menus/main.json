@@ -10,6 +10,11 @@
             "icon": "IconFile"
         },
         {
+            "title": "新开账号",
+            "url": "/portal/llm/accounts",
+            "icon": "IconFile"
+        },
+        {
             "title": "模型测试",
             "url": "/portal/llm/testcases",
             "icon": "IconFile"

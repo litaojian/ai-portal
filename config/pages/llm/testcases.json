@@ -6,7 +6,7 @@
         "description": "模型",
         "icon": "Shield",
         "api": "/api/rest/testcases",
-        "default_view": "form"
+        "defaultView": "form"
     },
     "model": {
         "fields": {

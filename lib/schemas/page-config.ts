@@ -33,12 +33,15 @@ export const FieldSchema = z.object({
   label: z.string(),
   type: FieldTypeSchema,
   hidden: z.boolean().optional(),
+  disabled: z.boolean().optional(),
   primaryKey: z.boolean().optional(),
+  placeholder: z.string().optional(),
   options: z.array(SelectOptionSchema).optional(),
   format: z.string().optional(),
   defaultValue: z.any().optional(),
   validation: ValidationSchema.optional(),
   datasource: z.string().optional(), // for combobox: remote options API path
+  dependencies: z.array(z.string()).optional(), // Fields this one depends on (triggers reload)
   labelKey: z.string().optional(),   // combobox: which field in response to use as label
   valueKey: z.string().optional(),   // combobox: which field in response to use as value
   displayFields: z.array(z.object({
@@ -46,6 +49,7 @@ export const FieldSchema = z.object({
     label: z.string().optional(),
     width: z.string().optional(),    // e.g. "w-24", "flex-1"
   })).optional(),                    // combobox: columns to show in dropdown
+  fieldMapping: z.record(z.string(), z.string()).optional(), // combobox: map data source fields to form fields
 });
 
 // --- 视图配置 ---
@@ -111,6 +115,8 @@ export const SearchFieldSchema = z.object({
 
 export const FormSectionSchema = z.object({
   title: z.string().optional(),
+  labelLayout: z.enum(["vertical", "horizontal"]).optional(),
+  labelWidth: z.string().optional(),
   fields: z.array(
     z.union([
       z.string(),
@@ -143,7 +149,7 @@ export const PageConfigSchema = z.object({
     description: z.string().optional(),
     icon: z.string().optional(),
     api: z.string().optional(),
-    default_view: z.enum(["list", "form"]).optional(),
+    defaultView: z.enum(["list", "form"]).optional(), // Renamed from default_view to camelCase
   }),
   permissions: PermissionConfigSchema.optional(),
   model: z.object({
@@ -187,6 +193,12 @@ export const PageConfigSchema = z.object({
       labelLayout: z.enum(["vertical", "horizontal"]).optional(), // label position
       labelWidth: z.string().optional(), // e.g. "w-24", "w-32" (horizontal only)
       sections: z.array(FormSectionSchema),
+      submitButton: z.object({
+        title: z.string().optional(),
+        icon: z.string().optional(),
+        hidden: z.boolean().optional(),
+        variant: z.enum(["default", "destructive", "outline", "secondary", "ghost", "link"]).optional(),
+      }).optional(),
     }).optional(),
   }),
 });
