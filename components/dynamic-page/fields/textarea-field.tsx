@@ -20,7 +20,7 @@ export default function TextareaField({ field, value, onChange, disabled, placeh
             readOnly={disabled}
             placeholder={placeholder}
             rows={rows}
-            className={`min-h-[80px] ${disabled ? "bg-muted cursor-not-allowed opacity-100" : ""}`}
+            className={`field-sizing-fixed overflow-y-auto resize-none ${disabled ? "bg-muted cursor-not-allowed opacity-100" : ""}`}
         />
     );
 }

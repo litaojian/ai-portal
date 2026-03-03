@@ -5,7 +5,7 @@
         "title": "模型测试",
         "description": "模型",
         "icon": "Shield",
-        "api": "/api/rest/testcases",
+        "api": "/api/llm/testcases",
         "defaultView": "form"
     },
     "model": {
@@ -19,6 +19,7 @@
             "site_name": {
                 "label": "API站点",
                 "type": "combobox",
+                "defaultValue":"http://20.246.88.31:8080",
                 "datasource": "/api/data/valuelist/sites",
                 "validation": {
                     "required": true
@@ -40,30 +41,43 @@
                 "displayFields": [
                     { "key": "model_name", "label": "模型名称", "width": "flex-1" },
                     { "key": "supported_endpoint_types", "label": "端点类型", "width": "w-24" }
-                ]
+                ],
+                "fieldMapping": {
+                    "supported_endpoint_types": "supported_endpoint_types"
+                }
+            },
+            "supported_endpoint_types": {
+                "label": "端点类型",
+                "type": "text",
+                "disabled": true
             },
             "endpoint_type": {
                 "label": "端点类型",
-                "type": "radio",
-                "options": [
-                    {
-                        "label": "OpenAI",
-                        "value": "openai"
-                    },
-                    {
-                        "label": "Anthropic",
-                        "value": "anthropic"
-                    }
-                ]
+                "type": "combobox",
+                "datasource": "/api/data/valuelist/endpoint"
+            },            
+            "endpoint_url": {
+                "label": "端点URL",
+                "type": "text",
+                "disabled": true
             },
+            "request_example": {
+                "label": "示例",
+                "type": "combobox",
+                "datasource": "/api/data/valuelist/model_examples?endpoint_url={{endpoint_url}}",
+                "fieldMapping": {
+                    "request_body": "request_body"
+                }
+            },   
             "request_body": {
                 "label": "请求参数",
                 "type": "textarea",
-                "rows": 3
+                "rows": 10
             },
             "response_data": {
                 "label": "响应结果",
-                "type": "text"
+                "type": "textarea",
+                "rows": 10
             }
         }
     },
@@ -94,9 +108,6 @@
                 },
                 {
                     "key": "endpoint_type"
-                },
-                {
-                    "key": "request_body"
                 }
             ],
             "actions": {
@@ -112,6 +123,12 @@
         "form": {
             "layout": "grid",
             "columns": 2,
+            "submitButton": {
+                "title": "开始测试"
+            },
+            "extraButtons": [
+                { "title": "生成cURL", "action": "generateCurl", "variant": "outline" }
+            ],
             "sections": [
                 {
                     "title": "站点",
@@ -124,13 +141,17 @@
                     "title": "模型",
                     "fields": [
                         "model_name",
-                        "endpoint_type"
+                        "supported_endpoint_types"
                     ]
                 },
                 {
                     "title": "请求",
                     "fields": [
-                        "request_body"
+                        "endpoint_type",
+                        "endpoint_url",
+                        { "key": "request_example", "colSpan": 2 },
+                        { "key": "request_body", "colSpan": 1 },
+                        { "key": "response_data", "colSpan": 1 }
                     ]
                 }
             ]

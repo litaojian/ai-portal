@@ -185,8 +185,9 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
 
       setDialogOpen(false);
 
-      // Show result dialog for standalone form pages
-      if (config.meta.defaultView === 'form' && res) {
+      // Show result dialog for standalone form pages (only when submitResult is configured)
+      const hasSubmitResult = !!(config.views.form as any)?.submitResult;
+      if (config.meta.defaultView === 'form' && res && hasSubmitResult) {
         setSubmitResult(res);
         setResultDialogOpen(true);
       } else if (config.meta.defaultView !== 'form') {

@@ -20,6 +20,7 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
   const [loading, setLoading] = useState(false);
   const [initialData, setInitialData] = useState<any>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [copiedAction, setCopiedAction] = useState<string | null>(null);
 
   useEffect(() => {
     if (mode === 'edit' && entityId) {
@@ -81,6 +82,23 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
     });
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handleExtraButtonClick = (btn: { action: string; actionParams?: Record<string, string> }) => {
+    if (btn.action === 'generateCurl') {
+      const p = btn.actionParams ?? {};
+      const baseUrl = String(formData[p.urlField ?? 'site_name'] ?? '').replace(/\/$/, '');
+      const path = String(formData[p.pathField ?? 'endpoint_url'] ?? '');
+      const token = String(formData[p.tokenField ?? 'api_token'] ?? '');
+      const body = String(formData[p.bodyField ?? 'request_body'] ?? '');
+      const fullUrl = `${baseUrl}${path.startsWith('/') ? path : `/${path}`}`;
+      const parts = [`curl -X POST "${fullUrl}"`, `  -H "Content-Type: application/json"`];
+      if (token) parts.push(`  -H "Authorization: Bearer ${token}"`);
+      if (body) parts.push(`  -d '${body.replace(/'/g, `'\\''`)}'`);
+      navigator.clipboard?.writeText(parts.join(' \\\n'));
+      setCopiedAction(btn.action);
+      setTimeout(() => setCopiedAction(null), 2000);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -203,6 +221,17 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
             取消
           </Button>
         )}
+        {((formView as any)?.extraButtons as any[] | undefined)?.map((btn, i) => (
+          <Button
+            key={i}
+            type="button"
+            variant={(btn.variant as any) ?? 'outline'}
+            disabled={loading}
+            onClick={() => handleExtraButtonClick(btn)}
+          >
+            {copiedAction === btn.action ? '已复制' : btn.title}
+          </Button>
+        ))}
         {!formView?.submitButton?.hidden && (
           <Button
             type="submit"
