@@ -35,7 +35,7 @@
             "initialPassword": {
                 "label": "密码",
                 "type": "text",
-                "defaultValue": "123456123456qwe!@#",
+                "defaultValue": "123456qwe!@#",
                 "validation": {
                     "required": true
                 }

@@ -46,5 +46,47 @@
                 ]
             }
         }
+    },
+    {
+        "endpoint_url": "/v1/images/generations",
+        "label": "文本生成图片(dall-e-3)",
+        "value": 4,
+        "extra": {
+            "request_body": {
+                "model": "dall-e-3",
+                "prompt": "一只小狗在海边散步",
+                "n": 1,
+                "size": "1024x1024"
+            }
+        }
+    },
+    {
+        "endpoint_url": "/v1/images/generations",
+        "label": "文本生成图片(gemini-3-pro-image-preview)",
+        "value": 5,
+        "extra": {
+            "request_body": {
+                "model": "gemini-3-pro-image-preview",
+                "prompt": "一只小狗在海边散步",
+                "n": 1,
+                "size": "1024x1024"
+            }
+        }
+    },
+    {
+        "endpoint_url": "/v1/chat/completions",
+        "label": "文本生成图片(gemini-3-pro-image-preview) chat",
+        "value": 6,
+        "extra": {
+            "request_body": {
+                "model": "gemini-3-pro-image-preview",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": "一只小狗在海边散步"
+                    }
+                ]
+            }
+        }
     }
 ]

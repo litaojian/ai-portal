@@ -6,6 +6,7 @@ import { PageConfig, FieldDefinition } from '@/lib/schemas/page-config';
 import FormFieldRenderer from './fields/form-field-renderer';
 import { BizDataService } from '@/lib/biz-data-service';
 import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 
 interface DynamicFormProps {
   config: PageConfig;
@@ -238,7 +239,9 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
             disabled={loading}
             variant={(formView?.submitButton?.variant as any) ?? 'default'}
           >
-            {loading ? '提交中...' : (formView?.submitButton?.title ?? (mode === 'create' ? '创建' : '更新'))}
+          {loading
+            ? <><Loader2 className="mr-1 h-4 w-4 animate-spin" />{formView?.submitButton?.loadingTitle ?? '处理中...'}</>
+            : (formView?.submitButton?.title ?? (mode === 'create' ? '创建' : '更新'))}
           </Button>
         )}
       </div>

@@ -124,7 +124,8 @@
             "layout": "grid",
             "columns": 2,
             "submitButton": {
-                "title": "开始测试"
+                "title": "开始测试",
+                "loadingTitle": "测试中..."
             },
             "extraButtons": [
                 { "title": "生成cURL", "action": "generateCurl", "variant": "outline" }
