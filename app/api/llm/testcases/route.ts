@@ -1,59 +1,77 @@
 import { NextRequest, NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
-    return NextResponse.json({ data: [], total: 0 });
+const LIBRARY_PATH = path.join(process.cwd(), 'config', 'data', 'testcases', 'library.json');
+
+async function readLibrary(): Promise<any[]> {
+    try {
+        const content = await fs.promises.readFile(LIBRARY_PATH, 'utf8');
+        return JSON.parse(content);
+    } catch {
+        return [];
+    }
+}
+
+async function writeLibrary(data: any[]): Promise<void> {
+    await fs.promises.writeFile(LIBRARY_PATH, JSON.stringify(data, null, 2), 'utf8');
+}
+
+export async function GET(request: NextRequest) {
+    const { searchParams } = new URL(request.url);
+    const model_name = searchParams.get('model_name') ?? '';
+    const endpoint_type = searchParams.get('endpoint_type') ?? '';
+    const site_name = searchParams.get('site_name') ?? '';
+    const page = parseInt(searchParams.get('page') ?? '1');
+    const pageSize = parseInt(searchParams.get('pageSize') ?? '20');
+
+    let data = await readLibrary();
+
+    // Filter
+    if (model_name) {
+        data = data.filter(tc => tc.model_name?.toLowerCase().includes(model_name.toLowerCase()));
+    }
+    if (endpoint_type) {
+        data = data.filter(tc => tc.endpoint_type === endpoint_type);
+    }
+    if (site_name) {
+        data = data.filter(tc => tc.site_name === site_name);
+    }
+
+    const total = data.length;
+
+    // Client-side pagination
+    const start = (page - 1) * pageSize;
+    const paged = data.slice(start, start + pageSize);
+
+    return NextResponse.json({ data: paged, total, page, pageSize });
 }
 
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { site_name, api_token, endpoint_url, request_body } = body;
+        const library = await readLibrary();
 
-        if (!site_name || !api_token || !endpoint_url) {
-            return NextResponse.json({ error: "Missing required parameters (site_name, api_token, endpoint_url)" }, { status: 400 });
-        }
+        const newItem = {
+            id: `tc_${Date.now()}`,
+            title: body.title ?? '',
+            model_name: body.model_name ?? '',
+            endpoint_type: body.endpoint_type ?? 'chat',
+            endpoint_url: body.endpoint_url ?? '',
+            site_name: body.site_name ?? '',
+            request_body: body.request_body ?? {},
+            curl_raw: body.curl_raw ?? '',
+            tags: body.tags ?? '',
+            created_at: new Date().toISOString(),
+        };
 
-        // Construct target URL
-        const baseUrl = site_name.endsWith('/') ? site_name.slice(0, -1) : site_name;
-        const path = endpoint_url.startsWith('/') ? endpoint_url : `/${endpoint_url}`;
-        const targetUrl = `${baseUrl}${path}`;
+        library.unshift(newItem);
+        await writeLibrary(library);
 
-        console.log(`Proxying request to: ${targetUrl}`);
-
-        // Parse request_body if it's a string
-        let payload = request_body;
-        if (typeof request_body === 'string') {
-            try {
-                payload = JSON.parse(request_body);
-            } catch (e) {
-                // If not valid JSON, send as is or handle accordingly
-            }
-        }
-
-        const response = await fetch(targetUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${api_token}`
-            },
-            body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-
-        // We update the response_data field for the frontend to display
-        return NextResponse.json({
-            ...body,
-            response_data: JSON.stringify(data, null, 2)
-        });
-
+        return NextResponse.json(newItem, { status: 201 });
     } catch (error: any) {
-        console.error("Model Test Error:", error);
-        return NextResponse.json({
-            error: "Model test failed",
-            details: error.message
-        }, { status: 500 });
+        return NextResponse.json({ error: 'Create failed', details: error.message }, { status: 500 });
     }
 }

@@ -1,0 +1,6 @@
+{
+    "endpoint_url": "/v1/video/generations",
+    "label": "参考图生成视频(wan2.6-r2v-flash)",
+    "model_name": "wan2.6-r2v-flash",
+    "curl": "curl --location 'http://api.mass.netnic.cn:8080/v1/video/generations' -d 'asdfasfd'"
+}

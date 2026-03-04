@@ -1,0 +1,13 @@
+[
+  {
+    "label": "gpt-5",
+    "value": "gpt-5",
+    "extra": { "mode": "chat" }
+  },
+  {
+    "label": "sora-2",
+    "value": "sora-2",
+    "extra": { "mode": "video_generation" }
+  }
+
+]

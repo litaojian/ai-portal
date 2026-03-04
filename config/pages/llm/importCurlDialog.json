@@ -1,0 +1,48 @@
+{
+    "title": "从 cURL 命令导入测试用例",
+    "width": "max-w-2xl",
+    "sections": [
+        {
+            "title": "第一步：粘贴 cURL 命令",
+            "columns": 1,
+            "fields": [
+                {
+                    "key": "curl_raw",
+                    "label": "cURL 命令",
+                    "editable": true,
+                    "type": "textarea",
+                    "rows": 8,
+                    "placeholder": "粘贴完整的 cURL 命令，例如：\ncurl https://api.openai.com/v1/chat/completions \\\n  -H \"Authorization: Bearer sk-xxx\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"model\": \"gpt-4o\", \"messages\": [{\"role\": \"user\", \"content\": \"Hello\"}]}'"
+                }
+            ]
+        },
+        {
+            "title": "第二步：填写用例描述",
+            "columns": 1,
+            "fields": [
+                {
+                    "key": "title",
+                    "label": "用例简述",
+                    "editable": true,
+                    "type": "text",
+                    "placeholder": "请输入简短的用例描述，如：GPT-4o 基础对话测试"
+                },
+                {
+                    "key": "tags",
+                    "label": "标签",
+                    "editable": true,
+                    "type": "text",
+                    "placeholder": "可选，多个标签用英文逗号分隔，如：chat,text"
+                }
+            ]
+        }
+    ],
+    "buttons": [
+        {
+            "label": "解析并导入",
+            "api": "/api/llm/testcases/import",
+            "method": "POST",
+            "params": {}
+        }
+    ]
+}

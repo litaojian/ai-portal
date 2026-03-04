@@ -1,0 +1,111 @@
+[
+  {
+    "id": "tc_001",
+    "title": "文本生成对话",
+    "model_name": "gpt-4o",
+    "endpoint_type": "chat",
+    "endpoint_url": "/v1/chat/completions",
+    "site_name": "pinova",
+    "request_body": {
+      "model": "gpt-4o",
+      "messages": [{ "role": "user", "content": "一只小狗在海边散步" }]
+    },
+    "curl_raw": "",
+    "tags": "chat,text",
+    "created_at": "2026-03-04T00:00:00Z"
+  },
+  {
+    "id": "tc_002",
+    "title": "文本生成图片(dall-e-3)",
+    "model_name": "dall-e-3",
+    "endpoint_type": "images",
+    "endpoint_url": "/v1/images/generations",
+    "site_name": "pinova",
+    "request_body": {
+      "model": "dall-e-3",
+      "prompt": "一只小狗在海边散步",
+      "n": 1,
+      "size": "1024x1024"
+    },
+    "curl_raw": "",
+    "tags": "images",
+    "created_at": "2026-03-04T00:00:00Z"
+  },
+  {
+    "id": "tc_003",
+    "title": "文本生成图片(gemini-3-pro-image-preview)",
+    "model_name": "gemini-3-pro-image-preview",
+    "endpoint_type": "images",
+    "endpoint_url": "/v1/images/generations",
+    "site_name": "pinova",
+    "request_body": {
+      "model": "gemini-3-pro-image-preview",
+      "prompt": "一只小狗在海边散步",
+      "n": 1,
+      "size": "1024x1024"
+    },
+    "curl_raw": "",
+    "tags": "images",
+    "created_at": "2026-03-04T00:00:00Z"
+  },
+  {
+    "id": "tc_004",
+    "title": "文本生成图片-Chat方式(gemini-3-pro-image-preview)",
+    "model_name": "gemini-3-pro-image-preview",
+    "endpoint_type": "chat",
+    "endpoint_url": "/v1/chat/completions",
+    "site_name": "pinova",
+    "request_body": {
+      "model": "gemini-3-pro-image-preview",
+      "messages": [{ "role": "user", "content": "一只小狗在海边散步" }]
+    },
+    "curl_raw": "",
+    "tags": "chat,images",
+    "created_at": "2026-03-04T00:00:00Z"
+  },
+  {
+    "id": "tc_005",
+    "title": "实时语音对话(gpt-4o-realtime)",
+    "model_name": "gpt-4o-realtime-preview",
+    "endpoint_type": "audio",
+    "endpoint_url": "/v1/realtime",
+    "site_name": "pinova",
+    "request_body": {
+      "model": "gpt-4o-realtime-preview",
+      "modalities": ["audio", "text"],
+      "instructions": "You are a helpful assistant.",
+      "voice": "alloy",
+      "input_audio_format": "pcm16",
+      "output_audio_format": "pcm16",
+      "input_audio_transcription": { "model": "whisper-1" },
+      "turn_detection": {
+        "type": "server_vad",
+        "threshold": 0.5,
+        "prefix_padding_ms": 300,
+        "silence_duration_ms": 500
+      }
+    },
+    "curl_raw": "",
+    "tags": "audio,realtime",
+    "created_at": "2026-03-04T00:00:00Z"
+  },
+  {
+    "id": "tc_006",
+    "title": "参考图生成视频(wan2.6-r2v-flash)",
+    "model_name": "wan2.6-r2v-flash",
+    "endpoint_type": "videos",
+    "endpoint_url": "/v1/video/generations",
+    "site_name": "netnic",
+    "request_body": {
+      "model": "wan2.6-r2v-flash",
+      "prompt": "一只小狗在海边奔跑，海浪拍打着沙滩，阳光明媚",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Cute_dog.jpg/320px-Cute_dog.jpg",
+      "size": "1280x720",
+      "duration": 10,
+      "n": 1
+    },
+    "curl_raw": "curl --location 'http://api.mass.netnic.cn:8080/v1/video/generations' -H 'Authorization: Bearer sk-xxx' -H 'Content-Type: application/json' -d '{\"model\":\"wan2.6-r2v-flash\"}'",
+    "tags": "videos,wan",
+    "created_at": "2026-03-04T00:00:00Z"
+  }
+]

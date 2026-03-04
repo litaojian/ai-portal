@@ -24,7 +24,7 @@
         "label": "视频生成 (Videos)",
         "value": "videos",
         "extra": {
-            "endpoint_url": "/v1/videos/generations"
+            "endpoint_url": "/v1/video/generations"
         }
     },
     {

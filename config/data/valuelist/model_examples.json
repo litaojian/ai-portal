@@ -32,7 +32,7 @@
         }
     },
     {
-        "endpoint_url": "/v1/videos/generations",
+        "endpoint_url": "/v1/video/generations",
         "label": "文本生成视频1",
         "value": 3,
         "extra": {
@@ -110,6 +110,21 @@
                     "prefix_padding_ms": 300,
                     "silence_duration_ms": 500
                 }
+            }
+        }
+    },
+    {
+        "endpoint_url": "/v1/video/generations",
+        "label": "参考图生成视频(wan2.6-r2v-flash)",
+        "value": 8,
+        "extra": {
+            "request_body": {
+                "model": "wan2.6-r2v-flash",
+                "prompt": "一只小狗在海边奔跑，海浪拍打着沙滩，阳光明媚",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Cute_dog.jpg/320px-Cute_dog.jpg",
+                "size": "1280x720",
+                "duration": 10,
+                "n": 1
             }
         }
     }

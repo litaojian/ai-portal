@@ -1,12 +1,12 @@
 {
     "$schema": "https://ai-portal.com/schemas/page-config.json",
     "meta": {
-        "key": "llm/testcase",
-        "title": "模型测试",
-        "description": "模型",
-        "icon": "Shield",
+        "key": "llm/testcases",
+        "title": "模型测试用例库",
+        "description": "管理和执行模型测试用例",
+        "icon": "TestTube",
         "api": "/api/llm/testcases",
-        "defaultView": "form"
+        "defaultView": "list"
     },
     "model": {
         "fields": {
@@ -16,76 +16,50 @@
                 "hidden": true,
                 "primaryKey": true
             },
-            "site_name": {
-                "label": "API站点",
-                "type": "combobox",
-                "defaultValue":"http://20.246.88.31:8080",
-                "datasource": "/api/data/valuelist/sites",
-                "validation": {
-                    "required": true
-                }
-            },
-            "api_token": {
-                "label": "API令牌",
-                "type": "text"
+            "title": {
+                "label": "用例简述",
+                "type": "text",
+                "validation": { "required": true }
             },
             "model_name": {
                 "label": "模型名称",
-                "type": "combobox",
-                "datasource": "/api/integration/pricing?_site=https://pinova.ai/api",
-                "validation": {
-                    "required": true
-                },
-                "labelKey": "model_name",
-                "valueKey": "model_name",
-                "displayFields": [
-                    { "key": "model_name", "label": "模型名称", "width": "flex-1" },
-                    { "key": "supported_endpoint_types", "label": "端点类型", "width": "w-24" }
-                ],
-                "fieldMapping": {
-                    "supported_endpoint_types": "supported_endpoint_types"
-                },
-                "onChange": [
-                    {
-                        "action": "updateJsonField",
-                        "target": "request_body",
-                        "jsonPath": "model",
-                        "value": "{{value}}"
-                    }
-                ]
-            },
-            "supported_endpoint_types": {
-                "label": "端点类型",
                 "type": "text",
-                "disabled": true
+                "validation": { "required": true }
             },
             "endpoint_type": {
                 "label": "端点类型",
                 "type": "combobox",
                 "datasource": "/api/data/valuelist/endpoint"
-            },            
+            },
             "endpoint_url": {
                 "label": "端点URL",
+                "type": "text"
+            },
+            "site_name": {
+                "label": "站点",
+                "type": "combobox",
+                "datasource": "/api/data/valuelist/sites",
+                "labelKey": "label",
+                "valueKey": "label"
+            },
+            "request_body": {
+                "label": "请求体",
+                "type": "textarea",
+                "rows": 12
+            },
+            "curl_raw": {
+                "label": "cURL命令",
+                "type": "textarea",
+                "rows": 6
+            },
+            "tags": {
+                "label": "标签",
+                "type": "text"
+            },
+            "created_at": {
+                "label": "创建时间",
                 "type": "text",
                 "disabled": true
-            },
-            "request_example": {
-                "label": "示例",
-                "type": "combobox",
-                "datasource": "/api/data/valuelist/model_examples?endpoint_url={{endpoint_url}}",
-                "fieldMapping": {
-                    "request_body": "request_body"
-                }
-            },   
-            "request_body": {
-                "label": "请求参数",
-                "type": "textarea",
-                "rows": 10
-            },
-            "response_data": {
-                "label": "响应结果",
-                "type": "textarea",
-                "rows": 10
             }
         }
     },
@@ -93,12 +67,16 @@
         "search": {
             "fields": [
                 {
-                    "key": "site_name",
-                    "placeholder": "站点名称"
-                },
-                {
                     "key": "model_name",
                     "placeholder": "模型名称"
+                },
+                {
+                    "key": "endpoint_type",
+                    "placeholder": "端点类型"
+                },
+                {
+                    "key": "site_name",
+                    "placeholder": "站点名称"
                 }
             ]
         },
@@ -107,24 +85,57 @@
             "rownum": true,
             "columns": [
                 {
-                    "key": "site_name",
-                    "width": 150
+                    "key": "title",
+                    "width": 220
                 },
                 {
                     "key": "model_name",
-                    "width": 150
+                    "width": 160
                 },
                 {
-                    "key": "endpoint_type"
+                    "key": "endpoint_type",
+                    "width": 100
+                },
+                {
+                    "key": "site_name",
+                    "width": 100
+                },
+                {
+                    "key": "tags",
+                    "width": 120
                 }
             ],
             "actions": {
-                "row": [],
-                "toolbar": []
+                "row": [
+                    {
+                        "action": "showDialog",
+                        "title": "执行",
+                        "dialogConfig": "llm/runTestcaseDialog"
+                    },
+                    {
+                        "action": "edit",
+                        "title": "编辑"
+                    },
+                    {
+                        "action": "delete",
+                        "title": "删除"
+                    }
+                ],
+                "toolbar": [
+                    {
+                        "action": "showDialog",
+                        "title": "从cURL导入",
+                        "dialogConfig": "llm/importCurlDialog"
+                    },
+                    {
+                        "action": "create",
+                        "title": "新建"
+                    }
+                ]
             },
             "pagination": {
                 "enabled": true,
-                "pageSize": 10,
+                "pageSize": 20,
                 "mode": "client"
             }
         },
@@ -132,35 +143,26 @@
             "layout": "grid",
             "columns": 2,
             "submitButton": {
-                "title": "开始测试",
-                "loadingTitle": "测试中..."
+                "title": "保存",
+                "loadingTitle": "保存中..."
             },
-            "extraButtons": [
-                { "title": "生成cURL", "action": "generateCurl", "variant": "outline" }
-            ],
             "sections": [
                 {
-                    "title": "站点",
+                    "title": "基本信息",
                     "fields": [
-                        "site_name",
-                        "api_token"
-                    ]
-                },
-                {
-                    "title": "模型",
-                    "fields": [
+                        { "key": "title", "colSpan": 2 },
                         "model_name",
-                        "supported_endpoint_types"
+                        "endpoint_type",
+                        "site_name",
+                        "endpoint_url",
+                        "tags"
                     ]
                 },
                 {
-                    "title": "请求",
+                    "title": "请求内容",
                     "fields": [
-                        "endpoint_type",
-                        "endpoint_url",
-                        { "key": "request_example", "colSpan": 2 },
-                        { "key": "request_body", "colSpan": 1 },
-                        { "key": "response_data", "colSpan": 1 }
+                        { "key": "request_body", "colSpan": 2 },
+                        { "key": "curl_raw", "colSpan": 2 }
                     ]
                 }
             ]
