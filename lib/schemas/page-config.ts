@@ -50,6 +50,12 @@ export const FieldSchema = z.object({
     width: z.string().optional(),    // e.g. "w-24", "flex-1"
   })).optional(),                    // combobox: columns to show in dropdown
   fieldMapping: z.record(z.string(), z.string()).optional(), // combobox: map data source fields to form fields
+  onChange: z.array(z.object({
+    action: z.enum(["setField", "updateJsonField"]),
+    target: z.string(),           // target field name to update
+    jsonPath: z.string().optional(), // for updateJsonField: the JSON key path to update
+    value: z.string().optional(), // template string; use {{value}} for the current field value
+  })).optional(),                 // actions to trigger when this field value changes
 });
 
 // --- 视图配置 ---
@@ -78,9 +84,9 @@ const RowActionSchema = z.union([
 export const TableColumnSchema = z.object({
   key: z.string(),
   label: z.string().optional(), // 覆盖 model 中的 label
-  width: z.number().optional(),
-  minWidth: z.number().optional(),
-  maxWidth: z.number().optional(),
+  width: z.union([z.number(), z.string()]).optional(),
+  minWidth: z.union([z.number(), z.string()]).optional(),
+  maxWidth: z.union([z.number(), z.string()]).optional(),
   sortable: z.boolean().optional(),
   copyable: z.boolean().optional(),
   component: z.string().optional(), // 强制指定渲染组件，如 'badge', 'link'

@@ -145,9 +145,9 @@ export function DynamicTable({
       return {
         accessorKey: colConfig.key,
         header: () => colConfig.label || fieldDef?.label || colConfig.key,
-        size: colConfig.width, // TanStack uses 'size' for width
-        minSize: colConfig.minWidth,
-        maxSize: colConfig.maxWidth,
+        size: typeof colConfig.width === 'number' ? colConfig.width : undefined,
+        minSize: typeof colConfig.minWidth === 'number' ? colConfig.minWidth : undefined,
+        maxSize: typeof colConfig.maxWidth === 'number' ? colConfig.maxWidth : undefined,
         cell: ({ row }: any) => {
           const value = row.getValue(colConfig.key);
           return (
@@ -162,7 +162,10 @@ export function DynamicTable({
         meta: {
           align,
           summaryType: colConfig.summaryType,
-          summaryText: colConfig.summaryText
+          summaryText: colConfig.summaryText,
+          rawWidth: typeof colConfig.width === 'string' ? colConfig.width : undefined,
+          rawMinWidth: typeof colConfig.minWidth === 'string' ? colConfig.minWidth : undefined,
+          rawMaxWidth: typeof colConfig.maxWidth === 'string' ? colConfig.maxWidth : undefined,
         }
       };
     });
@@ -298,7 +301,7 @@ export function DynamicTable({
 
       <div className="flex-1 overflow-auto min-h-0 border-b relative">
 
-        <Table containerClassName="overflow-visible" className="w-max min-w-full">
+        <Table containerClassName="overflow-visible" className="min-w-[480px] sm:min-w-[640px]">
 
           <TableHeader className="bg-muted/50 sticky top-0 z-10 shadow-[0_1px_0_rgba(0,0,0,0.05)]">
 
@@ -308,15 +311,16 @@ export function DynamicTable({
 
                 {headerGroup.headers.map((header) => {
 
-                  const align = (header.column.columnDef.meta as any)?.align || 'left';
+                  const meta = (header.column.columnDef.meta as Record<string, unknown>) || {};
+                  const align = (meta.align as string) || 'left';
 
                   const style: React.CSSProperties = {
 
-                    width: header.getSize() !== 150 ? `${header.getSize()}px` : 'auto',
+                    width: (meta.rawWidth as string | undefined) ?? (header.getSize() !== 150 ? `${header.getSize()}px` : 'auto'),
 
-                    minWidth: header.column.columnDef.minSize ? `${header.column.columnDef.minSize}px` : undefined,
+                    minWidth: (meta.rawMinWidth as string | undefined) ?? (header.column.columnDef.minSize ? `${header.column.columnDef.minSize}px` : undefined),
 
-                    maxWidth: header.column.columnDef.maxSize ? `${header.column.columnDef.maxSize}px` : undefined,
+                    maxWidth: (meta.rawMaxWidth as string | undefined) ?? (header.column.columnDef.maxSize ? `${header.column.columnDef.maxSize}px` : undefined),
 
                   };
 
@@ -384,15 +388,16 @@ export function DynamicTable({
 
                   {row.getVisibleCells().map((cell) => {
 
-                    const align = (cell.column.columnDef.meta as any)?.align || 'left';
+                    const cellMeta = (cell.column.columnDef.meta as Record<string, unknown>) || {};
+                    const align = (cellMeta.align as string) || 'left';
 
                     const style: React.CSSProperties = {
 
-                      width: cell.column.getSize() !== 150 ? `${cell.column.getSize()}px` : 'auto',
+                      width: (cellMeta.rawWidth as string | undefined) ?? (cell.column.getSize() !== 150 ? `${cell.column.getSize()}px` : 'auto'),
 
-                      minWidth: cell.column.columnDef.minSize ? `${cell.column.columnDef.minSize}px` : undefined,
+                      minWidth: (cellMeta.rawMinWidth as string | undefined) ?? (cell.column.columnDef.minSize ? `${cell.column.columnDef.minSize}px` : undefined),
 
-                      maxWidth: cell.column.columnDef.maxSize ? `${cell.column.columnDef.maxSize}px` : undefined,
+                      maxWidth: (cellMeta.rawMaxWidth as string | undefined) ?? (cell.column.columnDef.maxSize ? `${cell.column.columnDef.maxSize}px` : undefined),
 
                     };
 

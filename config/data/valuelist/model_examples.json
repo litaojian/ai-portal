@@ -88,5 +88,29 @@
                 ]
             }
         }
+    },
+    {
+        "endpoint_url": "/v1/realtime",
+        "label": "实时语音对话(gpt-4o-realtime)",
+        "value": 7,
+        "extra": {
+            "request_body": {
+                "model": "gpt-4o-realtime-preview",
+                "modalities": ["audio", "text"],
+                "instructions": "You are a helpful assistant.",
+                "voice": "alloy",
+                "input_audio_format": "pcm16",
+                "output_audio_format": "pcm16",
+                "input_audio_transcription": {
+                    "model": "whisper-1"
+                },
+                "turn_detection": {
+                    "type": "server_vad",
+                    "threshold": 0.5,
+                    "prefix_padding_ms": 300,
+                    "silence_duration_ms": 500
+                }
+            }
+        }
     }
 ]

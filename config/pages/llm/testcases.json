@@ -44,7 +44,15 @@
                 ],
                 "fieldMapping": {
                     "supported_endpoint_types": "supported_endpoint_types"
-                }
+                },
+                "onChange": [
+                    {
+                        "action": "updateJsonField",
+                        "target": "request_body",
+                        "jsonPath": "model",
+                        "value": "{{value}}"
+                    }
+                ]
             },
             "supported_endpoint_types": {
                 "label": "端点类型",

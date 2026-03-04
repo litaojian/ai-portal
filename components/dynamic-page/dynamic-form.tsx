@@ -62,10 +62,34 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
   };
 
   const handleChange = (fieldName: string, value: any) => {
-    setFormData(prev => ({
-      ...prev,
-      [fieldName]: value
-    }));
+    setFormData(prev => {
+      const newData = { ...prev, [fieldName]: value };
+
+      // Process onChange actions defined in field config
+      const field = config.model.fields[fieldName];
+      if (field?.onChange) {
+        for (const event of field.onChange) {
+          const resolvedValue = event.value !== undefined
+            ? event.value.replace(/\{\{value\}\}/g, String(value ?? ''))
+            : String(value ?? '');
+
+          if (event.action === 'updateJsonField' && event.target && event.jsonPath) {
+            try {
+              const raw = newData[event.target];
+              const json = raw ? JSON.parse(raw) : {};
+              json[event.jsonPath] = resolvedValue;
+              newData[event.target] = JSON.stringify(json, null, 2);
+            } catch {
+              // skip if target field is not valid JSON
+            }
+          } else if (event.action === 'setField' && event.target) {
+            newData[event.target] = resolvedValue;
+          }
+        }
+      }
+
+      return newData;
+    });
     if (errors[fieldName]) {
       setErrors(prev => { const n = { ...prev }; delete n[fieldName]; return n; });
     }
