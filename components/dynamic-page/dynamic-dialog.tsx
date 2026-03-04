@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
+import { Loader2, WandSparkles, AlertCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface DynamicDialogProps {
   formConfig: ActionDialogConfig;
@@ -16,6 +17,57 @@ interface DynamicDialogProps {
 }
 
 // ── helpers ──────────────────────────────────────────────────────────────────
+
+function toJsonString(value: unknown): string {
+  if (value === null || value === undefined || value === '') return '';
+  if (typeof value === 'string') {
+    try { return JSON.stringify(JSON.parse(value), null, 2); } catch { return value; }
+  }
+  return JSON.stringify(value, null, 2);
+}
+
+// Inline JSON editor used inside action dialogs
+function DialogJsonField({ label, value, rows, onChange }: {
+  label: string; value: unknown; rows: number; onChange: (v: unknown) => void;
+}) {
+  const [text, setText] = useState(() => toJsonString(value));
+  const [error, setError] = useState<string | null>(null);
+
+  const handleChange = (raw: string) => {
+    setText(raw);
+    if (!raw.trim()) { setError(null); onChange(null); return; }
+    try { setError(null); onChange(JSON.parse(raw)); }
+    catch { setError('JSON 格式错误'); onChange(raw); }
+  };
+
+  const handleFormat = () => {
+    try {
+      const formatted = JSON.stringify(JSON.parse(text), null, 2);
+      setText(formatted); setError(null); onChange(JSON.parse(formatted));
+    } catch { setError('JSON 格式错误，无法格式化'); }
+  };
+
+  return (
+    <div className="space-y-1">
+      <div className="text-xs text-muted-foreground">{label}</div>
+      <div className="relative group">
+        <Textarea
+          className={cn('text-sm font-mono', error ? 'border-destructive focus-visible:ring-destructive' : '')}
+          rows={rows}
+          value={text}
+          onChange={(e) => handleChange(e.target.value)}
+        />
+        <button
+          type="button" onClick={handleFormat} title="格式化 JSON"
+          className="absolute top-1.5 right-2 p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground hover:bg-muted"
+        >
+          <WandSparkles className="h-3.5 w-3.5" />
+        </button>
+      </div>
+      {error && <div className="flex items-center gap-1 text-xs text-destructive"><AlertCircle className="h-3 w-3" />{error}</div>}
+    </div>
+  );
+}
 
 function resolveField(item: ActionDialogFieldItem) {
   return typeof item === 'string' ? { key: item } : item;
@@ -168,14 +220,17 @@ export function DynamicDialog({ formConfig, pageConfig, data }: DynamicDialogPro
             style={{ gridTemplateColumns: `repeat(${section.columns ?? 2}, minmax(0, 1fr))` }}
           >
             {section.fields.map((item, fi) => {
-              const { key, label: labelOverride, editable, type: typeOverride, options: staticOptions } =
-                resolveField(item);
+              const resolved = resolveField(item);
+              const { key, label: labelOverride, editable, type: typeOverride, options: staticOptions } = resolved;
+              const rowsOverride = 'rows' in resolved ? (resolved as { rows?: number }).rows : undefined;
+              const placeholderOverride = 'placeholder' in resolved ? (resolved as { placeholder?: string }).placeholder : undefined;
               const fieldDef = pageConfig.model.fields[key];
               const label = labelOverride ?? fieldDef?.label ?? key;
 
               if (editable) {
                 const effectiveType = typeOverride ?? fieldDef?.type ?? 'text';
                 const value = editValues[key] ?? '';
+                const placeholder = placeholderOverride ?? fieldDef?.placeholder ?? undefined;
 
                 if (effectiveType === 'select') {
                   const options =
@@ -233,15 +288,32 @@ export function DynamicDialog({ formConfig, pageConfig, data }: DynamicDialogPro
                 }
 
                 if (effectiveType === 'textarea') {
+                  const textValue = typeof value === 'object' && value !== null
+                    ? JSON.stringify(value, null, 2)
+                    : String(value);
                   return (
                     <div key={fi} className="space-y-1">
                       <div className="text-xs text-muted-foreground">{label}</div>
                       <Textarea
-                        className="text-sm min-h-[80px]"
-                        value={String(value)}
+                        className="text-sm font-mono"
+                        rows={rowsOverride ?? 4}
+                        placeholder={placeholder}
+                        value={textValue}
                         onChange={(e) => setField(key, e.target.value)}
                       />
                     </div>
+                  );
+                }
+
+                if (effectiveType === 'json') {
+                  return (
+                    <DialogJsonField
+                      key={fi}
+                      label={label}
+                      value={value}
+                      rows={rowsOverride ?? 6}
+                      onChange={(v) => setField(key, v)}
+                    />
                   );
                 }
 
@@ -250,6 +322,7 @@ export function DynamicDialog({ formConfig, pageConfig, data }: DynamicDialogPro
                     <div className="text-xs text-muted-foreground">{label}</div>
                     <Input
                       className="h-8 text-sm"
+                      placeholder={placeholder}
                       value={String(value)}
                       onChange={(e) => setField(key, e.target.value)}
                     />

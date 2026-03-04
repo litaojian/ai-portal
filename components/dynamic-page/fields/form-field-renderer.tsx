@@ -9,6 +9,7 @@ import BooleanField from './boolean-field';
 import RadioField from './radio-field';
 import ComboboxField from './combobox-field';
 import TextareaField from './textarea-field';
+import JsonField from './json-field';
 
 interface FormFieldRendererProps {
   field: FieldDefinition;
@@ -47,6 +48,15 @@ export default function FormFieldRenderer({ field, value, onChange, onExtraChang
             onChange={onChange}
             disabled={disabled}
             placeholder={effectivePlaceholder}
+          />
+        );
+      case 'json':
+        return (
+          <JsonField
+            field={field}
+            value={value}
+            onChange={onChange}
+            disabled={disabled}
           />
         );
       case 'select':

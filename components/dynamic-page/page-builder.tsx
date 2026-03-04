@@ -399,37 +399,41 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
       </Card>
       {/* Dialog for Create/Edit */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
+        <DialogContent className="max-w-2xl p-0">
+          <DialogHeader className="px-6 pt-6 pb-3 pr-12 border-b">
             <DialogTitle>
               {dialogMode === 'create' ? `新建${config.meta.title}` : `编辑${config.meta.title}`}
             </DialogTitle>
           </DialogHeader>
-          <DynamicForm
-            config={config}
-            mode={dialogMode}
-            entityId={currentEntityId}
-            onSubmit={handleFormSubmit}
-            onCancel={() => setDialogOpen(false)}
-          />
+          <div className="overflow-y-auto px-6 py-4" style={{ maxHeight: 'calc(90vh - 5rem)' }}>
+            <DynamicForm
+              config={config}
+              mode={dialogMode}
+              entityId={currentEntityId}
+              onSubmit={handleFormSubmit}
+              onCancel={() => setDialogOpen(false)}
+            />
+          </div>
         </DialogContent>
       </Dialog>
 
       {/* Dialog for View/Detail */}
       <Dialog open={actionDialogOpen} onOpenChange={setActionDialogOpen}>
-        <DialogContent className={`${actionDialogConfig?.width ?? 'max-w-2xl'} max-h-[90vh] overflow-y-auto`}>
-          <DialogHeader>
+        <DialogContent className={`${actionDialogConfig?.width ?? 'max-w-2xl'} p-0`}>
+          <DialogHeader className="px-6 pt-6 pb-3 pr-12 border-b">
             <DialogTitle>
               {actionDialogConfig?.title ?? `${config.meta.title}详情`}
             </DialogTitle>
           </DialogHeader>
-          {actionDialogConfig && actionDialogData && (
-            <DynamicDialog
-              formConfig={actionDialogConfig}
-              pageConfig={config}
-              data={actionDialogData}
-            />
-          )}
+          <div className="overflow-y-auto px-6 py-4" style={{ maxHeight: 'calc(90vh - 5rem)' }}>
+            {actionDialogConfig && actionDialogData && (
+              <DynamicDialog
+                formConfig={actionDialogConfig}
+                pageConfig={config}
+                data={actionDialogData}
+              />
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </div>

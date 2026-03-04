@@ -22,6 +22,7 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
   const [initialData, setInitialData] = useState<any>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [copiedAction, setCopiedAction] = useState<string | null>(null);
+  const [callApiState, setCallApiState] = useState<{ loading: boolean; result: unknown; error: string | null } | null>(null);
 
   useEffect(() => {
     if (mode === 'edit' && entityId) {
@@ -109,7 +110,7 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleExtraButtonClick = (btn: { action: string; actionParams?: Record<string, string> }) => {
+  const handleExtraButtonClick = async (btn: { action: string; actionParams?: Record<string, string>; api?: string; method?: string; bodyFields?: string[] }) => {
     if (btn.action === 'generateCurl') {
       const p = btn.actionParams ?? {};
       const baseUrl = String(formData[p.urlField ?? 'site_name'] ?? '').replace(/\/$/, '');
@@ -123,6 +124,26 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
       navigator.clipboard?.writeText(parts.join(' \\\n'));
       setCopiedAction(btn.action);
       setTimeout(() => setCopiedAction(null), 2000);
+    } else if (btn.action === 'callApi' && btn.api) {
+      const body = btn.bodyFields
+        ? Object.fromEntries(btn.bodyFields.map((k) => [k, formData[k]]))
+        : formData;
+      setCallApiState({ loading: true, result: null, error: null });
+      try {
+        const res = await fetch(btn.api, {
+          method: btn.method ?? 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const json = await res.json().catch(() => null);
+        if (!res.ok) {
+          setCallApiState({ loading: false, result: null, error: json ? JSON.stringify(json, null, 2) : `HTTP ${res.status}` });
+        } else {
+          setCallApiState({ loading: false, result: json, error: null });
+        }
+      } catch (e) {
+        setCallApiState({ loading: false, result: null, error: e instanceof Error ? e.message : '请求失败' });
+      }
     }
   };
 
@@ -246,17 +267,25 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
             取消
           </Button>
         )}
-        {((formView as any)?.extraButtons as any[] | undefined)?.map((btn, i) => (
-          <Button
-            key={i}
-            type="button"
-            variant={(btn.variant as any) ?? 'outline'}
-            disabled={loading}
-            onClick={() => handleExtraButtonClick(btn)}
-          >
-            {copiedAction === btn.action ? '已复制' : btn.title}
-          </Button>
-        ))}
+        {((formView as any)?.extraButtons as any[] | undefined)
+          ?.filter((btn) => !btn.editOnly || mode === 'edit')
+          ?.map((btn, i) => {
+            const isCallApiLoading = btn.action === 'callApi' && callApiState?.loading;
+            return (
+              <Button
+                key={i}
+                type="button"
+                variant={(btn.variant as any) ?? 'outline'}
+                disabled={loading || !!isCallApiLoading}
+                onClick={() => handleExtraButtonClick(btn)}
+              >
+                {isCallApiLoading
+                  ? <><Loader2 className="mr-1 h-4 w-4 animate-spin" />测试中...</>
+                  : (copiedAction === btn.action ? '已复制' : btn.title)
+                }
+              </Button>
+            );
+          })}
         {!formView?.submitButton?.hidden && (
           <Button
             type="submit"
@@ -269,6 +298,14 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
           </Button>
         )}
       </div>
+      {callApiState && !callApiState.loading && (callApiState.result !== null || callApiState.error !== null) && (
+        <div className={`rounded-md border p-3 text-xs font-mono whitespace-pre-wrap break-all max-h-60 overflow-y-auto ${callApiState.error ? 'border-destructive/40 bg-destructive/5 text-destructive' : 'bg-muted'}`}>
+          {callApiState.error
+            ? callApiState.error
+            : (typeof callApiState.result === 'string' ? callApiState.result : JSON.stringify(callApiState.result, null, 2))
+          }
+        </div>
+      )}
     </form>
   );
 }

@@ -1,6 +1,6 @@
 {
     "title": "执行测试用例",
-    "width": "max-w-3xl",
+    "width": "max-w-2xl",
     "sections": [
         {
             "title": "用例信息",
@@ -18,7 +18,7 @@
             "columns": 1,
             "fields": [
                 {
-                    "key": "api_token_override",
+                    "key": "api_token",
                     "label": "API Token（留空则使用站点默认）",
                     "editable": true,
                     "type": "text",
@@ -29,20 +29,7 @@
                     "label": "请求体（可临时修改）",
                     "editable": true,
                     "type": "textarea",
-                    "rows": 10
-                }
-            ]
-        },
-        {
-            "title": "执行结果",
-            "columns": 1,
-            "fields": [
-                {
-                    "key": "response_data",
-                    "label": "响应结果",
-                    "editable": false,
-                    "type": "textarea",
-                    "rows": 10
+                    "rows": 4
                 }
             ]
         }
@@ -52,14 +39,7 @@
             "label": "发起调用",
             "api": "/api/llm/testcases/run",
             "method": "POST",
-            "params": {
-                "id": "{{id}}",
-                "api_token": "{{api_token_override}}",
-                "request_body": "{{request_body}}"
-            },
-            "resultMapping": {
-                "response_data": "response_data"
-            }
+            "bodyFields": ["id", "api_token", "request_body"]
         }
     ]
 }

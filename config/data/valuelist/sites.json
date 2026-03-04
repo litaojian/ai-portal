@@ -2,22 +2,29 @@
   {
     "label": "pinova",
     "value": "http://20.246.88.31:8080",
-    "extra": { "api_token": "sk-d9R7EF8tTj14huKsMk6xRobUHTbUiHFynUWMqwZpUafUcYLV" }
+    "extra": {
+      "api_token": "sk-d9R7EF8tTj14huKsMk6xRobUHTbUiHFynUWMqwZpUafUcYLV"
+    }
   },
   {
     "label": "csp",
     "value": "http://csp.burncloud.com",
-    "extra": { "api_token": "sk-H5vvhCg4uyo0KRKq5T9F6ozTPsPzuEMTlgKTD4v23de6aVgj" }
+    "extra": {
+      "api_token": "sk-H5vvhCg4uyo0KRKq5T9F6ozTPsPzuEMTlgKTD4v23de6aVgj"
+    }
   },
   {
     "label": "digitalcloud",
     "value": "https://www.digitalcloud.asia",
-    "extra": { "api_token": "sk-Kdyt2OOzHvQLVGqnmjORaF4AHX22gw5yyBmtTrKt5W2FvCql" }
+    "extra": {
+      "api_token": "sk-Kdyt2OOzHvQLVGqnmjORaF4AHX22gw5yyBmtTrKt5W2FvCql"
+    }
   },
   {
     "label": "netnic",
     "value": "http://api.mass.netnic.cn:8080",
-    "extra": { "api_token": "sk-7HcO2XhiLvtlaw3pX9HgZKIXrZLqAiOrKN52SAP3iDWmYel6" }
+    "extra": {
+      "api_token": "sk-7HcO2XhiLvtlaw3pX9HgZKIXrZLqAiOrKN52SAP3iDWmYel6"
+    }
   }
-
 ]

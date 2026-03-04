@@ -57,6 +57,7 @@
             "site_url": {
                 "label": "API站点",
                 "type": "combobox",
+                "defaultValue":"http://20.246.88.31:9602/api",
                 "datasource": "/api/data/valuelist/newapidb",
                 "validation": {
                     "required": true

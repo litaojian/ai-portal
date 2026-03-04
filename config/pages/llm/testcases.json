@@ -44,13 +44,13 @@
             },
             "request_body": {
                 "label": "请求体",
-                "type": "textarea",
-                "rows": 12
+                "type": "json",
+                "rows": 6
             },
             "curl_raw": {
                 "label": "cURL命令",
                 "type": "textarea",
-                "rows": 6
+                "rows": 4
             },
             "tags": {
                 "label": "标签",
@@ -97,21 +97,12 @@
                     "width": 100
                 },
                 {
-                    "key": "site_name",
-                    "width": 100
-                },
-                {
                     "key": "tags",
                     "width": 120
                 }
             ],
             "actions": {
                 "row": [
-                    {
-                        "action": "showDialog",
-                        "title": "执行",
-                        "dialogConfig": "llm/runTestcaseDialog"
-                    },
                     {
                         "action": "edit",
                         "title": "编辑"
@@ -141,28 +132,39 @@
         },
         "form": {
             "layout": "grid",
-            "columns": 2,
+            "columns": 3,
             "submitButton": {
                 "title": "保存",
                 "loadingTitle": "保存中..."
             },
+            "extraButtons": [
+                {
+                    "action": "callApi",
+                    "title": "测试",
+                    "api": "/api/llm/testcases/run",
+                    "method": "POST",
+                    "bodyFields": ["id", "request_body"],
+                    "editOnly": true,
+                    "variant": "outline"
+                }
+            ],
             "sections": [
                 {
                     "title": "基本信息",
                     "fields": [
                         { "key": "title", "colSpan": 2 },
+                        "tags",
                         "model_name",
-                        "endpoint_type",
-                        "site_name",
+                        "endpoint_type",          
                         "endpoint_url",
-                        "tags"
+                        "site_name"
+                        
                     ]
                 },
                 {
                     "title": "请求内容",
                     "fields": [
-                        { "key": "request_body", "colSpan": 2 },
-                        { "key": "curl_raw", "colSpan": 2 }
+                        { "key": "request_body", "colSpan": 2 }
                     ]
                 }
             ]

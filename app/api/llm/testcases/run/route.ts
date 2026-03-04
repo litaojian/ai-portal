@@ -64,8 +64,11 @@ export async function POST(request: NextRequest) {
         const endpointPath = testcase.endpoint_url.startsWith('/') ? testcase.endpoint_url : `/${testcase.endpoint_url}`;
         const targetUrl = `${baseUrl}${endpointPath}`;
 
-        // Use override body or stored body
-        const payload = bodyOverride ?? testcase.request_body;
+        // Use override body or stored body; parse string if needed
+        let payload = bodyOverride ?? testcase.request_body;
+        if (typeof payload === 'string') {
+            try { payload = JSON.parse(payload); } catch { /* send as-is */ }
+        }
 
         const startTime = Date.now();
         const response = await fetch(targetUrl, {
