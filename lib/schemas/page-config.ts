@@ -196,16 +196,30 @@ export const PageConfigSchema = z.object({
     form: z.object({
       layout: z.enum(["stack", "grid"]).optional(),
       columns: z.number().optional(),
-      width: z.string().optional(), // dialog width class, e.g. "max-w-xl", "max-w-3xl", "max-w-4xl"
-      labelLayout: z.enum(["vertical", "horizontal"]).optional(), // label position
-      labelWidth: z.string().optional(), // e.g. "w-24", "w-32" (horizontal only)
+      width: z.string().optional(),
+      labelLayout: z.enum(["vertical", "horizontal"]).optional(),
+      labelWidth: z.string().optional(),
       sections: z.array(FormSectionSchema),
       submitButton: z.object({
         title: z.string().optional(),
+        loadingTitle: z.string().optional(),
         icon: z.string().optional(),
         hidden: z.boolean().optional(),
         variant: z.enum(["default", "destructive", "outline", "secondary", "ghost", "link"]).optional(),
       }).optional(),
+      extraButtons: z.array(z.object({
+        action: z.string(),
+        title: z.string(),
+        loadingTitle: z.string().optional(),
+        api: z.string().optional(),
+        method: z.enum(["GET", "POST", "PUT", "DELETE"]).optional(),
+        bodyFields: z.array(z.string()).optional(),
+        resultPath: z.string().optional(),
+        copyResult: z.boolean().optional(),
+        validateRequired: z.boolean().optional(),
+        variant: z.enum(["default", "destructive", "outline", "secondary", "ghost", "link"]).optional(),
+        editOnly: z.boolean().optional(),
+      })).optional(),
     }).optional(),
   }),
 });

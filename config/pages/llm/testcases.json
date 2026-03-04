@@ -33,14 +33,16 @@
             },
             "endpoint_url": {
                 "label": "端点URL",
-                "type": "text"
+                "type": "text",
+                "readonly":true
             },
             "site_name": {
                 "label": "站点",
                 "type": "combobox",
                 "datasource": "/api/data/valuelist/sites",
                 "labelKey": "label",
-                "valueKey": "label"
+                "valueKey": "label",
+                "validation": { "required": true }
             },
             "api_token": {
                 "label": "API Token",
@@ -49,7 +51,7 @@
             "request_body": {
                 "label": "请求体",
                 "type": "json",
-                "rows": 6
+                "rows": 10
             },
             "curl_raw": {
                 "label": "cURL命令",
@@ -144,13 +146,21 @@
             },
             "extraButtons": [
                 {
-                    "action": "generateCurl",
+                    "action": "callApi",
                     "title": "生成cURL",
+                    "loadingTitle": "生成中...",
+                    "api": "/api/llm/testcases/generate-curl",
+                    "method": "POST",
+                    "bodyFields": ["site_name", "endpoint_url", "api_token", "request_body"],
+                    "resultPath": "curl",
+                    "copyResult": true,
+                    "validateRequired": true,
                     "variant": "outline"
                 },
                 {
                     "action": "callApi",
                     "title": "测试",
+                    "loadingTitle": "测试中...",
                     "api": "/api/llm/testcases/run",
                     "method": "POST",
                     "bodyFields": ["id", "request_body", "site_name", "api_token"],

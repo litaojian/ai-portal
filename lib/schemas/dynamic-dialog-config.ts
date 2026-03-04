@@ -16,6 +16,7 @@ const ViewDialogFieldItemSchema = z.union([
     // Number of visible text rows for textarea fields
     rows: z.number().optional(),
     placeholder: z.string().optional(),
+    validation: z.object({ required: z.boolean().optional() }).optional(),
   }),
 ]);
 
@@ -33,6 +34,8 @@ export const ActionDialogButtonSchema = z.object({
   bodyFields: z.array(z.string()).optional(),
   // Static extra params merged into the request body
   params: z.record(z.string(), z.unknown()).optional(),
+  // Close the dialog automatically on success
+  closeOnSuccess: z.boolean().optional(),
 });
 
 export const ActionDialogConfigSchema = z.object({

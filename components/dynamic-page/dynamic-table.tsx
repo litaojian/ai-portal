@@ -128,6 +128,8 @@ export function DynamicTable({
           const { pageIndex, pageSize } = table.getState().pagination;
           return pageIndex * pageSize + row.index + 1;
         },
+        size: 60,
+        maxSize: 60,
         meta: { align: 'center' }
       });
     }

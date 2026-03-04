@@ -14,6 +14,7 @@ interface DynamicDialogProps {
   formConfig: ActionDialogConfig;
   pageConfig: PageConfig;
   data: Record<string, unknown>;
+  onSuccess?: () => void;
 }
 
 // ── helpers ──────────────────────────────────────────────────────────────────
@@ -109,9 +110,11 @@ function ResultBlock({ result }: { result: unknown }) {
 function ActionButton({
   btn,
   data,
+  onSuccess,
 }: {
   btn: ActionDialogButton;
   data: Record<string, unknown>;
+  onSuccess?: () => void;
 }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<unknown>(null);
@@ -139,7 +142,11 @@ function ActionButton({
       if (!res.ok) {
         setError(json ? JSON.stringify(json, null, 2) : `HTTP ${res.status}`);
       } else {
-        setResult(json);
+        if (btn.closeOnSuccess) {
+          onSuccess?.();
+        } else {
+          setResult(json);
+        }
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : '请求失败');
@@ -166,7 +173,7 @@ function ActionButton({
 
 // ── main component ───────────────────────────────────────────────────────────
 
-export function DynamicDialog({ formConfig, pageConfig, data }: DynamicDialogProps) {
+export function DynamicDialog({ formConfig, pageConfig, data, onSuccess }: DynamicDialogProps) {
   // Collect all editable field items (not just keys) so we can compute defaults.
   const editableItems = formConfig.sections
     .flatMap((s) => s.fields)
@@ -224,8 +231,10 @@ export function DynamicDialog({ formConfig, pageConfig, data }: DynamicDialogPro
               const { key, label: labelOverride, editable, type: typeOverride, options: staticOptions } = resolved;
               const rowsOverride = 'rows' in resolved ? (resolved as { rows?: number }).rows : undefined;
               const placeholderOverride = 'placeholder' in resolved ? (resolved as { placeholder?: string }).placeholder : undefined;
+              const required = 'validation' in resolved ? (resolved as { validation?: { required?: boolean } }).validation?.required : false;
               const fieldDef = pageConfig.model.fields[key];
               const label = labelOverride ?? fieldDef?.label ?? key;
+              const isRequired = required ?? fieldDef?.validation?.required ?? false;
 
               if (editable) {
                 const effectiveType = typeOverride ?? fieldDef?.type ?? 'text';
@@ -241,7 +250,7 @@ export function DynamicDialog({ formConfig, pageConfig, data }: DynamicDialogPro
 
                   return (
                     <div key={fi} className="space-y-1">
-                      <div className="text-xs text-muted-foreground">{label}</div>
+                      <div className="text-xs text-muted-foreground">{label}{isRequired && <span className="text-destructive ml-1">*</span>}</div>
                       <Select value={String(value)} onValueChange={(v) => setField(key, v)}>
                         <SelectTrigger className="h-8 text-sm">
                           <SelectValue placeholder="请选择" />
@@ -267,7 +276,7 @@ export function DynamicDialog({ formConfig, pageConfig, data }: DynamicDialogPro
 
                   return (
                     <div key={fi} className="space-y-1">
-                      <div className="text-xs text-muted-foreground">{label}</div>
+                      <div className="text-xs text-muted-foreground">{label}{isRequired && <span className="text-destructive ml-1">*</span>}</div>
                       <div className="flex flex-wrap gap-3 pt-1">
                         {options.map((o) => (
                           <label key={o.value} className="flex items-center gap-1.5 cursor-pointer text-sm">
@@ -293,9 +302,10 @@ export function DynamicDialog({ formConfig, pageConfig, data }: DynamicDialogPro
                     : String(value);
                   return (
                     <div key={fi} className="space-y-1">
-                      <div className="text-xs text-muted-foreground">{label}</div>
+                      <div className="text-xs text-muted-foreground">{label}{isRequired && <span className="text-destructive ml-1">*</span>}</div>
                       <Textarea
                         className="text-sm font-mono"
+                        style={{ fieldSizing: 'fixed' } as React.CSSProperties}
                         rows={rowsOverride ?? 4}
                         placeholder={placeholder}
                         value={textValue}
@@ -319,7 +329,7 @@ export function DynamicDialog({ formConfig, pageConfig, data }: DynamicDialogPro
 
                 return (
                   <div key={fi} className="space-y-1">
-                    <div className="text-xs text-muted-foreground">{label}</div>
+                    <div className="text-xs text-muted-foreground">{label}{isRequired && <span className="text-destructive ml-1">*</span>}</div>
                     <Input
                       className="h-8 text-sm"
                       placeholder={placeholder}
@@ -348,7 +358,7 @@ export function DynamicDialog({ formConfig, pageConfig, data }: DynamicDialogPro
       {formConfig.buttons && formConfig.buttons.length > 0 && (
         <div className="space-y-4 pt-2 border-t">
           {formConfig.buttons.map((btn, idx) => (
-            <ActionButton key={idx} btn={btn} data={mergedData} />
+            <ActionButton key={idx} btn={btn} data={mergedData} onSuccess={onSuccess} />
           ))}
         </div>
       )}

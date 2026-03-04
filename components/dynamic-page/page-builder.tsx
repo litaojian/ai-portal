@@ -436,11 +436,12 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
             </DialogTitle>
           </DialogHeader>
           <div className="overflow-y-auto px-6 py-4" style={{ maxHeight: 'calc(90vh - 5rem)' }}>
-            {actionDialogConfig && actionDialogData && (
+            {actionDialogConfig && (
               <DynamicDialog
                 formConfig={actionDialogConfig}
                 pageConfig={config}
-                data={actionDialogData}
+                data={actionDialogData ?? {}}
+                onSuccess={() => { setActionDialogOpen(false); loadListData(); }}
               />
             )}
           </div>

@@ -8,6 +8,8 @@ import { BizDataService } from '@/lib/biz-data-service';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 
+type ExtraButton = { action: string; actionParams?: Record<string, string>; api?: string; method?: string; bodyFields?: string[]; resultPath?: string; copyResult?: boolean; validateRequired?: boolean };
+
 interface DynamicFormProps {
   config: PageConfig;
   mode: 'create' | 'edit';
@@ -22,7 +24,8 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
   const [initialData, setInitialData] = useState<any>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [copiedAction, setCopiedAction] = useState<string | null>(null);
-  const [callApiState, setCallApiState] = useState<{ loading: boolean; result: unknown; error: string | null } | null>(null);
+  type BtnState = { loading: boolean; result: unknown; error: string | null };
+  const [btnStates, setBtnStates] = useState<Record<number, BtnState>>({});
 
   useEffect(() => {
     if (mode === 'edit' && entityId) {
@@ -117,25 +120,29 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
     }, obj);
   };
 
-  const handleExtraButtonClick = async (btn: { action: string; actionParams?: Record<string, string>; api?: string; method?: string; bodyFields?: string[]; resultPath?: string }) => {
-    if (btn.action === 'generateCurl') {
-      const p = btn.actionParams ?? {};
-      const baseUrl = String(formData[p.urlField ?? 'site_name'] ?? '').replace(/\/$/, '');
-      const path = String(formData[p.pathField ?? 'endpoint_url'] ?? '');
-      const token = String(formData[p.tokenField ?? 'api_token'] ?? '');
-      const body = String(formData[p.bodyField ?? 'request_body'] ?? '');
-      const fullUrl = `${baseUrl}${path.startsWith('/') ? path : `/${path}`}`;
-      const parts = [`curl -X POST "${fullUrl}"`, `  -H "Content-Type: application/json"`];
-      if (token) parts.push(`  -H "Authorization: Bearer ${token}"`);
-      if (body) parts.push(`  -d '${body.replace(/'/g, `'\\''`)}'`);
-      navigator.clipboard?.writeText(parts.join(' \\\n'));
-      setCopiedAction(btn.action);
-      setTimeout(() => setCopiedAction(null), 2000);
-    } else if (btn.action === 'callApi' && btn.api) {
+  const handleExtraButtonClick = async (btn: ExtraButton, idx: number) => {
+    if (btn.action === 'callApi' && btn.api) {
+      if (btn.validateRequired) {
+        const fields = btn.bodyFields ?? Object.keys(config.model.fields);
+        const newErrors: Record<string, string> = {};
+        for (const key of fields) {
+          const field = config.model.fields[key];
+          if (field?.validation?.required) {
+            const val = formData[key];
+            if (val === undefined || val === null || val === '') {
+              newErrors[key] = `${field.label}不能为空`;
+            }
+          }
+        }
+        if (Object.keys(newErrors).length > 0) {
+          setErrors(newErrors);
+          return;
+        }
+      }
       const body = btn.bodyFields
         ? Object.fromEntries(btn.bodyFields.map((k) => [k, formData[k]]))
         : formData;
-      setCallApiState({ loading: true, result: null, error: null });
+      setBtnStates(prev => ({ ...prev, [idx]: { loading: true, result: null, error: null } }));
       try {
         const res = await fetch(btn.api, {
           method: btn.method ?? 'POST',
@@ -144,13 +151,21 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
         });
         const json = await res.json().catch(() => null);
         if (!res.ok) {
-          setCallApiState({ loading: false, result: null, error: json ? JSON.stringify(json, null, 2) : `HTTP ${res.status}` });
+          setBtnStates(prev => ({ ...prev, [idx]: { loading: false, result: null, error: json ? JSON.stringify(json, null, 2) : `HTTP ${res.status}` } }));
         } else {
           const displayResult = btn.resultPath ? getValueByPath(json, btn.resultPath) : json;
-          setCallApiState({ loading: false, result: displayResult, error: null });
+          if (btn.copyResult) {
+            const text = typeof displayResult === 'string' ? displayResult : JSON.stringify(displayResult, null, 2);
+            navigator.clipboard?.writeText(text);
+            setBtnStates(prev => ({ ...prev, [idx]: { loading: false, result: null, error: null } }));
+            setCopiedAction(btn.action);
+            setTimeout(() => setCopiedAction(null), 2000);
+          } else {
+            setBtnStates(prev => ({ ...prev, [idx]: { loading: false, result: displayResult, error: null } }));
+          }
         }
       } catch (e) {
-        setCallApiState({ loading: false, result: null, error: e instanceof Error ? e.message : '请求失败' });
+        setBtnStates(prev => ({ ...prev, [idx]: { loading: false, result: null, error: e instanceof Error ? e.message : '请求失败' } }));
       }
     }
   };
@@ -275,20 +290,21 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
             取消
           </Button>
         )}
-        {((formView as any)?.extraButtons as any[] | undefined)
+        {formView?.extraButtons
           ?.filter((btn) => !btn.editOnly || mode === 'edit')
           ?.map((btn, i) => {
-            const isCallApiLoading = btn.action === 'callApi' && callApiState?.loading;
+            const state = btnStates[i];
+            const isLoading = btn.action === 'callApi' && !!state?.loading;
             return (
               <Button
                 key={i}
                 type="button"
-                variant={(btn.variant as any) ?? 'outline'}
-                disabled={loading || !!isCallApiLoading}
-                onClick={() => handleExtraButtonClick(btn)}
+                variant={btn.variant ?? 'outline'}
+                disabled={loading || isLoading}
+                onClick={() => handleExtraButtonClick(btn, i)}
               >
-                {isCallApiLoading
-                  ? <><Loader2 className="mr-1 h-4 w-4 animate-spin" />测试中...</>
+                {isLoading
+                  ? <><Loader2 className="mr-1 h-4 w-4 animate-spin" />{btn.loadingTitle ?? '处理中...'}</>
                   : (copiedAction === btn.action ? '已复制' : btn.title)
                 }
               </Button>
@@ -298,7 +314,7 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
           <Button
             type="submit"
             disabled={loading}
-            variant={(formView?.submitButton?.variant as any) ?? 'default'}
+            variant={formView?.submitButton?.variant ?? 'default'}
           >
           {loading
             ? <><Loader2 className="mr-1 h-4 w-4 animate-spin" />{formView?.submitButton?.loadingTitle ?? '处理中...'}</>
@@ -306,14 +322,18 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
           </Button>
         )}
       </div>
-      {callApiState && !callApiState.loading && (callApiState.result !== null || callApiState.error !== null) && (
-        <div className={`rounded-md border p-3 text-xs font-mono whitespace-pre-wrap break-all max-h-60 overflow-y-auto ${callApiState.error ? 'border-destructive/40 bg-destructive/5 text-destructive' : 'bg-muted'}`}>
-          {callApiState.error
-            ? callApiState.error
-            : (typeof callApiState.result === 'string' ? callApiState.result : JSON.stringify(callApiState.result, null, 2))
-          }
-        </div>
-      )}
+      {formView?.extraButtons?.map((_btn, i) => {
+        const state = btnStates[i];
+        if (!state || state.loading || (state.result === null && state.error === null)) return null;
+        return (
+          <div key={i} className={`rounded-md border p-3 text-xs font-mono whitespace-pre-wrap break-all max-h-60 overflow-y-auto ${state.error ? 'border-destructive/40 bg-destructive/5 text-destructive' : 'bg-muted'}`}>
+            {state.error
+              ? state.error
+              : (typeof state.result === 'string' ? state.result : JSON.stringify(state.result, null, 2))
+            }
+          </div>
+        );
+      })}
     </form>
   );
 }

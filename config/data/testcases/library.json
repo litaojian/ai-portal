@@ -1,5 +1,94 @@
 [
   {
+    "id": "tc_1772638922323",
+    "title": "342342",
+    "model_name": "gemini-3-pro-image-preview",
+    "endpoint_type": "chat",
+    "endpoint_url": "/v1/chat/completions",
+    "site_name": "ai_burncloud_com",
+    "request_body": {
+      "model": "gemini-3-pro-image-preview",
+      "stream": false,
+      "messages": [
+        {
+          "role": "user",
+          "content": "draw a cat"
+        }
+      ],
+      "extra_body": {
+        "google": {
+          "image_config": {
+            "aspect_ratio": "16:9",
+            "image_size": "1K"
+          }
+        }
+      }
+    },
+    "curl_raw": "curl --location --request POST 'https://ai.burncloud.com/v1/chat/completions' \\\n--header 'Authorization: Bearer sk-g5NGSmropi4KeIKem2FATvipEKf7GLiJyoVq2qAlQdmiNnxC' \\\n--header 'Content-Type: application/json' \\\n--data-raw '{\n  \"model\": \"gemini-3-pro-image-preview\",\n  \"stream\": false,\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"draw a cat\"\n    }\n  ],\n  \"extra_body\": {\n    \"google\": {\n      \"image_config\": {\n        \"aspect_ratio\": \"16:9\",\n        \"image_size\": \"1K\"\n      }\n    }\n  }\n}'",
+    "tags": "",
+    "created_at": "2026-03-04T15:42:02.323Z"
+  },
+  {
+    "id": "tc_1772637350253",
+    "title": "文字生图",
+    "model_name": "gemini-3-pro-image-preview",
+    "endpoint_type": "chat",
+    "endpoint_url": "/v1/chat/completions",
+    "site_name": "ai_burncloud_com",
+    "request_body": {
+      "model": "gemini-3-pro-image-preview",
+      "stream": false,
+      "messages": [
+        {
+          "role": "user",
+          "content": "draw a cat"
+        }
+      ],
+      "extra_body": {
+        "google": {
+          "image_config": {
+            "aspect_ratio": "16:9",
+            "image_size": "1K"
+          }
+        }
+      }
+    },
+    "curl_raw": "curl --location --request POST 'https://ai.burncloud.com/v1/chat/completions' \\\n--header 'Authorization: Bearer sk-g5NGSmropi4KeIKem2FATvipEKf7GLiJyoVq2qAlQdmiNnxC' \\\n--header 'Content-Type: application/json' \\\n--data-raw '{\n  \"model\": \"gemini-3-pro-image-preview\",\n  \"stream\": false,\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"draw a cat\"\n    }\n  ],\n  \"extra_body\": {\n    \"google\": {\n      \"image_config\": {\n        \"aspect_ratio\": \"16:9\",\n        \"image_size\": \"1K\"\n      }\n    }\n  }\n}'",
+    "tags": "",
+    "created_at": "2026-03-04T15:15:50.253Z"
+  },
+  {
+    "id": "tc_1772637114961",
+    "title": "图片内容理解",
+    "model_name": "doubao-seed-1-8-251228",
+    "endpoint_type": "chat",
+    "endpoint_url": "/api/v3/chat/completions",
+    "site_name": "ark_cn-beijing_volces_com",
+    "request_body": {
+      "model": "doubao-seed-1-8-251228",
+      "messages": [
+        {
+          "content": [
+            {
+              "image_url": {
+                "url": "https://ark-project.tos-cn-beijing.ivolces.com/images/view.jpeg"
+              },
+              "type": "image_url"
+            },
+            {
+              "text": "图片主要讲了什么?",
+              "type": "text"
+            }
+          ],
+          "role": "user"
+        }
+      ]
+    },
+    "curl_raw": "curl --location --request POST 'https://ark.cn-beijing.volces.com/api/v3/chat/completions' \\\n--header 'Authorization: Bearer bce238a9-9a14-438a-8f1f-6ac206863b34' \\\n--header 'Content-Type: application/json' \\\n--data-raw '{\n    \"model\": \"doubao-seed-1-8-251228\",\n    \"messages\": [\n        {\n            \"content\": [\n                {\n                    \"image_url\": {\n                        \"url\": \"https://ark-project.tos-cn-beijing.ivolces.com/images/view.jpeg\"\n                    },\n                    \"type\": \"image_url\"\n                },\n                {\n                    \"text\": \"图片主要讲了什么?\",\n                    \"type\": \"text\"\n                }\n            ],\n            \"role\": \"user\"\n        }\n    ]\n}'",
+    "tags": "image",
+    "created_at": "2026-03-04T15:11:54.961Z"
+  },
+  {
     "id": "tc_001",
     "title": "文本生成对话",
     "model_name": "gpt-4o",
