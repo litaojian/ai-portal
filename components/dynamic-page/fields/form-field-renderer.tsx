@@ -1,6 +1,7 @@
 // components/dynamic/fields/FormFieldRenderer.tsx
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { X } from 'lucide-react';
 import { FieldDefinition } from '@/lib/schemas/page-config';
 import TextField from './text-field';
 import SelectField from './select-field';
@@ -151,12 +152,28 @@ export default function FormFieldRenderer({ field, value, onChange, onExtraChang
     <p className="text-[0.8rem] text-destructive">{error}</p>
   );
 
+  const fieldEl = field.clearable ? (
+    <div className="relative">
+      {renderField()}
+      {!disabled && value != null && value !== '' && (
+        <button
+          type="button"
+          onClick={() => onChange('')}
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+          tabIndex={-1}
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+      )}
+    </div>
+  ) : renderField();
+
   if (labelLayout === 'horizontal') {
     return (
       <div className="flex items-start gap-3">
         {labelEl}
         <div className="flex-1 space-y-1">
-          {renderField()}
+          {fieldEl}
           {hintEl}
           {errorEl}
         </div>
@@ -167,7 +184,7 @@ export default function FormFieldRenderer({ field, value, onChange, onExtraChang
   return (
     <div className="space-y-2">
       {labelEl}
-      {renderField()}
+      {fieldEl}
       {hintEl}
       {errorEl}
     </div>

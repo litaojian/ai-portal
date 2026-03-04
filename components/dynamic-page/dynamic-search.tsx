@@ -266,12 +266,24 @@ export function DynamicSearch({ config, onSearch, onReset, loading }: DynamicSea
                   </PopoverContent>
                 </Popover>
               ) : (
-                <Input
-                  placeholder={searchField.placeholder || `请输入`}
-                  className="!h-8 w-full !text-xs !px-2"
-                  value={values[searchField.key] || ""}
-                  onChange={(e) => handleChange(searchField.key, e.target.value)}
-                />
+                <div className="relative">
+                  <Input
+                    placeholder={searchField.placeholder || `请输入`}
+                    className={`!h-8 w-full !text-xs !px-2${searchField.clearable ? ' !pr-7' : ''}`}
+                    value={values[searchField.key] || ""}
+                    onChange={(e) => handleChange(searchField.key, e.target.value)}
+                  />
+                  {searchField.clearable && values[searchField.key] && (
+                    <button
+                      type="button"
+                      onClick={() => handleChange(searchField.key, '')}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      tabIndex={-1}
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  )}
+                </div>
               )}
             </div>
           );

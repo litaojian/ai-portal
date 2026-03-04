@@ -34,6 +34,8 @@ export const FieldSchema = z.object({
   type: FieldTypeSchema,
   hidden: z.boolean().optional(),
   disabled: z.boolean().optional(),
+  readonly: z.boolean().optional(),
+  clearable: z.boolean().optional(),
   primaryKey: z.boolean().optional(),
   placeholder: z.string().optional(),
   options: z.array(SelectOptionSchema).optional(),
@@ -101,6 +103,7 @@ export const SearchFieldSchema = z.object({
   key: z.string(),
   label: z.string().optional(),
   placeholder: z.string().optional(),
+  clearable: z.boolean().optional(),
   width: z.string().optional(), // 'sm' | 'md' | 'lg' | 'xl' or custom class
   component: z.string().optional(), // 如 'date-range'
   type: FieldTypeSchema.optional(), // Allow overriding type in search

@@ -19,11 +19,13 @@
             "title": {
                 "label": "用例简述",
                 "type": "text",
+                "clearable": true,
                 "validation": { "required": true }
             },
             "model_name": {
                 "label": "模型名称",
                 "type": "text",
+                "clearable": true,
                 "validation": { "required": true }
             },
             "endpoint_type": {
@@ -74,15 +76,18 @@
             "fields": [
                 {
                     "key": "model_name",
-                    "placeholder": "模型名称"
+                    "placeholder": "模型名称",
+                    "clearable": true
                 },
                 {
                     "key": "endpoint_type",
-                    "placeholder": "端点类型"
+                    "placeholder": "端点类型",
+                    "clearable": true
                 },
                 {
                     "key": "title",
-                    "placeholder": "用例名称"
+                    "placeholder": "用例名称",
+                    "clearable": true
                 }
             ]
         },

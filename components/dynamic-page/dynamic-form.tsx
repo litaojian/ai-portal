@@ -23,7 +23,7 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
   const [loading, setLoading] = useState(false);
   const [initialData, setInitialData] = useState<any>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [copiedAction, setCopiedAction] = useState<string | null>(null);
+  const [copiedAction, setCopiedAction] = useState<number | null>(null);
   type BtnState = { loading: boolean; result: unknown; error: string | null };
   const [btnStates, setBtnStates] = useState<Record<number, BtnState>>({});
 
@@ -158,7 +158,7 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
             const text = typeof displayResult === 'string' ? displayResult : JSON.stringify(displayResult, null, 2);
             navigator.clipboard?.writeText(text);
             setBtnStates(prev => ({ ...prev, [idx]: { loading: false, result: null, error: null } }));
-            setCopiedAction(btn.action);
+            setCopiedAction(idx);
             setTimeout(() => setCopiedAction(null), 2000);
           } else {
             setBtnStates(prev => ({ ...prev, [idx]: { loading: false, result: displayResult, error: null } }));
@@ -305,7 +305,7 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
               >
                 {isLoading
                   ? <><Loader2 className="mr-1 h-4 w-4 animate-spin" />{btn.loadingTitle ?? '处理中...'}</>
-                  : (copiedAction === btn.action ? '已复制' : btn.title)
+                  : (copiedAction === i ? '已复制' : btn.title)
                 }
               </Button>
             );
