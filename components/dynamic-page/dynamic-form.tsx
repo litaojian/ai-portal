@@ -110,7 +110,14 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleExtraButtonClick = async (btn: { action: string; actionParams?: Record<string, string>; api?: string; method?: string; bodyFields?: string[] }) => {
+  const getValueByPath = (obj: unknown, path: string): unknown => {
+    return path.split(/\.|\[(\d+)\]/).filter(Boolean).reduce<unknown>((cur, key) => {
+      if (cur == null || typeof cur !== 'object') return undefined;
+      return (cur as Record<string, unknown>)[key];
+    }, obj);
+  };
+
+  const handleExtraButtonClick = async (btn: { action: string; actionParams?: Record<string, string>; api?: string; method?: string; bodyFields?: string[]; resultPath?: string }) => {
     if (btn.action === 'generateCurl') {
       const p = btn.actionParams ?? {};
       const baseUrl = String(formData[p.urlField ?? 'site_name'] ?? '').replace(/\/$/, '');
@@ -139,7 +146,8 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
         if (!res.ok) {
           setCallApiState({ loading: false, result: null, error: json ? JSON.stringify(json, null, 2) : `HTTP ${res.status}` });
         } else {
-          setCallApiState({ loading: false, result: json, error: null });
+          const displayResult = btn.resultPath ? getValueByPath(json, btn.resultPath) : json;
+          setCallApiState({ loading: false, result: displayResult, error: null });
         }
       } catch (e) {
         setCallApiState({ loading: false, result: null, error: e instanceof Error ? e.message : '请求失败' });

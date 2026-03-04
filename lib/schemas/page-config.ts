@@ -196,6 +196,7 @@ export const PageConfigSchema = z.object({
     form: z.object({
       layout: z.enum(["stack", "grid"]).optional(),
       columns: z.number().optional(),
+      width: z.string().optional(), // dialog width class, e.g. "max-w-xl", "max-w-3xl", "max-w-4xl"
       labelLayout: z.enum(["vertical", "horizontal"]).optional(), // label position
       labelWidth: z.string().optional(), // e.g. "w-24", "w-32" (horizontal only)
       sections: z.array(FormSectionSchema),

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { ConfigService } from '@/lib/config-service';
 import { PageConfig } from '@/lib/schemas/page-config';
 import { DynamicTable } from './dynamic-table';
@@ -9,6 +9,16 @@ import { DynamicSearch } from './dynamic-search';
 
 import { BizDataService } from '@/lib/biz-data-service';
 import { Card, CardContent } from '@/components/ui/card';
+
+// Shadcn DialogContent has a built-in sm:max-w-lg that beats non-responsive classes.
+// Use inline style to reliably control dialog width.
+const MAX_W: Record<string, string> = {
+  'max-w-sm': '24rem', 'max-w-md': '28rem', 'max-w-lg': '32rem',
+  'max-w-xl': '36rem', 'max-w-2xl': '42rem', 'max-w-3xl': '48rem',
+  'max-w-4xl': '56rem', 'max-w-5xl': '64rem', 'max-w-6xl': '72rem',
+};
+const dlgWidth = (cls?: string): React.CSSProperties =>
+  ({ maxWidth: MAX_W[cls ?? 'max-w-2xl'] ?? '42rem' });
 import { Plus, Upload, Download, CheckCircle2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import {
@@ -368,7 +378,7 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
                 return (
                   <Button
                     key={action}
-                    onClick={() => handleAction(action)}
+                    onClick={() => handleAction(action, undefined, typeof item === 'string' ? undefined : item)}
                     variant="outline"
                     size="sm"
                     className="h-8 shadow-sm"
@@ -399,7 +409,7 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
       </Card>
       {/* Dialog for Create/Edit */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-2xl p-0">
+        <DialogContent className="p-0" style={dlgWidth(config.views.form?.width)}>
           <DialogHeader className="px-6 pt-6 pb-3 pr-12 border-b">
             <DialogTitle>
               {dialogMode === 'create' ? `新建${config.meta.title}` : `编辑${config.meta.title}`}
@@ -419,7 +429,7 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
 
       {/* Dialog for View/Detail */}
       <Dialog open={actionDialogOpen} onOpenChange={setActionDialogOpen}>
-        <DialogContent className={`${actionDialogConfig?.width ?? 'max-w-2xl'} p-0`}>
+        <DialogContent className="p-0" style={dlgWidth(actionDialogConfig?.width)}>
           <DialogHeader className="px-6 pt-6 pb-3 pr-12 border-b">
             <DialogTitle>
               {actionDialogConfig?.title ?? `${config.meta.title}详情`}

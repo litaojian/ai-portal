@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Check } from 'lucide-react';
+import { Check, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover';
@@ -209,16 +209,29 @@ export default function ComboboxField({
       onOpenChange={(o) => { if (!o) close(); }}
     >
       <PopoverAnchor asChild>
-        <Input
-          ref={inputRef}
-          value={fetching ? '' : inputValue}
-          placeholder={fetching ? '加载中...' : (placeholder ?? '请选择或搜索')}
-          onChange={handleInputChange}
-          onFocus={() => setOpen(true)}
-          onKeyDown={handleInputKeyDown}
-          disabled={disabled || fetching}
-          className="h-9 text-sm"
-        />
+        <div className="relative">
+          <Input
+            ref={inputRef}
+            value={fetching ? '' : inputValue}
+            placeholder={fetching ? '加载中...' : (placeholder ?? '请选择或搜索')}
+            onChange={handleInputChange}
+            onFocus={() => setOpen(true)}
+            onClick={() => setOpen(true)}
+            onKeyDown={handleInputKeyDown}
+            disabled={disabled || fetching}
+            className="h-9 text-sm pr-8"
+          />
+          <button
+            type="button"
+            tabIndex={-1}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => { if (!disabled && !fetching) { if (open) { close(); } else { inputRef.current?.focus(); } } }}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground disabled:opacity-40"
+            disabled={disabled || fetching}
+          >
+            <ChevronDown className="h-4 w-4" />
+          </button>
+        </div>
       </PopoverAnchor>
 
       <PopoverContent

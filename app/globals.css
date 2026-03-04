@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../config";
 
 /* @plugin "tailwindcss-animate"; */
 

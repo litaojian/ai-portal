@@ -42,6 +42,10 @@
                 "labelKey": "label",
                 "valueKey": "label"
             },
+            "api_token": {
+                "label": "API Token",
+                "type": "text"
+            },
             "request_body": {
                 "label": "请求体",
                 "type": "json",
@@ -75,8 +79,8 @@
                     "placeholder": "端点类型"
                 },
                 {
-                    "key": "site_name",
-                    "placeholder": "站点名称"
+                    "key": "title",
+                    "placeholder": "用例名称"
                 }
             ]
         },
@@ -132,6 +136,7 @@
         },
         "form": {
             "layout": "grid",
+            "width": "max-w-4xl",
             "columns": 3,
             "submitButton": {
                 "title": "保存",
@@ -139,32 +144,31 @@
             },
             "extraButtons": [
                 {
+                    "action": "generateCurl",
+                    "title": "生成cURL",
+                    "variant": "outline"
+                },
+                {
                     "action": "callApi",
                     "title": "测试",
                     "api": "/api/llm/testcases/run",
                     "method": "POST",
-                    "bodyFields": ["id", "request_body"],
+                    "bodyFields": ["id", "request_body", "site_name", "api_token"],
                     "editOnly": true,
                     "variant": "outline"
                 }
             ],
             "sections": [
                 {
-                    "title": "基本信息",
                     "fields": [
                         { "key": "title", "colSpan": 2 },
                         "tags",
                         "model_name",
                         "endpoint_type",          
                         "endpoint_url",
-                        "site_name"
-                        
-                    ]
-                },
-                {
-                    "title": "请求内容",
-                    "fields": [
-                        { "key": "request_body", "colSpan": 2 }
+                        "site_name",
+                        { "key": "api_token", "colSpan": 2 },
+                        { "key": "request_body", "colSpan": 3 }
                     ]
                 }
             ]
