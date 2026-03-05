@@ -1,0 +1,25 @@
+{
+    "title": "AI内容生产线",
+    "url": "#",
+    "icon": "IconEdit",
+    "order": 2,
+    "isActive": true,
+    "items": [
+        {
+            "title": "AI+营销 Wiki",
+            "url": "/portal/cms/wiki",
+            "icon": "IconBook"
+        },
+        {
+            "title": "AI应用落地指南",
+            "url": "/portal/cms/ai/tutorial",
+            "icon": "IconMap"
+        },
+        {
+            "title": "AI应用场景测试",
+            "url": "/portal/cms/llm/api-cases",
+            "icon": "IconFolder"
+        }
+
+    ]
+}

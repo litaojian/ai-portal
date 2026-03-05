@@ -1,0 +1,457 @@
+{
+  "categories": [
+    {
+      "id": "video",
+      "label": "视频生成",
+      "subTypes": [
+        { "id": "text-to-video", "label": "文字 → 视频" },
+        { "id": "image-to-video", "label": "图片 → 视频" }
+      ]
+    },
+    {
+      "id": "image",
+      "label": "图片生成",
+      "subTypes": [
+        { "id": "text-to-image", "label": "文字 → 图片" },
+        { "id": "image-to-image", "label": "图片 → 图片" }
+      ]
+    },
+    {
+      "id": "audio",
+      "label": "音频生成",
+      "subTypes": [
+        { "id": "text-to-speech", "label": "文字 → 语音" },
+        { "id": "text-to-music", "label": "文字 → 音乐" }
+      ]
+    },
+    {
+      "id": "multimodal",
+      "label": "多模态理解",
+      "subTypes": [
+        { "id": "image-understanding", "label": "图片理解" },
+        { "id": "video-understanding", "label": "视频理解" }
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "id": "sora-2-t2v-1",
+      "model": "Sora-2",
+      "vendor": "OpenAI",
+      "vendorTag": "openai",
+      "category": "video",
+      "subType": "text-to-video",
+      "mediaType": "video",
+      "prompt": "一只橘猫在雨后的石板街道上漫步，背景是模糊的日式小店招牌，慢镜头，电影感光效",
+      "outputUrl": "",
+      "thumbnail": "https://picsum.photos/seed/sora2cat/800/450",
+      "tags": ["写实", "物理引擎", "长视频"],
+      "rating": 5,
+      "highlights": [
+        "物理引擎极其真实，雨水反光、毛发细节精准",
+        "镜头语言丰富，自带推拉变焦等电影级运镜",
+        "对中文提示词语义还原度高"
+      ],
+      "limitations": ["生成速度较慢，约3-5分钟", "API暂未全面开放"],
+      "params": { "时长": "5s", "分辨率": "1080p", "帧率": "24fps", "风格": "写实" },
+      "costEstimate": "~$0.08/次",
+      "latency": "3-5min"
+    },
+    {
+      "id": "veo3-t2v-1",
+      "model": "Veo 3",
+      "vendor": "Google",
+      "vendorTag": "google",
+      "category": "video",
+      "subType": "text-to-video",
+      "mediaType": "video",
+      "prompt": "一只橘猫在雨后的石板街道上漫步，背景是模糊的日式小店招牌，慢镜头，电影感光效",
+      "outputUrl": "",
+      "thumbnail": "https://picsum.photos/seed/veo3cat/800/450",
+      "tags": ["写实", "原生音频", "8秒"],
+      "rating": 5,
+      "highlights": [
+        "全球首个原生音视频同步生成，环境音效自然",
+        "物体运动轨迹符合物理规律",
+        "支持音频提示词，可指定背景音乐氛围"
+      ],
+      "limitations": ["目前通过 VideoFX 限量体验", "暂不支持 API 调用"],
+      "params": { "时长": "8s", "分辨率": "1080p", "帧率": "24fps", "音频": "原生生成" },
+      "costEstimate": "内测中",
+      "latency": "2-4min"
+    },
+    {
+      "id": "kling-t2v-1",
+      "model": "Kling 1.6",
+      "vendor": "快手",
+      "vendorTag": "kuaishou",
+      "category": "video",
+      "subType": "text-to-video",
+      "mediaType": "video",
+      "prompt": "一只橘猫在雨后的石板街道上漫步，背景是模糊的日式小店招牌，慢镜头，电影感光效",
+      "outputUrl": "",
+      "thumbnail": "https://picsum.photos/seed/klingcat/800/450",
+      "tags": ["中文优化", "运动流畅", "高性价比"],
+      "rating": 4,
+      "highlights": [
+        "对中文提示词理解能力强，本土化场景还原好",
+        "运动流畅度业界领先，人物动作自然",
+        "API已开放，国内访问稳定无需翻墙"
+      ],
+      "limitations": ["细节纹理精细度略低于Sora-2", "超长视频（>10s）连贯性下降"],
+      "params": { "时长": "5s/10s", "分辨率": "1080p", "帧率": "30fps", "模式": "标准/专业" },
+      "costEstimate": "~¥0.3/次",
+      "latency": "1-2min"
+    },
+    {
+      "id": "jimeng-t2v-1",
+      "model": "即梦 AI",
+      "vendor": "字节跳动",
+      "vendorTag": "bytedance",
+      "category": "video",
+      "subType": "text-to-video",
+      "mediaType": "video",
+      "prompt": "一只橘猫在雨后的石板街道上漫步，背景是模糊的日式小店招牌，慢镜头，电影感光效",
+      "outputUrl": "",
+      "thumbnail": "https://picsum.photos/seed/jimengcat/800/450",
+      "tags": ["中文优化", "动漫风格", "快速生成"],
+      "rating": 4,
+      "highlights": [
+        "动漫/插画风格表现优秀，二次元场景首选",
+        "生成速度快，30秒内出图",
+        "与剪映生态打通，后期处理便捷"
+      ],
+      "limitations": ["写实风格表现一般", "镜头运动较为单一"],
+      "params": { "时长": "4s/8s", "分辨率": "720p/1080p", "帧率": "24fps", "风格": "多风格" },
+      "costEstimate": "~¥0.2/次",
+      "latency": "30s-1min"
+    },
+    {
+      "id": "wan-t2v-1",
+      "model": "Wan 2.1",
+      "vendor": "阿里云",
+      "vendorTag": "alibaba",
+      "category": "video",
+      "subType": "text-to-video",
+      "mediaType": "video",
+      "prompt": "一只橘猫在雨后的石板街道上漫步，背景是模糊的日式小店招牌，慢镜头，电影感光效",
+      "outputUrl": "",
+      "thumbnail": "https://picsum.photos/seed/wancat/800/450",
+      "tags": ["开源可部署", "多语言", "商用授权"],
+      "rating": 4,
+      "highlights": [
+        "开源模型，支持本地私有化部署",
+        "Apache 2.0 协议，商用无顾虑",
+        "支持中英日多语言提示词"
+      ],
+      "limitations": ["效果略逊于闭源商业模型", "本地部署需要高端GPU"],
+      "params": { "时长": "5s", "分辨率": "720p", "帧率": "16fps", "部署": "云端/本地" },
+      "costEstimate": "~¥0.1/次（云端）",
+      "latency": "1-3min"
+    },
+    {
+      "id": "kling-i2v-1",
+      "model": "Kling 1.6",
+      "vendor": "快手",
+      "vendorTag": "kuaishou",
+      "category": "video",
+      "subType": "image-to-video",
+      "mediaType": "video",
+      "prompt": "让猫咪慢慢抬起头，眼神向右看，耳朵轻轻抖动",
+      "inputAsset": "https://picsum.photos/seed/inputcat/400/400",
+      "outputUrl": "",
+      "thumbnail": "https://picsum.photos/seed/kling-i2v/800/450",
+      "tags": ["图生视频", "运动控制", "一致性高"],
+      "rating": 5,
+      "highlights": [
+        "图像主体一致性保持极好，不变形不漂移",
+        "支持运动笔刷精细控制动作区域",
+        "首帧/尾帧双锚点模式，视频内容可预期"
+      ],
+      "limitations": ["复杂动作描述有时理解偏差"],
+      "params": { "时长": "5s", "分辨率": "1080p", "模式": "图生视频", "运动强度": "中" },
+      "costEstimate": "~¥0.4/次",
+      "latency": "1-2min"
+    },
+    {
+      "id": "runway-i2v-1",
+      "model": "Gen-3 Alpha",
+      "vendor": "Runway",
+      "vendorTag": "runway",
+      "category": "video",
+      "subType": "image-to-video",
+      "mediaType": "video",
+      "prompt": "让猫咪慢慢抬起头，眼神向右看，耳朵轻轻抖动",
+      "inputAsset": "https://picsum.photos/seed/inputcat/400/400",
+      "outputUrl": "",
+      "thumbnail": "https://picsum.photos/seed/runway-i2v/800/450",
+      "tags": ["好莱坞级", "艺术感强", "运镜专业"],
+      "rating": 4,
+      "highlights": [
+        "运镜控制非常专业，支持精确摄像机参数",
+        "整体视频具有浓厚电影艺术感",
+        "配合 Act-One 表情迁移效果惊艳"
+      ],
+      "limitations": ["价格较贵", "国内访问需VPN"],
+      "params": { "时长": "10s", "分辨率": "1280x768", "摄像机": "可控", "风格": "电影级" },
+      "costEstimate": "~$0.1/次",
+      "latency": "2-3min"
+    },
+    {
+      "id": "midjourney-t2i-1",
+      "model": "Midjourney v7",
+      "vendor": "Midjourney",
+      "vendorTag": "midjourney",
+      "category": "image",
+      "subType": "text-to-image",
+      "mediaType": "image",
+      "prompt": "营销海报设计，极简风格，一杯咖啡在窗台上，晨光透过薄纱窗帘，暖色调，商业摄影质感",
+      "outputUrl": "https://picsum.photos/seed/mj-poster/800/800",
+      "thumbnail": "https://picsum.photos/seed/mj-poster/800/800",
+      "tags": ["艺术质感", "商业摄影", "创意构图"],
+      "rating": 5,
+      "highlights": [
+        "艺术审美和构图能力业界顶尖",
+        "v7版本对中文提示词理解大幅提升",
+        "Personalization功能可学习个人风格偏好"
+      ],
+      "limitations": ["只能在Discord或官网使用，无标准API", "中文提示词不如英文稳定"],
+      "params": { "版本": "v7", "宽高比": "1:1/16:9", "质量": "--q 2", "风格化": "--stylize 100" },
+      "costEstimate": "订阅制 $10/月起",
+      "latency": "30-60s"
+    },
+    {
+      "id": "dalle3-t2i-1",
+      "model": "DALL-E 3",
+      "vendor": "OpenAI",
+      "vendorTag": "openai",
+      "category": "image",
+      "subType": "text-to-image",
+      "mediaType": "image",
+      "prompt": "营销海报设计，极简风格，一杯咖啡在窗台上，晨光透过薄纱窗帘，暖色调，商业摄影质感",
+      "outputUrl": "https://picsum.photos/seed/dalle3-poster/800/800",
+      "thumbnail": "https://picsum.photos/seed/dalle3-poster/800/800",
+      "tags": ["文字生成", "API友好", "提示词增强"],
+      "rating": 4,
+      "highlights": [
+        "画面内文字生成能力最强，适合含文案的海报",
+        "标准 OpenAI API，集成最简单",
+        "会自动增强提示词，降低门槛"
+      ],
+      "limitations": ["艺术风格多样性不如Midjourney", "会拒绝部分创意内容"],
+      "params": { "分辨率": "1024x1024/1792x1024", "质量": "standard/hd", "风格": "vivid/natural" },
+      "costEstimate": "~$0.04/张",
+      "latency": "10-20s"
+    },
+    {
+      "id": "flux-t2i-1",
+      "model": "Flux 1.1 Pro",
+      "vendor": "Black Forest Labs",
+      "vendorTag": "bfl",
+      "category": "image",
+      "subType": "text-to-image",
+      "mediaType": "image",
+      "prompt": "营销海报设计，极简风格，一杯咖啡在窗台上，晨光透过薄纱窗帘，暖色调，商业摄影质感",
+      "outputUrl": "https://picsum.photos/seed/flux-poster/800/800",
+      "thumbnail": "https://picsum.photos/seed/flux-poster/800/800",
+      "tags": ["超高细节", "提示词精准", "速度快"],
+      "rating": 5,
+      "highlights": [
+        "对提示词的遵循度业界最高，指哪打哪",
+        "细节纹理极其丰富，超高清输出",
+        "速度极快，Pro版约3-5秒出图"
+      ],
+      "limitations": ["中文提示词需翻译为英文效果最佳"],
+      "params": { "分辨率": "最高2048px", "步数": "自适应", "输出格式": "JPEG/PNG/WebP" },
+      "costEstimate": "~$0.04/张",
+      "latency": "3-8s"
+    },
+    {
+      "id": "ideogram-t2i-1",
+      "model": "Ideogram 3.0",
+      "vendor": "Ideogram",
+      "vendorTag": "ideogram",
+      "category": "image",
+      "subType": "text-to-image",
+      "mediaType": "image",
+      "prompt": "营销海报设计，极简风格，一杯咖啡在窗台上，晨光透过薄纱窗帘，暖色调，商业摄影质感",
+      "outputUrl": "https://picsum.photos/seed/ideogram-poster/800/800",
+      "thumbnail": "https://picsum.photos/seed/ideogram-poster/800/800",
+      "tags": ["文字渲染", "海报设计", "排版出色"],
+      "rating": 4,
+      "highlights": [
+        "图中文字渲染质量最佳，适合含标题的设计稿",
+        "内置排版引擎，文字布局美观",
+        "支持魔法提示词自动优化描述"
+      ],
+      "limitations": ["照片写实风格弱于Flux", "价格略高"],
+      "params": { "分辨率": "多规格", "风格": "写实/设计/动漫/3D", "渲染质量": "标准/高质量" },
+      "costEstimate": "~$0.06/张",
+      "latency": "10-20s"
+    },
+    {
+      "id": "elevenlabs-tts-1",
+      "model": "ElevenLabs v3",
+      "vendor": "ElevenLabs",
+      "vendorTag": "elevenlabs",
+      "category": "audio",
+      "subType": "text-to-speech",
+      "mediaType": "audio",
+      "prompt": "欢迎使用AI内容生产平台，今天我们来聊聊如何用AI提升营销效率。这是一段示例语音，展示情感丰富的中文朗读效果。",
+      "outputUrl": "",
+      "thumbnail": "",
+      "tags": ["情感丰富", "声音克隆", "多语言"],
+      "rating": 5,
+      "highlights": [
+        "情感表现力最强，语调自然不机械",
+        "声音克隆只需30秒样本即可复刻",
+        "支持中英日等28种语言，跨语言音色保持"
+      ],
+      "limitations": ["价格较贵", "中文效果略逊于专注中文的厂商"],
+      "params": { "模型": "Eleven Multilingual v3", "采样率": "44.1kHz", "格式": "MP3/PCM/OGG" },
+      "costEstimate": "$0.18/千字符",
+      "latency": "1-3s"
+    },
+    {
+      "id": "doubao-tts-1",
+      "model": "豆包 TTS",
+      "vendor": "字节跳动",
+      "vendorTag": "bytedance",
+      "category": "audio",
+      "subType": "text-to-speech",
+      "mediaType": "audio",
+      "prompt": "欢迎使用AI内容生产平台，今天我们来聊聊如何用AI提升营销效率。这是一段示例语音，展示情感丰富的中文朗读效果。",
+      "outputUrl": "",
+      "thumbnail": "",
+      "tags": ["中文顶尖", "超低延迟", "多音色"],
+      "rating": 5,
+      "highlights": [
+        "中文语音质量业界顶尖，儿化音、方言处理自然",
+        "流式输出延迟低至100ms，适合实时对话",
+        "超300种音色可选，含情感/角色/方言类型"
+      ],
+      "limitations": ["需要企业备案才能使用克隆功能"],
+      "params": { "模型": "豆包大模型TTS", "延迟": "<100ms（流式）", "格式": "MP3/WAV/PCM" },
+      "costEstimate": "¥0.08/千字符",
+      "latency": "<100ms（流式）"
+    },
+    {
+      "id": "suno-ttm-1",
+      "model": "Suno v4",
+      "vendor": "Suno AI",
+      "vendorTag": "suno",
+      "category": "audio",
+      "subType": "text-to-music",
+      "mediaType": "audio",
+      "prompt": "一首轻快的商业背景音乐，钢琴+吉他，适合产品宣传片，无歌词，节奏稳定，时长30秒",
+      "outputUrl": "",
+      "thumbnail": "",
+      "tags": ["完整歌曲", "多风格", "带歌词"],
+      "rating": 5,
+      "highlights": [
+        "可生成完整歌曲含人声歌词，质量接近专业制作",
+        "支持30+音乐风格，从流行到古典全覆盖",
+        "自定义模式可精细控制结构和歌词"
+      ],
+      "limitations": ["生成内容版权归属有争议", "API暂未全面开放"],
+      "params": { "时长": "30s/4min", "风格": "可自定义", "歌词": "AI生成/自定义/无歌词" },
+      "costEstimate": "订阅制 $8/月起",
+      "latency": "30-60s"
+    },
+    {
+      "id": "udio-ttm-1",
+      "model": "Udio v1.5",
+      "vendor": "Udio",
+      "vendorTag": "udio",
+      "category": "audio",
+      "subType": "text-to-music",
+      "mediaType": "audio",
+      "prompt": "一首轻快的商业背景音乐，钢琴+吉他，适合产品宣传片，无歌词，节奏稳定，时长30秒",
+      "outputUrl": "",
+      "thumbnail": "",
+      "tags": ["音质出色", "风格多元", "可延伸"],
+      "rating": 4,
+      "highlights": [
+        "音频质量和混音效果业界最佳",
+        "支持歌曲续写和片段延伸功能",
+        "对乐器描述（如钢琴+贝斯+爵士鼓）响应准确"
+      ],
+      "limitations": ["中文歌词支持有限", "免费额度较少"],
+      "params": { "时长": "最长15min（分段生成）", "音质": "320kbps", "格式": "MP3/WAV" },
+      "costEstimate": "订阅制 $10/月起",
+      "latency": "20-40s"
+    },
+    {
+      "id": "gpt4o-img-1",
+      "model": "GPT-4o",
+      "vendor": "OpenAI",
+      "vendorTag": "openai",
+      "category": "multimodal",
+      "subType": "image-understanding",
+      "mediaType": "image",
+      "prompt": "这张营销海报的目标受众是谁？核心卖点是什么？文案逻辑是否清晰？给出优化建议。",
+      "inputAsset": "https://picsum.photos/seed/marketing-poster/800/600",
+      "outputUrl": "https://picsum.photos/seed/marketing-poster/800/600",
+      "thumbnail": "https://picsum.photos/seed/marketing-poster/800/600",
+      "tags": ["营销分析", "图文理解", "多轮对话"],
+      "rating": 5,
+      "highlights": [
+        "营销内容理解和分析能力极强，洞察准确",
+        "支持多图对比分析（如A/B测试海报）",
+        "可结合上下文进行多轮深度讨论"
+      ],
+      "limitations": ["每次调用成本相对较高"],
+      "params": { "模型": "gpt-4o", "图片输入": "最多10张", "Token上限": "128K" },
+      "costEstimate": "$0.005/千token",
+      "latency": "2-5s"
+    },
+    {
+      "id": "claude-img-1",
+      "model": "Claude 3.5 Sonnet",
+      "vendor": "Anthropic",
+      "vendorTag": "anthropic",
+      "category": "multimodal",
+      "subType": "image-understanding",
+      "mediaType": "image",
+      "prompt": "这张营销海报的目标受众是谁？核心卖点是什么？文案逻辑是否清晰？给出优化建议。",
+      "inputAsset": "https://picsum.photos/seed/marketing-poster/800/600",
+      "outputUrl": "https://picsum.photos/seed/marketing-poster/800/600",
+      "thumbnail": "https://picsum.photos/seed/marketing-poster/800/600",
+      "tags": ["深度分析", "长文理解", "细节识别"],
+      "rating": 5,
+      "highlights": [
+        "文字理解和逻辑推理能力最强，分析报告质量高",
+        "图片细节识别精准，能发现人类易忽视的细节",
+        "输出结构化程度高，适合自动化处理"
+      ],
+      "limitations": ["图片数量限制较多"],
+      "params": { "模型": "claude-sonnet-4-6", "图片输入": "最多20张", "Token上限": "200K" },
+      "costEstimate": "$0.003/千token",
+      "latency": "2-4s"
+    },
+    {
+      "id": "gemini-vid-1",
+      "model": "Gemini 1.5 Pro",
+      "vendor": "Google",
+      "vendorTag": "google",
+      "category": "multimodal",
+      "subType": "video-understanding",
+      "mediaType": "video",
+      "prompt": "分析这段产品演示视频，找出用户操作的困惑点，并建议改进方向",
+      "inputAsset": "https://picsum.photos/seed/product-demo/800/450",
+      "outputUrl": "https://picsum.photos/seed/product-demo/800/450",
+      "thumbnail": "https://picsum.photos/seed/product-demo/800/450",
+      "tags": ["视频理解", "超长上下文", "时序分析"],
+      "rating": 5,
+      "highlights": [
+        "支持最长1小时视频输入，100万Token上下文",
+        "可精准定位视频中的时间点（如'2:34处用户操作出错'）",
+        "理解视频+音频+字幕等多模态信息综合"
+      ],
+      "limitations": ["视频处理成本较高", "推理速度相对较慢"],
+      "params": { "模型": "gemini-1.5-pro", "视频上限": "1小时", "Token上限": "100万" },
+      "costEstimate": "$0.007/千token",
+      "latency": "5-30s（视时长）"
+    }
+  ]
+}

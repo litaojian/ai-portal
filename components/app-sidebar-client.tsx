@@ -25,7 +25,10 @@ import {
   IconKey,
   IconDeviceDesktop,
   IconActivityHeartbeat,
-  IconFile
+  IconFile,
+  IconEdit,
+  IconBook,
+  IconMap,
 } from "@tabler/icons-react"
 
 import {
@@ -71,6 +74,9 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   IconDeviceDesktop,
   IconActivityHeartbeat,
   IconFile,
+  IconEdit,
+  IconBook,
+  IconMap,
 }
 
 interface MenuItem {
