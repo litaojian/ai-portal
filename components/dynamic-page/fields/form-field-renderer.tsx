@@ -11,6 +11,7 @@ import RadioField from './radio-field';
 import ComboboxField from './combobox-field';
 import TextareaField from './textarea-field';
 import JsonField from './json-field';
+import VideoField from './video-field';
 
 interface FormFieldRendererProps {
   field: FieldDefinition;
@@ -57,6 +58,14 @@ export default function FormFieldRenderer({ field, value, onChange, onExtraChang
             field={field}
             value={value}
             onChange={onChange}
+            disabled={disabled}
+          />
+        );
+      case 'video':
+        return (
+          <VideoField
+            field={field}
+            value={value}
             disabled={disabled}
           />
         );

@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, WandSparkles, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import VideoField from './fields/video-field';
 
 interface DynamicDialogProps {
   formConfig: ActionDialogConfig;
@@ -327,6 +328,15 @@ export function DynamicDialog({ formConfig, pageConfig, data, onSuccess }: Dynam
                   );
                 }
 
+                if (effectiveType === 'video') {
+                  return (
+                    <div key={fi} className="space-y-1">
+                      <div className="text-xs text-muted-foreground">{label}{isRequired && <span className="text-destructive ml-1">*</span>}</div>
+                      <VideoField value={value} />
+                    </div>
+                  );
+                }
+
                 return (
                   <div key={fi} className="space-y-1">
                     <div className="text-xs text-muted-foreground">{label}{isRequired && <span className="text-destructive ml-1">*</span>}</div>
@@ -341,7 +351,28 @@ export function DynamicDialog({ formConfig, pageConfig, data, onSuccess }: Dynam
               }
 
               // Read-only
-              if (!fieldDef) return null;
+              if (!fieldDef) {
+                const effectiveType = typeOverride ?? 'text';
+                if (effectiveType === 'video') {
+                  return (
+                    <div key={fi} className="space-y-1">
+                      <div className="text-xs text-muted-foreground">{label}</div>
+                      <VideoField value={data[key]} />
+                    </div>
+                  );
+                }
+                return null;
+              }
+              const effectiveType = typeOverride ?? fieldDef.type ?? 'text';
+              if (effectiveType === 'video') {
+                return (
+                  <div key={fi} className="space-y-1">
+                    <div className="text-xs text-muted-foreground">{label}</div>
+                    <VideoField value={data[key]} />
+                  </div>
+                );
+              }
+
               return (
                 <div key={fi} className="space-y-0.5">
                   <div className="text-xs text-muted-foreground">{label}</div>

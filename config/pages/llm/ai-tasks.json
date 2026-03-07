@@ -1,0 +1,223 @@
+{
+    "meta": {
+        "key": "llm/ai-tasks",
+        "title": "AI视频生成任务",
+        "description": "提交并统一管理AI大模型生成的视频记录",
+        "icon": "Video",
+        "api": "/api/llm/ai-tasks",
+        "defaultView": "list"
+    },
+    "model": {
+        "fields": {
+            "id": {
+                "label": "任务ID",
+                "type": "text",
+                "hidden": true,
+                "primaryKey": true
+            },
+            "taskId": {
+                "label": "API流水号",
+                "type": "text",
+                "readonly": true
+            },
+            "model": {
+                "label": "模型选型",
+                "type": "select",
+                "options": [
+                    {
+                        "label": "Veo 3.1",
+                        "value": "veo-3.1-generate-preview"
+                    },
+                    {
+                        "label": "Kling 1.6",
+                        "value": "kling-1-6"
+                    },
+                    {
+                        "label": "Sora 2",
+                        "value": "sora-2"
+                    },
+                    {
+                        "label": "Gen-3 Alpha",
+                        "value": "runway-gen3"
+                    }
+                ],
+                "validation": {
+                    "required": true
+                },
+                "defaultValue": "veo-3.1-generate-preview"
+            },
+            "size": {
+                "label": "分辨率",
+                "type": "select",
+                "options": [
+                    {
+                        "label": "16:9 (1080p)",
+                        "value": "1920x1080"
+                    },
+                    {
+                        "label": "9:16 (竖屏)",
+                        "value": "1080x1920"
+                    },
+                    {
+                        "label": "16:9 (720p)",
+                        "value": "1280x720"
+                    }
+                ],
+                "defaultValue": "1280x720"
+            },
+            "duration": {
+                "label": "生成时长",
+                "type": "select",
+                "options": [
+                    {
+                        "label": "4 秒",
+                        "value": 4
+                    },
+                    {
+                        "label": "5 秒",
+                        "value": 5
+                    },
+                    {
+                        "label": "8 秒",
+                        "value": 8
+                    },
+                    {
+                        "label": "10 秒",
+                        "value": 10
+                    }
+                ],
+                "defaultValue": 4
+            },
+            "prompt": {
+                "label": "提示词",
+                "type": "textarea",
+                "rows": 4,
+                "placeholder": "请输入你想展示的画面：主体细节、环境、构图、光影等...",
+                "validation": {
+                    "required": true
+                },
+                "defaultValue": "一只小猫在草地上玩耍"
+            },
+            "status": {
+                "label": "执行状态",
+                "type": "text",
+                "readonly": true
+            },
+            "progress": {
+                "label": "处理进度(%)",
+                "type": "number",
+                "readonly": true
+            },
+            "createdAt": {
+                "label": "提交时间",
+                "type": "date",
+                "readonly": true
+            },
+            "resultUrl": {
+                "label": "视频链接",
+                "type": "text",
+                "readonly": true,
+                "hidden": true
+            }
+        }
+    },
+    "views": {
+        "search": {
+            "fields": [
+                {
+                    "key": "model",
+                    "placeholder": "选择模型查询",
+                    "clearable": true
+                },
+                {
+                    "key": "status",
+                    "placeholder": "当前状态",
+                    "clearable": true
+                }
+            ]
+        },
+        "table": {
+            "size": "default",
+            "rownum": true,
+            "columns": [
+                {
+                    "key": "taskId"
+                },
+                {
+                    "key": "model"
+                },
+                {
+                    "key": "prompt",
+                    "width": 300
+                },
+                {
+                    "key": "status"
+                },
+                {
+                    "key": "progress",
+                    "width": 100
+                },
+                {
+                    "key": "createdAt",
+                    "width": 160
+                }
+            ],
+            "actions": {
+                "row": [
+                    {
+                        "action": "callApi",
+                        "title": "同步",
+                        "api": "/api/llm/ai-tasks/{id}/sync",
+                        "method": "PUT",
+                        "validation": false
+                    },
+                    {
+                        "action": "showDialog",
+                        "title": "播放",
+                        "dialogConfig": "llm/videoDialog"
+                    },
+                    {
+                        "action": "delete",
+                        "title": "删除"
+                    }
+                ],
+                "toolbar": [
+                    {
+                        "action": "create",
+                        "title": "生成视频"
+                    }
+                ]
+            },
+            "pagination": {
+                "enabled": true,
+                "pageSize": 10,
+                "mode": "server"
+            }
+        },
+        "form": {
+            "layout": "grid",
+            "width": "max-w-2xl",
+            "columns": 3,
+            "submitButton": {
+                "title": "加入生成队列",
+                "loadingTitle": "正在提交任务..."
+            },
+            "sections": [
+                {
+                    "fields": [
+                        {
+                            "key": "model",
+                            "colSpan": 1
+                        },
+                        "size",
+                        "duration",
+                        {
+                            "key": "prompt",
+                            "colSpan": 3
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

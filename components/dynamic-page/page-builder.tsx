@@ -38,10 +38,7 @@ interface PageBuilderProps {
   entityId?: string;
 }
 
-// Stub functions for missing implementations
-const handleCustomAction = async (action: string, data: any) => {
-  console.warn("handleCustomAction not implemented", action, data);
-};
+// Custom action handler is now processed within the component switch
 
 export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps) {
   const [config, setConfig] = useState<PageConfig | null>(null);
@@ -70,7 +67,6 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
   // Submit Result Dialog State (for standalone form pages)
   const [resultDialogOpen, setResultDialogOpen] = useState(false);
   const [submitResult, setSubmitResult] = useState<Record<string, any> | null>(null);
-
 
   useEffect(() => {
     loadConfig();
@@ -265,7 +261,36 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
           }
           break;
         default:
-          await handleCustomAction(action, data);
+          if (action === 'callApi' && actionDef?.api) {
+            let apiUrl = actionDef.api as string;
+            // 替换路径参数，如 /api/xx/{id}
+            if (data && typeof data === 'object') {
+              for (const key of Object.keys(data)) {
+                apiUrl = apiUrl.replace(`{${key}}`, encodeURIComponent(String(data[key])));
+              }
+            }
+
+            const method = actionDef.method || 'POST';
+
+            const res = await fetch(apiUrl, {
+              method,
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: ['POST', 'PUT', 'PATCH'].includes(method.toUpperCase())
+                ? JSON.stringify(data || {})
+                : undefined
+            });
+
+            if (!res.ok) {
+              const err = await res.json().catch(() => null);
+              throw new Error(err?.error || err?.message || '请求失败');
+            }
+            // 调用成功后可执行刷新等操作
+            loadListData();
+          } else {
+            console.warn("Unhandled action:", action, data);
+          }
       }
     } catch (e) {
       console.error("Action failed", e);
@@ -417,6 +442,7 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
           </DialogHeader>
           <div className="overflow-y-auto px-6 py-4" style={{ maxHeight: 'calc(90vh - 5rem)' }}>
             <DynamicForm
+              key={`${dialogMode}-${currentEntityId || 'new'}-${dialogOpen}`}
               config={config}
               mode={dialogMode}
               entityId={currentEntityId}

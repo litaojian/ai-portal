@@ -13,6 +13,7 @@ export const FieldTypeSchema = z.enum([
   "boolean",
   "textarea",
   "json",
+  "video",
 ]);
 
 export const ValidationSchema = z.object({

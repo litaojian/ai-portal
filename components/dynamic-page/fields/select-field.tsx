@@ -16,8 +16,9 @@ interface SelectFieldProps {
 }
 
 export default function SelectField({ field, value, onChange, disabled, placeholder }: SelectFieldProps) {
+  const stringValue = value !== undefined && value !== null && value !== '' ? String(value) : undefined;
   return (
-    <Select value={value} onValueChange={onChange} disabled={disabled}>
+    <Select value={stringValue} onValueChange={onChange} disabled={disabled}>
       <SelectTrigger>
         <SelectValue placeholder={placeholder || "请选择"} />
       </SelectTrigger>

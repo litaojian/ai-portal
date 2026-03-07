@@ -241,6 +241,47 @@ export function AppSidebarClient({ menuData, ...props }: AppSidebarClientProps) 
               {children && children.length > 0 ? (
                 children.map((child) => {
                   const ChildIcon = child.icon || IconFolder;
+
+                  // 判断是否含有三级菜单
+                  if (child.items && child.items.length > 0) {
+                    return (
+                      <div key={child.title} className="flex flex-col border-b last:border-b-0 p-4 pb-2 text-sm">
+                        <div className="flex w-full items-center gap-2 mb-2 font-medium text-foreground">
+                          <ChildIcon className="size-4" />
+                          <span>{child.title}</span>
+                          {child.badge && (
+                            <span className="ml-auto text-xs bg-primary/10 text-primary px-2 py-0.5 rounded">
+                              {child.badge}
+                            </span>
+                          )}
+                        </div>
+                        {child.description && (
+                          <span className="text-xs text-muted-foreground mb-2">
+                            {child.description}
+                          </span>
+                        )}
+                        <div className="flex flex-col gap-1 pl-6">
+                          {child.items.map((subItem) => {
+                            const SubIcon = subItem.icon || IconFile;
+                            const isSubActive = pathname === subItem.url;
+                            return (
+                              <Link
+                                key={subItem.title}
+                                href={subItem.url || "#"}
+                                className={`flex items-center gap-2 p-2 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors ${isSubActive ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium" : "text-muted-foreground"
+                                  }`}
+                              >
+                                <SubIcon className="size-3.5" />
+                                <span>{subItem.title}</span>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // 仅二级的普通路由表现
                   return (
                     <Link
                       href={child.url || "#"}

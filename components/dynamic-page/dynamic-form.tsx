@@ -19,7 +19,21 @@ interface DynamicFormProps {
 }
 
 export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel }: DynamicFormProps) {
-  const [formData, setFormData] = useState<Record<string, any>>({});
+  const [formData, setFormData] = useState<Record<string, any>>(() => {
+    if (mode === 'create') {
+      const defaults: Record<string, any> = {};
+      Object.entries(config.model.fields).forEach(([key, field]) => {
+        if (field.defaultValue !== undefined) {
+          defaults[key] = field.defaultValue;
+        } else if (field.type === 'date' || field.type === 'datetime') {
+          defaults[key] = new Date().toISOString().split('T')[0];
+        }
+      });
+      return defaults;
+    }
+    return {};
+  });
+
   const [loading, setLoading] = useState(false);
   const [initialData, setInitialData] = useState<any>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -30,20 +44,20 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
   useEffect(() => {
     if (mode === 'edit' && entityId) {
       loadEntityData();
-    } else {
-      // 设置默认值
+    } else if (mode === 'create') {
+      // 在模式切回、依赖变更时仍要恢复出厂默认设置
       const defaults: Record<string, any> = {};
       Object.entries(config.model.fields).forEach(([key, field]) => {
         if (field.defaultValue !== undefined) {
           defaults[key] = field.defaultValue;
         } else if (field.type === 'date' || field.type === 'datetime') {
-          // 如果日期字段没有初始值，默认显示当天日期 (YYYY-MM-DD)
           defaults[key] = new Date().toISOString().split('T')[0];
         }
       });
       setFormData(defaults);
+      setErrors({});
     }
-  }, [mode, entityId]);
+  }, [mode, entityId, config]);
 
   const loadEntityData = async () => {
     const dataService = BizDataService.getInstance();
@@ -316,9 +330,9 @@ export default function DynamicForm({ config, mode, entityId, onSubmit, onCancel
             disabled={loading}
             variant={formView?.submitButton?.variant ?? 'default'}
           >
-          {loading
-            ? <><Loader2 className="mr-1 h-4 w-4 animate-spin" />{formView?.submitButton?.loadingTitle ?? '处理中...'}</>
-            : (formView?.submitButton?.title ?? (mode === 'create' ? '创建' : '更新'))}
+            {loading
+              ? <><Loader2 className="mr-1 h-4 w-4 animate-spin" />{formView?.submitButton?.loadingTitle ?? '处理中...'}</>
+              : (formView?.submitButton?.title ?? (mode === 'create' ? '创建' : '更新'))}
           </Button>
         )}
       </div>

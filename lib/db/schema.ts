@@ -177,6 +177,34 @@ export const roles = mysqlTable("uc_role", {
     updatedAt: updated(),
 });
 
+// AI Tasks Record
+export const aiTasks = mysqlTable("ai_tasks", {
+    id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
+    taskId: varchar("task_id", { length: 255 }),
+    userId: varchar("userId", { length: 255 }).notNull().references(() => users.id, { onDelete: "cascade" }),
+    model: varchar("model", { length: 255 }).notNull(),
+    prompt: text("prompt").notNull(),
+    size: varchar("size", { length: 50 }),
+    duration: int("duration"),
+    status: varchar("status", { length: 50 }).default("queued").notNull(),
+    progress: int("progress").default(0),
+    resultUrl: varchar("result_url", { length: 500 }),
+    failReason: text("fail_reason"),
+    createdAt: now(),
+    updatedAt: updated(),
+}, (table) => ({
+    userIdx: index("ai_task_user_idx").on(table.userId),
+    statusIdx: index("ai_task_status_idx").on(table.status),
+}));
+
+export const aiTasksRelations = relations(aiTasks, ({ one }) => ({
+    user: one(users, {
+        fields: [aiTasks.userId],
+        references: [users.id],
+        relationName: "userTasks"
+    }),
+}));
+
 export const tables = {
     user: users,
     users: users,
@@ -197,6 +225,9 @@ export const tables = {
     oidcClients: oidcClients,
     oidcPayload: oidcPayloads,
     oidcPayloads: oidcPayloads,
+
+    aiTask: aiTasks,
+    aiTasks: aiTasks,
 };
 
 export type User = InferSelectModel<typeof users>;
@@ -205,6 +236,7 @@ export type Session = InferSelectModel<typeof sessions>;
 export type VerificationToken = InferSelectModel<typeof verificationTokens>;
 export type Menu = InferSelectModel<typeof menus> & { children?: Menu[] };
 export type Role = InferSelectModel<typeof roles>;
+export type AiTask = InferSelectModel<typeof aiTasks>;
 
 export type Application = InferSelectModel<typeof applications> & { oidcClient?: OidcClient | null };
 export type OidcClient = InferSelectModel<typeof oidcClients>;

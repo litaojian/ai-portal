@@ -1,0 +1,22 @@
+{
+  "title": "视频",
+  "width": "max-w-2xl",
+  "sections": [
+    {
+      "title": "",
+      "columns": 1,
+      "fields": [
+        {
+          "key": "resultUrl",
+          "type": "video",
+          "editable": false
+        },
+        {
+          "key": "prompt",
+          "label": "提示词",
+          "editable": false
+        }
+      ]
+    }
+  ]
+}

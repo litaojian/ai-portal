@@ -17,7 +17,7 @@
         {
             "title": "模型测试",
             "icon": "IconBolt",
-            "items":[
+            "items": [
                 {
                     "title": "AI文本",
                     "url": "/portal/llm/testcases/text"
@@ -28,7 +28,7 @@
                 },
                 {
                     "title": "AI视频",
-                    "url": "/portal/llm/testcases/video"
+                    "url": "/portal/llm/ai-tasks"
                 }
             ]
         },
