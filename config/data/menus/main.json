@@ -16,8 +16,21 @@
         },
         {
             "title": "模型测试",
-            "url": "/portal/llm/testcases",
-            "icon": "IconBolt"
+            "icon": "IconBolt",
+            "items":[
+                {
+                    "title": "AI文本",
+                    "url": "/portal/llm/testcases/text"
+                },
+                {
+                    "title": "AI图片",
+                    "url": "/portal/llm/testcases/image"
+                },
+                {
+                    "title": "AI视频",
+                    "url": "/portal/llm/testcases/video"
+                }
+            ]
         },
         {
             "title": "交易日报",
