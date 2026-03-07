@@ -68,6 +68,7 @@ export async function PUT(
 
         let resultUrl = rootData.result_url || innerData.result_url || task.resultUrl;
         let failReason = innerData.error?.message || innerData.fail_reason || rootData.fail_reason || task.failReason;
+        let quota = innerData.quota ?? rootData.quota ?? task.quota ?? 0;
 
         // Update DB
         await db.update(aiTasks)
@@ -76,6 +77,7 @@ export async function PUT(
                 progress: currentProgress,
                 resultUrl: resultUrl,
                 failReason: failReason,
+                quota: quota,
                 updatedAt: new Date()
             })
             .where(eq(aiTasks.id, id));

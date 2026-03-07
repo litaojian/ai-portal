@@ -20,7 +20,6 @@ export default function VideoField({ value }: VideoFieldProps) {
                 src={videoUrl}
                 controls
                 className="max-h-[60vh] max-w-full"
-                controlsList="nodownload"
             />
         </div>
     );

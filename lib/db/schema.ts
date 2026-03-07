@@ -190,6 +190,7 @@ export const aiTasks = mysqlTable("ai_tasks", {
     progress: int("progress").default(0),
     resultUrl: varchar("result_url", { length: 500 }),
     failReason: text("fail_reason"),
+    quota: int("quota").default(0),
     createdAt: now(),
     updatedAt: updated(),
 }, (table) => ({

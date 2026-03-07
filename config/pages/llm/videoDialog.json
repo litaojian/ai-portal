@@ -12,6 +12,11 @@
           "editable": false
         },
         {
+          "key": "quota",
+          "label": "消耗额度",
+          "editable": false
+        },
+        {
           "key": "prompt",
           "label": "提示词",
           "editable": false

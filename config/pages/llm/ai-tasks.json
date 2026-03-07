@@ -118,6 +118,11 @@
                 "type": "text",
                 "readonly": true,
                 "hidden": true
+            },
+            "quota": {
+                "label": "消耗额度",
+                "type": "number",
+                "readonly": true
             }
         }
     },
@@ -158,6 +163,11 @@
                     "width": 100
                 },
                 {
+                    "key": "quota",
+                    "width": 100,
+                    "align": "right"
+                },
+                {
                     "key": "createdAt",
                     "width": 160
                 }
@@ -169,16 +179,25 @@
                         "title": "同步",
                         "api": "/api/llm/ai-tasks/{id}/sync",
                         "method": "PUT",
-                        "validation": false
+                        "validation": false,
+                        "conditions": {
+                            "status": "queued"
+                        }
                     },
                     {
                         "action": "showDialog",
                         "title": "播放",
-                        "dialogConfig": "llm/videoDialog"
+                        "dialogConfig": "llm/videoDialog",
+                        "conditions": {
+                            "status": "completed"
+                        }
                     },
                     {
                         "action": "delete",
-                        "title": "删除"
+                        "title": "删除",
+                        "conditions": {
+                            "status": "failed"
+                        }
                     }
                 ],
                 "toolbar": [
