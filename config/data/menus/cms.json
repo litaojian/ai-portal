@@ -6,17 +6,12 @@
     "isActive": true,
     "items": [
         {
-            "title": "AI+营销 Wiki",
-            "url": "/portal/cms/wiki",
+            "title": "AI内容创作",
+            "url": "/cms/writer",
             "icon": "IconBook"
-        },
+        }, 
         {
-            "title": "AI应用落地指南",
-            "url": "/portal/cms/ai/tutorial",
-            "icon": "IconMap"
-        },
-        {
-            "title": "AI应用场景测试",
+            "title": "AI应用场景",
             "url": "/portal/cms/llm/api-cases",
             "icon": "IconFolder"
         }

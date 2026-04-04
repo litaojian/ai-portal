@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(pip list:*)",
+      "Bash(python:*)",
+      "Bash(pnpm build:*)",
+      "Bash(curl -s http://localhost:3000/api/data/menus)",
+      "Bash(node -e \":*)",
+      "Bash(curl -s -w \"\\\\nHTTP_CODE:%{http_code}\\\\n\" http://localhost:3000/api/data/menus)",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s \"http://localhost:3000/portal/bidding/bidding-board\")",
+      "Bash(npx tsc:*)",
+      "Bash(NODE_OPTIONS='--max-old-space-size=8192' pnpm build)",
+      "Bash(git commit -m ':*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}

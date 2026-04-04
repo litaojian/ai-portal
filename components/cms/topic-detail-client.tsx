@@ -83,6 +83,7 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
             const res = await fetch(`/api/rest/cms/topics/${topicId}`);
             if (!res.ok) throw new Error('Failed to fetch');
             const data = await res.json();
+            if (!data.detailItems) data.detailItems = [];
             setTopic(data);
         } catch {
             toast.error('加载专栏数据失败');
@@ -113,6 +114,7 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
 
         if (!res.ok) throw new Error('Failed to save');
         const updated = await res.json();
+        if (!updated.detailItems) updated.detailItems = [];
         setTopic(updated);
     };
 

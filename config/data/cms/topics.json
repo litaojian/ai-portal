@@ -1,10 +1,10 @@
 [
     {
-        "id": "t1",
-        "topicName": "AI 探索家",
-        "topicDesc": "一个专注于深度分析 AI 技术演进与真实应用的专栏",
+        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567801",
+        "topicName": "技术型AI营销自动化顾问",
+        "topicDesc": "帮B2B企业用AI+自动化打通内容、线索和转化流程",
         "ipPositioning": "极客风、中立冷静、前瞻性的行业观察者",
-        "targetAudience": "科技爱好者, AI 开发者, 企业技术决策者",
+        "targetAudience": "中小企业、科技服务、咨询培训公司",
         "coreLabels": "AI, 大模型, 效率工具, 行业深度",
         "contentMatrix": "60% 深度技术分析, 30% 应用测评, 10% 行业简评",
         "status": "open",
@@ -21,14 +21,21 @@
             {
                 "id": "d1-2",
                 "articleName": "文章2",
-                "dueDate": "2026-04-03",
+                "dueDate": "2026-04-04",
                 "status": "closed",
+                "contentUrl": ""
+            },
+            {
+                "id": "d1-3",
+                "articleName": "文章3",
+                "dueDate": "2026-04-08",
+                "status": "open",
                 "contentUrl": ""
             }
         ]
     },
     {
-        "id": "t2",
+        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567802",
         "topicName": "职场效率手册",
         "topicDesc": "利用 AI 构建下一代办公流程，告别由于低效带来的焦虑",
         "ipPositioning": "亲和力十足、实战驱动的效率教练",
@@ -36,8 +43,23 @@
         "coreLabels": "效率, 自动化, 职场成长, AI 实践",
         "contentMatrix": "50% 教程实操, 30% 案例分享, 20% 工具推荐",
         "status": "open",
-        "planTasks": 0,
-        "completedTasks": 0,
-        "detailItems": []
+        "planTasks": 2,
+        "completedTasks": 2,
+        "detailItems": [
+            {
+                "id": "d2-1",
+                "articleName": "文章1",
+                "dueDate": "2026-04-03",
+                "status": "closed",
+                "contentUrl": ""
+            },
+            {
+                "id": "d2-2",
+                "articleName": "文章2",
+                "dueDate": "2026-04-04",
+                "status": "closed",
+                "contentUrl": ""
+            }
+        ]
     }
 ]

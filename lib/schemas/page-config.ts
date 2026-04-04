@@ -87,6 +87,7 @@ const RowActionSchema = z.union([
 export const TableColumnSchema = z.object({
   key: z.string(),
   label: z.string().optional(), // 覆盖 model 中的 label
+  path: z.string().optional(), // 支持嵌套路径，如 'contract.quoteAmount'
   width: z.union([z.number(), z.string()]).optional(),
   minWidth: z.union([z.number(), z.string()]).optional(),
   maxWidth: z.union([z.number(), z.string()]).optional(),
