@@ -1,0 +1,93 @@
+{
+    "$schema": "https://ai-portal.com/schemas/page-config.json",
+    "meta": {
+        "key": "cms/topics",
+        "title": "新开专栏",
+        "description": "专栏管理与配置中心",
+        "icon": "Shield",
+        "api": "/api/rest/cms/topics",
+        "defaultView": "list"
+    },
+    "model": {
+        "fields": {
+            "id": { "label": "ID", "type": "text", "hidden": true, "primaryKey": true },
+            "topicName": { "label": "专栏名称", "type": "text", "validation": { "required": true } },
+            "ipPositioning": { "label": "定位", "type": "textarea", "validation": { "required": true } },
+            "targetAudience": { "label": "目标客群", "type": "textarea", "validation": { "required": true } },
+            "coreLabels": { "label": "核心标签", "type": "text" },
+            "contentMatrix": { "label": "内容矩阵", "type": "textarea" },
+            "remark": { "label": "备注", "type": "textarea" },
+            "planTasks": { "label": "计划任务数", "type": "number" },
+            "completedTasks": { "label": "已完成", "type": "number" },
+            "status": {
+                "label": "状态",
+                "type": "select",
+                "options": [
+                    { "label": "进行中", "value": "open", "color": "green" },
+                    { "label": "草稿", "value": "draft", "color": "gray" },
+                    { "label": "已关闭", "value": "closed", "color": "red" }
+                ]
+            }
+        }
+    },
+    "views": {
+        "search": {
+            "fields": [
+                { "key": "topicName", "placeholder": "专栏名称" }
+            ]
+        },
+        "table": {
+            "size": "small",
+            "rownum": true,
+            "columns": [
+                { "key": "topicName", "width": 150 },
+                { "key": "ipPositioning", "width": 200 },
+                { "key": "targetAudience", "width": 150 },
+                { "key": "status", "width": 100, "component": "badge" },
+                { "key": "planTasks", "width": 100 },
+                { "key": "completedTasks", "width": 100 }
+            ],
+            "actions": {
+                "row": [
+                    {
+                        "action": "navigate",
+                        "title": "详情",
+                        "url": "/portal/cms/topics/{id}"
+                    },
+                    {
+                        "action": "delete",
+                        "title": "删除",
+                        "conditions": {
+                            "status": "draft"
+                        }
+                    }
+                ],
+                "toolbar": [
+                    {
+                        "action": "create",
+                        "title": "新专栏"
+                    }
+                ]
+            },
+            "pagination": {
+                "enabled": true,
+                "pageSize": 10,
+                "mode": "client"
+            }
+        },
+        "form": {
+            "layout": "grid",
+            "columns": 1,
+            "sections": [
+                {
+                    "title": "基础定位",
+                    "fields": ["topicName", "ipPositioning", "targetAudience"]
+                },
+                {
+                    "title": "内容策略",
+                    "fields": ["coreLabels", "contentMatrix", "remark"]
+                }
+            ]
+        }
+    }
+}
