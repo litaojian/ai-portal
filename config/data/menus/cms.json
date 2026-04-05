@@ -1,18 +1,23 @@
 {
-    "title": "AI内容生产线",
+    "title": "内容仓库",
     "url": "#",
     "icon": "IconEdit",
     "order": 2,
     "isActive": true,
     "items": [
         {
-            "title": "AI内容创作",
-            "url": "/cms/writer",
+            "title": "AI营销",
+            "url": "/portal/cms/ai-marketing",
             "icon": "IconBook"
         }, 
         {
-            "title": "AI应用场景",
-            "url": "/portal/cms/llm/api-cases",
+            "title": "AI编程",
+            "url": "/portal/cms/ai-coding",
+            "icon": "IconFolder"
+        },
+        {
+            "title": "AI应用案例",
+            "url": "/portal/cms/ai-cases",
             "icon": "IconFolder"
         }
 

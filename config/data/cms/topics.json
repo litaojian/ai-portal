@@ -7,50 +7,36 @@
     "coreLabels": "AI, 大模型, 效率工具, 行业深度",
     "contentMatrix": "60% 深度技术分析, 30% 应用测评, 10% 行业简评",
     "status": "open",
-    "planTasks": 20,
-    "completedTasks": 6,
+    "planTasks": 18,
+    "completedTasks": 1,
     "detailItems": [
-      {
-        "id": "d1-2",
-        "articleName": "文章2",
-        "dueDate": "2026-04-04",
-        "status": "published",
-        "contentUrl": ""
-      },
-      {
-        "id": "d1-3",
-        "articleName": "文章3",
-        "dueDate": "2026-04-08",
-        "status": "published",
-        "contentUrl": ""
-      },
       {
         "id": "46815cfa-21d2-4c67-959c-e19d1e0a7d02",
         "articleName": "AI赋能B2B营销自动化全流程剖析",
         "dueDate": "2024-06-03",
-        "status": "published",
-        "contentUrl": ""
+        "status": "reviewed",
+        "contentUrl": "content/articles/46815cfa-21d2-4c67-959c-e19d1e0a7d02.md"
       },
       {
         "id": "105056e2-247e-4488-97ff-c52c4746ffaa",
         "articleName": "从线索到成交：基于大模型的线索分级与转化自动化实践",
         "dueDate": "2024-06-07",
-        "status": "published",
+        "status": "draft",
         "contentUrl": ""
       },
       {
         "id": "e5b2db01-99f4-4f86-948e-866b18c933ed",
         "articleName": "推荐10款提升B2B营销效率的AI工具",
         "dueDate": "2024-06-10",
-        "status": "published",
+        "status": "draft",
         "contentUrl": ""
       },
       {
         "id": "aa0fe0f7-a488-492a-9b27-1d8f45bb1349",
         "articleName": "大模型驱动内容个性化：主流解决方案解析",
         "dueDate": "2024-06-13",
-        "status": "draft",
-        "contentUrl": ""
+        "status": "reviewed",
+        "contentUrl": "content/articles/aa0fe0f7-a488-492a-9b27-1d8f45bb1349.md"
       },
       {
         "id": "ee0f849c-1239-4969-984f-d130bf6ceb48",
@@ -63,8 +49,8 @@
         "id": "e005dfb8-36f1-49c8-befe-fedc528ccb6c",
         "articleName": "行业快评：2024上半年AI营销自动化趋势观察",
         "dueDate": "2024-06-19",
-        "status": "draft",
-        "contentUrl": ""
+        "status": "reviewed",
+        "contentUrl": "content/articles/e005dfb8-36f1-49c8-befe-fedc528ccb6c.md"
       },
       {
         "id": "e2041d71-563c-4fc6-8d9c-dc92909b454b",
@@ -151,7 +137,7 @@
         "contentUrl": ""
       }
     ],
-    "updatedAt": "2026-04-05T02:22:29.177Z"
+    "updatedAt": "2026-04-05T09:12:43.121Z"
   },
   {
     "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567802",

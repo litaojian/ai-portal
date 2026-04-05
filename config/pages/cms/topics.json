@@ -2,7 +2,7 @@
     "$schema": "https://ai-portal.com/schemas/page-config.json",
     "meta": {
         "key": "cms/topics",
-        "title": "新开专栏",
+        "title": "专栏创作",
         "description": "专栏管理与配置中心",
         "icon": "Shield",
         "api": "/api/rest/cms/topics",
@@ -13,9 +13,9 @@
             "id": { "label": "ID", "type": "text", "hidden": true, "primaryKey": true },
             "topicName": { "label": "专栏名称", "type": "text", "validation": { "required": true } },
             "ipPositioning": { "label": "定位", "type": "textarea", "validation": { "required": true } },
-            "targetAudience": { "label": "目标客群", "type": "textarea", "validation": { "required": true } },
+            "targetAudience": { "label": "目标客群", "type": "textarea", "rows": 2, "validation": { "required": true } },
             "coreLabels": { "label": "核心标签", "type": "text" },
-            "contentMatrix": { "label": "内容矩阵", "type": "textarea" },
+            "contentMatrix": { "label": "内容矩阵", "type": "textarea", "rows": 2 },
             "remark": { "label": "备注", "type": "textarea" },
             "planTasks": { "label": "计划任务数", "type": "number" },
             "completedTasks": { "label": "已完成", "type": "number" },
@@ -50,14 +50,14 @@
             "actions": {
                 "row": [
                     {
-                        "action": "navigate",
-                        "title": "详情",
-                        "url": "/portal/cms/topics/{id}"
-                    },
-                    {
                         "action": "showDialog",
                         "title": "规划",
                         "dialogConfig": "cms/topicPlanDialog"
+                    },
+                    {
+                        "action": "navigate",
+                        "title": "任务",
+                        "url": "/portal/cms/topics/{id}"
                     },
                     {
                         "action": "delete",
@@ -90,7 +90,7 @@
                 },
                 {
                     "title": "内容策略",
-                    "fields": ["coreLabels", "contentMatrix", "remark"]
+                    "fields": ["coreLabels", "contentMatrix"]
                 }
             ]
         }

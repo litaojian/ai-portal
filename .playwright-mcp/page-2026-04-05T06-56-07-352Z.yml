@@ -1,0 +1,112 @@
+- generic [active] [ref=e1]:
+  - link "欢迎进入 知乎 - 有问题，就会有答案,盲人用户使用操作智能引导，请按快捷键Ctrl+Alt+R；阅读详细操作说明请按快捷键Ctrl+Alt+问号键。":
+    - /url: javascript:void(0)
+    - img [ref=e2] [cursor=pointer]
+  - generic [ref=e4]:
+    - main [ref=e5]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - img "知乎 LOGO" [ref=e9]
+          - generic [ref=e10]:
+            - generic [ref=e11]:
+              - generic [ref=e12]:
+                - generic [ref=e13]: 打开知乎App
+                - generic [ref=e14]: 在「我的页」右上角打开扫一扫
+                - generic [ref=e19]: 其他扫码方式：微信
+              - generic [ref=e20]:
+                - button "下载知乎App" [ref=e22] [cursor=pointer]
+                - button "无障碍模式" [ref=e24] [cursor=pointer]
+            - generic [ref=e26]:
+              - generic [ref=e28]:
+                - generic [ref=e30]:
+                  - generic [ref=e31]:
+                    - button "验证码登录" [ref=e32] [cursor=pointer]
+                    - button "密码登录" [ref=e33] [cursor=pointer]
+                    - link "开通机构号" [ref=e34] [cursor=pointer]:
+                      - /url: /org/signup
+                  - generic [ref=e35]:
+                    - combobox [ref=e38] [cursor=pointer]:
+                      - generic [ref=e39]: 中国 +86
+                      - img [ref=e40]
+                    - textbox [ref=e45]:
+                      - /placeholder: 手机号
+                  - generic [ref=e46]:
+                    - textbox [ref=e49]:
+                      - /placeholder: 输入 6 位短信验证码
+                    - button "获取短信验证码" [ref=e50] [cursor=pointer]
+                  - generic [ref=e51]:
+                    - button
+                    - button "获取语音验证码" [ref=e52] [cursor=pointer]:
+                      - generic [ref=e53]: 获取语音验证码
+                  - button "登录/注册" [ref=e54] [cursor=pointer]
+                - generic:
+                  - log
+              - generic [ref=e57]: 其他方式登录
+              - generic [ref=e60]:
+                - button [ref=e61] [cursor=pointer]:
+                  - img [ref=e62]
+                - button [ref=e64] [cursor=pointer]:
+                  - img [ref=e65]
+                - button [ref=e67] [cursor=pointer]:
+                  - img [ref=e68]
+              - generic [ref=e70]:
+                - text: 未注册手机验证后自动登录，注册即代表同意
+                - link "《知乎协议》" [ref=e71] [cursor=pointer]:
+                  - /url: https://www.zhihu.com/term/zhihu-terms
+                - link "《隐私保护指引》" [ref=e72] [cursor=pointer]:
+                  - /url: https://www.zhihu.com/term/privacy
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - link "知乎专栏 ·" [ref=e75] [cursor=pointer]:
+              - /url: https://zhuanlan.zhihu.com
+            - link "圆桌 ·" [ref=e76] [cursor=pointer]:
+              - /url: /roundtable
+            - link "发现 ·" [ref=e77] [cursor=pointer]:
+              - /url: /explore
+            - link "移动应用 ·" [ref=e78] [cursor=pointer]:
+              - /url: /app
+            - link "联系我们 ·" [ref=e79] [cursor=pointer]:
+              - /url: /contact
+            - link "来知乎工作 ·" [ref=e80] [cursor=pointer]:
+              - /url: https://app.mokahr.com/apply/zhihu
+            - link "注册机构号 ·" [ref=e81] [cursor=pointer]:
+              - /url: /org/signup
+            - link "Investor Relations" [ref=e82] [cursor=pointer]:
+              - /url: //ir.zhihu.com
+          - generic [ref=e83]:
+            - generic [ref=e84]: © 2026 知乎 ·
+            - link "京ICP证110745号 ·" [ref=e85] [cursor=pointer]:
+              - /url: https://tsm.miit.gov.cn/dxxzsp/
+            - link "京ICP备13052560号-1 ·" [ref=e86] [cursor=pointer]:
+              - /url: https://beian.miit.gov.cn/
+            - link "京公网安备 11010802020088 号 ·" [ref=e87] [cursor=pointer]:
+              - /url: http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802020088
+            - link "互联网新闻信息服务许可证：11220250001 ·" [ref=e88] [cursor=pointer]:
+              - /url: https://www.zhihu.com/certificates
+            - link "京网文[2025]0422-132 号 ·" [ref=e89] [cursor=pointer]:
+              - /url: https://www.zhihu.com/certificates
+            - link "出版物经营许可证 ·" [ref=e90] [cursor=pointer]:
+              - /url: https://pic4.zhimg.com/v2-69619662ff377c3741d92bb6fd46b7ca.png
+            - link "药品医疗器械网络信息服务备案（京）网药械信息备字（2022）第00334号" [ref=e91] [cursor=pointer]:
+              - /url: https://picx.zhimg.com/80/v2-7475facab3f2d2eda6faddaca4901d20_720w.png
+          - generic [ref=e92]:
+            - link "广播电视节目制作经营许可证:（京）字第06591号 ·" [ref=e93] [cursor=pointer]:
+              - /url: https://pic1.zhimg.com/v2-185764ce177e344f335363edb724f1d8.png
+            - link "互联网宗教信息服务许可证：京（2022）0000078" [ref=e94] [cursor=pointer]:
+              - /url: https://www.zhihu.com/certificates
+          - generic [ref=e95]:
+            - link "侵权举报 ·" [ref=e96] [cursor=pointer]:
+              - /url: https://zhuanlan.zhihu.com/p/28852607
+            - link "网上有害信息举报专区 ·" [ref=e97] [cursor=pointer]:
+              - /url: http://www.12377.cn
+            - link "儿童色情信息举报专区 ·" [ref=e98] [cursor=pointer]:
+              - /url: /term/child-jubao
+            - link "互联网算法推荐举报专区 ·" [ref=e99] [cursor=pointer]:
+              - /url: /term/algorithm-recommend-report
+            - text: 违法和不良信息举报：010-82716601 ·
+            - link "举报邮箱：jubao@zhihu.com" [ref=e100] [cursor=pointer]:
+              - /url: mailto:jubao@zhihu.com
+          - img "本站提供适老化无障碍服务" [ref=e102]
+    - complementary:
+      - button "回到顶部" [ref=e103] [cursor=pointer]:
+        - img [ref=e104]

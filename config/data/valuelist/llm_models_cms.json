@@ -1,0 +1,24 @@
+[
+  {
+    "label": "gpt-5",
+    "value": "gpt-5",
+    "extra": { "mode": "chat" }
+  },  
+  {
+    "label": "gpt-5.1",
+    "value": "gpt-5.1",
+    "extra": { "mode": "chat" }
+  },
+  {
+    "label": "gpt-5.2",
+    "value": "gpt-5.2",
+    "extra": { "mode": "chat" }
+  },  
+  {
+    "label": "claude-opus-4-6",
+    "value": "claude-opus-4-6",
+    "extra": { "mode": "chat" }
+  }
+    
+
+]

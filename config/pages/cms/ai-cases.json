@@ -1,0 +1,64 @@
+{
+    "$schema": "https://ai-portal.com/schemas/page-config.json",
+    "meta": {
+        "key": "cms/articles/ai-cases",
+        "title": "AI案例",
+        "description": "AI案例库",
+        "icon": "Shield",
+        "api": "/api/data/cms/articles/ai-cases",
+        "defaultView": "list"
+    },
+    "model": {
+        "fields": {
+            "id": { "label": "ID", "type": "text", "hidden": true, "primaryKey": true },
+            "filename": { "label": "文件名称", "type": "text", "validation": { "required": true } },
+            "title": { "label": "标题", "type": "text" },
+            "size": { "label": "长度", "type": "text" },
+            "createdAt": { "label": "创建时间", "type": "datetime" },           
+            "updatedAt": { "label": "修改时间", "type": "datetime" }                        
+        }
+    },
+    "views": {
+        "search": {
+            "fields": [
+                { "key": "filename", "placeholder": "文件名称" }
+            ]
+        },
+        "table": {
+            "size": "small",
+            "rownum": true,
+            "columns": [
+                { "key": "filename", "width": 150 },
+                { "key": "title", "width": 200 },
+                { "key": "createdAt", "width": 150 },
+                { "key": "updatedAt", "width": 150 }
+            ],
+            "actions": {
+                "row": [
+                                        
+                ],
+                "toolbar": [
+                    {
+                        "action": "create",
+                        "title": "上传"
+                    }
+                ]
+            },
+            "pagination": {
+                "enabled": true,
+                "pageSize": 10,
+                "mode": "client"
+            }
+        },
+        "form": {
+            "layout": "grid",
+            "columns": 1,
+            "sections": [
+                {
+                    "title": "基本信息",
+                    "fields": ["filename", "title", "createdAt", "updatedAt"]
+                }
+            ]
+        }
+    }
+}

@@ -5,7 +5,7 @@
     "isActive": true,
     "items": [
         {
-            "title": "新开专栏",
+            "title": "AI内容创作",
             "url": "/portal/cms/topics",
             "icon": "IconListDetails"
         },

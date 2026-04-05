@@ -465,21 +465,7 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
                                                     >
                                                         <Sparkles className="h-3.5 w-3.5" />
                                                     </Button>
-                                                )}
-                                                {item.status === 'reviewed' && (
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="h-7 w-7 text-muted-foreground hover:text-primary"
-                                                        title="发布到知乎"
-                                                        disabled={publishingTaskId === item.id}
-                                                        onClick={() => handlePublishToZhihu(item)}
-                                                    >
-                                                        {publishingTaskId === item.id
-                                                            ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                                            : <Upload className="h-3.5 w-3.5" />}
-                                                    </Button>
-                                                )}
+                                                )}                                                
                                                 {item.status === 'reviewed' && (
                                                     <Button
                                                         variant="ghost"

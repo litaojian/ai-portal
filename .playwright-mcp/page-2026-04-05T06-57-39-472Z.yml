@@ -1,0 +1,220 @@
+- generic [ref=e1]:
+  - link "欢迎进入 知乎 - 知乎,盲人用户使用操作智能引导，请按快捷键Ctrl+Alt+R；阅读详细操作说明请按快捷键Ctrl+Alt+问号键。":
+    - /url: javascript:void(0)
+    - img [ref=e2] [cursor=pointer]
+  - generic [ref=e4]:
+    - main [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - link "知乎" [ref=e11] [cursor=pointer]:
+              - /url: //www.zhihu.com
+              - img [ref=e12]
+            - generic [ref=e17]:
+              - generic [ref=e19]: 写文章
+              - button [ref=e20] [cursor=pointer]:
+                - img [ref=e21]
+          - generic [ref=e23]:
+            - button "更多" [ref=e26] [cursor=pointer]:
+              - img [ref=e27]
+            - button "点击打开飞扬AI的主页" [ref=e31] [cursor=pointer]:
+              - img "点击打开飞扬AI的主页" [ref=e32]
+        - generic [ref=e35]:
+          - generic [ref=e39]:
+            - generic [ref=e40]:
+              - generic [ref=e41]:
+                - button "撤销" [disabled]:
+                  - generic:
+                    - generic:
+                      - img
+                    - generic: 撤销
+                - button "重做" [disabled]:
+                  - generic:
+                    - generic:
+                      - img
+                    - generic: 重做
+                - button "清除格式" [ref=e42] [cursor=pointer]:
+                  - generic [ref=e43]:
+                    - img [ref=e45]
+                    - generic [ref=e47]: 清除格式
+              - generic [ref=e49]:
+                - button "标题" [ref=e51] [cursor=pointer]:
+                  - generic [ref=e52]:
+                    - img [ref=e54]
+                    - generic [ref=e56]: 标题
+                  - img [ref=e58]
+                - button "加粗" [ref=e60] [cursor=pointer]:
+                  - generic [ref=e61]:
+                    - img [ref=e63]
+                    - generic [ref=e65]: 加粗
+                - button "斜体" [ref=e66] [cursor=pointer]:
+                  - generic [ref=e67]:
+                    - img [ref=e69]
+                    - generic [ref=e71]: 斜体
+              - generic [ref=e73]:
+                - button "列表" [ref=e75] [cursor=pointer]:
+                  - generic [ref=e76]:
+                    - img [ref=e78]
+                    - generic [ref=e80]: 列表
+                  - img [ref=e82]
+                - button "目录" [ref=e85] [cursor=pointer]:
+                  - generic [ref=e86]:
+                    - img [ref=e88]
+                    - generic [ref=e90]: 目录
+                - button "引用" [ref=e91] [cursor=pointer]:
+                  - generic [ref=e92]:
+                    - img [ref=e94]
+                    - generic [ref=e97]: 引用
+                - button "分割线" [ref=e98] [cursor=pointer]:
+                  - generic [ref=e99]:
+                    - img [ref=e101]
+                    - generic [ref=e103]: 分割线
+                - button "代码块" [ref=e104] [cursor=pointer]:
+                  - generic [ref=e105]:
+                    - img [ref=e107]
+                    - generic [ref=e109]: 代码块
+                - button "注释" [ref=e110] [cursor=pointer]:
+                  - generic [ref=e111]:
+                    - img [ref=e113]
+                    - generic [ref=e115]: 注释
+              - generic [ref=e117]:
+                - button "图片" [ref=e119] [cursor=pointer]:
+                  - generic [ref=e120]:
+                    - img [ref=e122]
+                    - generic [ref=e125]: 图片
+                - button "视频" [ref=e126] [cursor=pointer]:
+                  - generic [ref=e127]:
+                    - img [ref=e129]
+                    - generic [ref=e132]: 视频
+            - generic [ref=e135]:
+              - button "导入" [ref=e137] [cursor=pointer]:
+                - generic [ref=e138]:
+                  - img [ref=e140]
+                  - generic [ref=e142]: 导入
+                - img [ref=e144]
+              - button "草稿备份" [ref=e146] [cursor=pointer]:
+                - generic [ref=e147]:
+                  - img [ref=e149]
+                  - generic [ref=e154]: 草稿备份
+            - button "更多" [ref=e158] [cursor=pointer]:
+              - generic [ref=e159]:
+                - img [ref=e161]
+                - generic [ref=e163]: 更多
+              - img [ref=e165]
+            - button "创作助手" [ref=e170] [cursor=pointer]:
+              - generic [ref=e171]:
+                - img [ref=e173]
+                - generic [ref=e177]: 创作助手
+          - generic [ref=e179]:
+            - textbox [ref=e182]:
+              - /placeholder: 请输入标题（最多 100 个字）
+            - generic [ref=e183]:
+              - generic [ref=e185]:
+                - generic [ref=e187]:
+                  - generic:
+                    - generic: 请输入正文
+                  - textbox [ref=e189]
+                - generic [ref=e195]:
+                  - generic [ref=e196]:
+                    - generic [ref=e197]: 创作助手
+                    - generic [ref=e198]:
+                      - button "清空检测列表" [disabled] [ref=e200]:
+                        - img [ref=e201]
+                      - button "关闭创作助手" [ref=e203] [cursor=pointer]:
+                        - img [ref=e204]
+                  - generic [ref=e206]:
+                    - text: Hello，欢迎使用知乎创作助手，你可选择以下功能辅助创作更优质的内容
+                    - img [ref=e208] [cursor=pointer]
+                  - generic [ref=e210]:
+                    - generic [ref=e211]:
+                      - generic [ref=e212]:
+                        - generic [ref=e213]:
+                          - img [ref=e214]
+                          - generic [ref=e218]: 内容检测
+                        - img [ref=e219]
+                      - paragraph [ref=e221]: 识别错别字，提供用词优化建议
+                    - generic [ref=e222]:
+                      - generic [ref=e223]:
+                        - generic [ref=e224]:
+                          - img [ref=e225]
+                          - generic [ref=e228]: 智能排版
+                        - img [ref=e229]
+                      - paragraph [ref=e231]: 自动修正空格、标点及英文大小写
+                    - generic [ref=e232]:
+                      - generic [ref=e233]:
+                        - generic [ref=e234]:
+                          - img [ref=e235]
+                          - generic [ref=e237]: 智能标题
+                        - img [ref=e238]
+                      - paragraph [ref=e240]: 提供更多标题灵感，内容更出彩
+                    - generic [ref=e241]:
+                      - generic [ref=e242]:
+                        - generic [ref=e243]:
+                          - img [ref=e244]
+                          - generic [ref=e246]: 提取导语
+                        - img [ref=e247]
+                      - paragraph [ref=e249]: 理清全文思路，轻松创作导语
+                    - generic [ref=e250] [cursor=pointer]:
+                      - generic [ref=e251]:
+                        - generic [ref=e252]:
+                          - img [ref=e253]
+                          - generic [ref=e256]: AI 配图
+                        - img [ref=e257]
+                      - paragraph [ref=e259]: 输入你的图片灵感
+              - generic [ref=e262]:
+                - generic [ref=e263]: 发布设置
+                - generic [ref=e264]:
+                  - generic [ref=e265]: 添加封面
+                  - generic [ref=e267]:
+                    - generic [ref=e269] [cursor=pointer]:
+                      - img [ref=e270]
+                      - text: 添加文章封面
+                    - generic [ref=e272]: 图片上传格式支持 JPEG、JPG、PNG
+                - generic [ref=e275]:
+                  - button "回到顶部" [ref=e310] [cursor=pointer]:
+                    - generic [ref=e277]: 回到顶部
+                    - img [ref=e311]
+                  - generic [ref=e280]: 字数：0
+                  - generic [ref=e281]:
+                    - text: Markdown 语法输入中
+                    - button [ref=e283] [cursor=pointer]:
+                      - img [ref=e285]
+                  - generic [ref=e291] [cursor=pointer]:
+                    - text: 刚刚 · 草稿
+                    - img [ref=e292]
+                  - generic [ref=e295]:
+                    - button "预览" [disabled]
+                  - button "发布" [disabled]
+    - complementary:
+      - button "回到顶部" [ref=e298] [cursor=pointer]:
+        - img [ref=e299]
+  - generic [ref=e301]:
+    - img
+    - generic [ref=e302]: 支持上传手机相册的图片了
+  - generic [ref=e306] [cursor=pointer]:
+    - combobox [ref=e307]
+    - img [ref=e308]
+  - generic [ref=e314]:
+    - button "链接" [active] [ref=e315] [cursor=pointer]:
+      - img [ref=e317]
+      - text: 链接
+    - button "公式" [ref=e319] [cursor=pointer]:
+      - img [ref=e321]
+      - text: 公式
+    - button "表格" [ref=e323] [cursor=pointer]:
+      - img [ref=e325]
+      - text: 表格
+    - button "附件" [ref=e328] [cursor=pointer]:
+      - img [ref=e330]
+      - text: 附件
+    - button "帮助文档" [ref=e332] [cursor=pointer]:
+      - img [ref=e334]
+      - text: 帮助文档
+    - button "默认设置" [ref=e338] [cursor=pointer]:
+      - img [ref=e340]
+      - text: 默认设置
+    - button "Markdown 语法输入" [ref=e343] [cursor=pointer]:
+      - img [ref=e346]
+      - text: Markdown 语法输入
+      - generic [ref=e348]:
+        - checkbox [checked]

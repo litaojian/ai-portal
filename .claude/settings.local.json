@@ -14,7 +14,16 @@
       "Bash(NODE_OPTIONS='--max-old-space-size=8192' pnpm build)",
       "Bash(git commit -m ':*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(ls -la d:/AI-2026/ai-portal/app/*workflow*/)",
+      "WebFetch(domain:open.zhihu.com)",
+      "Bash(npx shadcn@latest add progress --yes)",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_snapshot",
+      "mcp__plugin_playwright_playwright__browser_click",
+      "mcp__plugin_playwright_playwright__browser_close",
+      "Bash(npx playwright:*)",
+      "Bash(pnpm add:*)"
     ]
   }
 }
