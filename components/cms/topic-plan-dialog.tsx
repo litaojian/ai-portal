@@ -73,6 +73,7 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
     const [startDate, setStartDate] = useState(today());
     const [endDate, setEndDate] = useState(daysFromNow(30));
     const [frequency, setFrequency] = useState('2');
+    const [clearPending, setClearPending] = useState(false);
     const [extraNotes, setExtraNotes] = useState('');
 
     // Phase state
@@ -82,11 +83,12 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
     const [planDocument, setPlanDocument] = useState('');
     const [tasks, setTasks] = useState<{ articleName: string; dueDate: string }[]>([]);
 
-    // Collect existing completed task names for the prompt
+    // Collect existing task info
     const existingItems: DetailItem[] = topic.detailItems || [];
     const completedArticles = existingItems
         .filter(i => i.status === 'closed')
         .map(i => i.articleName);
+    const pendingItems = existingItems.filter(i => i.status !== 'closed');
 
     const handleGenerate = async () => {
         if (!startDate || !endDate) {
@@ -154,7 +156,12 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
                 contentUrl: '',
             }));
 
-            const mergedItems = [...existingItems, ...newItems];
+            // Keep completed items always; only keep pending items if clearPending is off
+            const keptItems = clearPending
+                ? existingItems.filter(i => i.status === 'closed')
+                : existingItems;
+
+            const mergedItems = [...keptItems, ...newItems];
             const planTasks = mergedItems.length;
             const completedTasks = mergedItems.filter(i => i.status === 'closed').length;
 
@@ -185,6 +192,7 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
             setPlanDocument('');
             setTasks([]);
             setExtraNotes('');
+            setClearPending(false);
             onOpenChange(false);
         }
     };
@@ -237,6 +245,25 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
                                     </SelectContent>
                                 </Select>
                             </div>
+
+                            {/* Clear pending tasks option */}
+                            {pendingItems.length > 0 && (
+                                <div className="flex items-start gap-2 rounded-md border p-3">
+                                    <input
+                                        type="checkbox"
+                                        id="clearPending"
+                                        checked={clearPending}
+                                        onChange={e => setClearPending(e.target.checked)}
+                                        className="mt-0.5 accent-primary"
+                                    />
+                                    <label htmlFor="clearPending" className="text-sm cursor-pointer">
+                                        删除上次未完成的 <span className="font-medium text-destructive">{pendingItems.length}</span> 个任务
+                                        <span className="block text-xs text-muted-foreground mt-0.5">
+                                            勾选后，保存新规划时将移除所有状态为"进行中"的旧任务
+                                        </span>
+                                    </label>
+                                </div>
+                            )}
 
                             {/* Existing completed articles hint */}
                             {completedArticles.length > 0 && (
