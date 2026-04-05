@@ -28,8 +28,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { ArrowLeft, Plus, Pencil, Trash2, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Plus, Pencil, Trash2, ExternalLink, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
+import { ArticleGenerateDialog } from '@/components/cms/article-generate-dialog';
+import { BatchGenerateDialog } from '@/components/cms/batch-generate-dialog';
+import { ArticlePreviewDialog } from '@/components/cms/article-preview-dialog';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface DetailItem {
     id: string;
@@ -78,6 +82,15 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
     const [formDueDate, setFormDueDate] = useState('');
     const [formStatus, setFormStatus] = useState('draft');
     const [formContentUrl, setFormContentUrl] = useState('');
+
+    // Article generation state
+    const [selectedTaskIds, setSelectedTaskIds] = useState<Set<string>>(new Set());
+    const [generateDialogOpen, setGenerateDialogOpen] = useState(false);
+    const [generateTask, setGenerateTask] = useState<{ id: string; articleName: string } | null>(null);
+    const [batchDialogOpen, setBatchDialogOpen] = useState(false);
+    const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
+    const [previewTaskId, setPreviewTaskId] = useState<string | null>(null);
+    const [previewArticleName, setPreviewArticleName] = useState('');
 
     const fetchTopic = useCallback(async () => {
         try {
@@ -197,6 +210,66 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
         }
     };
 
+    // --- Article generation handlers ---
+    const draftTasks = topic?.detailItems.filter(i => i.status === 'draft') || [];
+
+    const toggleTaskSelection = (taskId: string) => {
+        setSelectedTaskIds(prev => {
+            const next = new Set(prev);
+            if (next.has(taskId)) next.delete(taskId);
+            else next.add(taskId);
+            return next;
+        });
+    };
+
+    const toggleAllDrafts = () => {
+        if (selectedTaskIds.size === draftTasks.length) {
+            setSelectedTaskIds(new Set());
+        } else {
+            setSelectedTaskIds(new Set(draftTasks.map(t => t.id)));
+        }
+    };
+
+    const openGenerateDialog = (task: DetailItem) => {
+        setGenerateTask({ id: task.id, articleName: task.articleName });
+        setGenerateDialogOpen(true);
+    };
+
+    const openPreviewDialog = (task: DetailItem) => {
+        setPreviewTaskId(task.id);
+        setPreviewArticleName(task.articleName);
+        setPreviewDialogOpen(true);
+    };
+
+    const handleGenerateSuccess = async (taskId: string, articlePath: string) => {
+        if (!topic) return;
+        const updatedItems = topic.detailItems.map(item =>
+            item.id === taskId
+                ? { ...item, status: 'reviewed', contentUrl: articlePath }
+                : item
+        );
+        await saveTopic(updatedItems);
+    };
+
+    const handleBatchTaskComplete = async (taskId: string, articlePath: string) => {
+        if (!topic) return;
+        const updatedItems = topic.detailItems.map(item =>
+            item.id === taskId
+                ? { ...item, status: 'reviewed', contentUrl: articlePath }
+                : item
+        );
+        await saveTopic(updatedItems);
+    };
+
+    const handleBatchAllComplete = () => {
+        setSelectedTaskIds(new Set());
+        fetchTopic();
+    };
+
+    const selectedBatchTasks = topic?.detailItems
+        .filter(i => selectedTaskIds.has(i.id))
+        .map(i => ({ id: i.id, articleName: i.articleName })) || [];
+
     if (loading) return <div className="p-8 text-center text-muted-foreground">加载中...</div>;
     if (!topic) return <div className="p-8 text-center text-muted-foreground">专栏不存在</div>;
 
@@ -247,29 +320,65 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
                 <CardContent className="p-0">
                     {/* Toolbar */}
                     <div className="flex items-center justify-between px-6 py-3 border-b">
-                        <div className="font-medium">计划任务列表</div>
-                        <Button variant="outline" size="sm" className="h-8 gap-1" onClick={openCreateDialog}>
-                            <Plus className="h-3.5 w-3.5" />
-                            新任务
-                        </Button>
+                        <div className="flex items-center gap-3">
+                            <div className="font-medium">计划任务列表</div>
+                            {selectedTaskIds.size > 0 && (
+                                <span className="text-xs text-muted-foreground">
+                                    已选 {selectedTaskIds.size} 项
+                                </span>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                            {selectedTaskIds.size > 0 && (
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-8 gap-1"
+                                    onClick={() => setBatchDialogOpen(true)}
+                                >
+                                    <Sparkles className="h-3.5 w-3.5" />
+                                    批量生成（{selectedTaskIds.size}）
+                                </Button>
+                            )}
+                            <Button variant="outline" size="sm" className="h-8 gap-1" onClick={openCreateDialog}>
+                                <Plus className="h-3.5 w-3.5" />
+                                新任务
+                            </Button>
+                        </div>
                     </div>
 
                     {/* Table */}
                     <Table>
                         <TableHeader className="bg-muted/50">
                             <TableRow>
-                                <TableHead className="w-[60px] text-center">序号</TableHead>
+                                <TableHead className="w-[40px] text-center">
+                                    {draftTasks.length > 0 && (
+                                        <Checkbox
+                                            checked={selectedTaskIds.size === draftTasks.length && draftTasks.length > 0}
+                                            onCheckedChange={toggleAllDrafts}
+                                        />
+                                    )}
+                                </TableHead>
+                                <TableHead className="w-[50px] text-center">序号</TableHead>
                                 <TableHead className="w-[200px]">任务名称</TableHead>
                                 <TableHead className="w-[120px]">截止日期</TableHead>
                                 <TableHead className="w-[100px]">状态</TableHead>
                                 <TableHead className="w-[100px]">内容链接</TableHead>
-                                <TableHead className="w-[100px] text-right">操作</TableHead>
+                                <TableHead className="w-[120px] text-right">操作</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {topic.detailItems.length > 0 ? (
                                 topic.detailItems.map((item, index) => (
                                     <TableRow key={item.id}>
+                                        <TableCell className="text-center">
+                                            {item.status === 'draft' && (
+                                                <Checkbox
+                                                    checked={selectedTaskIds.has(item.id)}
+                                                    onCheckedChange={() => toggleTaskSelection(item.id)}
+                                                />
+                                            )}
+                                        </TableCell>
                                         <TableCell className="text-center text-xs">{index + 1}</TableCell>
                                         <TableCell className="text-sm">{item.articleName}</TableCell>
                                         <TableCell className="text-sm">{item.dueDate}</TableCell>
@@ -280,21 +389,30 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
                                         </TableCell>
                                         <TableCell>
                                             {item.contentUrl ? (
-                                                <a
-                                                    href={item.contentUrl}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-primary hover:underline inline-flex items-center gap-1 text-sm"
+                                                <button
+                                                    onClick={() => openPreviewDialog(item)}
+                                                    className="text-primary hover:underline inline-flex items-center gap-1 text-sm cursor-pointer"
                                                 >
                                                     <ExternalLink className="h-3.5 w-3.5" />
-                                                    链接
-                                                </a>
+                                                    预览
+                                                </button>
                                             ) : (
                                                 <span className="text-muted-foreground text-xs">—</span>
                                             )}
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex items-center justify-end gap-1">
+                                                {item.status === 'draft' && (
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-7 w-7 text-muted-foreground hover:text-primary"
+                                                        title="生成文章"
+                                                        onClick={() => openGenerateDialog(item)}
+                                                    >
+                                                        <Sparkles className="h-3.5 w-3.5" />
+                                                    </Button>
+                                                )}
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
@@ -317,7 +435,7 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                                    <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
                                         暂无任务，点击"新任务"添加
                                     </TableCell>
                                 </TableRow>
@@ -378,6 +496,44 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {/* Article Generate Dialog */}
+            {topic && (
+                <ArticleGenerateDialog
+                    open={generateDialogOpen}
+                    onOpenChange={setGenerateDialogOpen}
+                    task={generateTask}
+                    topic={topic}
+                    onSuccess={handleGenerateSuccess}
+                />
+            )}
+
+            {/* Batch Generate Dialog */}
+            {topic && (
+                <BatchGenerateDialog
+                    open={batchDialogOpen}
+                    onOpenChange={setBatchDialogOpen}
+                    tasks={selectedBatchTasks}
+                    topic={topic}
+                    onTaskComplete={handleBatchTaskComplete}
+                    onAllComplete={handleBatchAllComplete}
+                />
+            )}
+
+            {/* Article Preview Dialog */}
+            <ArticlePreviewDialog
+                open={previewDialogOpen}
+                onOpenChange={setPreviewDialogOpen}
+                taskId={previewTaskId}
+                articleName={previewArticleName}
+                onRegenerate={() => {
+                    setPreviewDialogOpen(false);
+                    if (previewTaskId) {
+                        const task = topic?.detailItems.find(i => i.id === previewTaskId);
+                        if (task) openGenerateDialog(task);
+                    }
+                }}
+            />
         </div>
     );
 }
