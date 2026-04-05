@@ -55,6 +55,10 @@
                         "url": "/portal/cms/topics/{id}"
                     },
                     {
+                        "action": "showPlanDialog",
+                        "title": "规划"
+                    },
+                    {
                         "action": "delete",
                         "title": "删除",
                         "conditions": {
