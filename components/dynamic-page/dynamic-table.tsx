@@ -264,9 +264,9 @@ export function DynamicTable({
                   return (
                     <Button
                       key={idx}
-                      variant="ghost"
+                      variant="link"
                       size="sm"
-                      className={cn("h-7 px-2 text-xs", colorClass)}
+                      className={cn("h-7 px-1 text-xs", colorClass)}
                       onClick={handleClick}
                     >
                       {title}
