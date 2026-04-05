@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
     Dialog,
@@ -28,6 +27,7 @@ interface DetailItem {
     dueDate: string;
     status: string;
     contentUrl: string;
+    planPeriod?: string;
 }
 
 interface TopicPlanDialogProps {
@@ -58,20 +58,58 @@ const FREQUENCY_OPTIONS = [
     { value: '5', label: '每周 5 篇' },
 ];
 
-function today() {
-    return new Date().toISOString().slice(0, 10);
+// Generate period options: current + next few weeks/months/quarters
+function getPeriodOptions() {
+    const now = new Date();
+    const options: { value: string; label: string; startDate: string; endDate: string }[] = [];
+
+    // Weeks: current week + next 3 weeks
+    for (let i = 0; i < 4; i++) {
+        const d = new Date(now);
+        d.setDate(d.getDate() + i * 7);
+        const day = d.getDay();
+        const mon = new Date(d); mon.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
+        const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+        const label = `第${getWeekNumber(mon)}周（${fmt(mon)} ~ ${fmt(sun)}）`;
+        options.push({ value: `W-${fmt(mon)}`, label, startDate: fmt(mon), endDate: fmt(sun) });
+    }
+
+    // Months: current month + next 2 months
+    for (let i = 0; i < 3; i++) {
+        const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+        const last = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+        const label = `${d.getFullYear()}年${d.getMonth() + 1}月`;
+        options.push({ value: `M-${fmt(d)}`, label, startDate: fmt(d), endDate: fmt(last) });
+    }
+
+    // Quarters: current quarter + next quarter
+    for (let i = 0; i < 2; i++) {
+        const q = Math.floor(now.getMonth() / 3) + i;
+        const year = now.getFullYear() + Math.floor(q / 4);
+        const qIdx = q % 4;
+        const start = new Date(year, qIdx * 3, 1);
+        const end = new Date(year, qIdx * 3 + 3, 0);
+        const label = `${year}年Q${qIdx + 1}`;
+        options.push({ value: `Q-${fmt(start)}`, label, startDate: fmt(start), endDate: fmt(end) });
+    }
+
+    return options;
 }
 
-function daysFromNow(days: number) {
-    const d = new Date();
-    d.setDate(d.getDate() + days);
+function fmt(d: Date) {
     return d.toISOString().slice(0, 10);
+}
+
+function getWeekNumber(d: Date) {
+    const start = new Date(d.getFullYear(), 0, 1);
+    const diff = d.getTime() - start.getTime() + (start.getDay() === 0 ? 6 : start.getDay() - 1) * 86400000;
+    return Math.ceil(diff / 604800000);
 }
 
 export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicPlanDialogProps) {
     // Config form state
-    const [startDate, setStartDate] = useState(today());
-    const [endDate, setEndDate] = useState(daysFromNow(30));
+    const periodOptions = getPeriodOptions();
+    const [selectedPeriod, setSelectedPeriod] = useState(periodOptions[0]?.value || '');
     const [frequency, setFrequency] = useState('2');
     const [model, setModel] = useState('');
     const [modelOptions, setModelOptions] = useState<{ label: string; value: string }[]>([]);
@@ -104,12 +142,9 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
     const pendingItems = existingItems.filter(i => i.status !== 'published');
 
     const handleGenerate = async () => {
-        if (!startDate || !endDate) {
-            toast.error('请选择开始和结束日期');
-            return;
-        }
-        if (startDate >= endDate) {
-            toast.error('结束日期必须晚于开始日期');
+        const period = periodOptions.find(p => p.value === selectedPeriod);
+        if (!period) {
+            toast.error('请选择规划时间范围');
             return;
         }
 
@@ -128,8 +163,9 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
                         coreLabels: topic.coreLabels,
                         contentMatrix: topic.contentMatrix,
                     },
-                    startDate,
-                    endDate,
+                    startDate: period.startDate,
+                    endDate: period.endDate,
+                    periodLabel: period.label,
                     frequency: parseInt(frequency),
                     model,
                     completedArticles,
@@ -162,12 +198,14 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
         setPhase('saving');
 
         try {
+            const period = periodOptions.find(p => p.value === selectedPeriod);
             const newItems: DetailItem[] = tasks.map(t => ({
                 id: crypto.randomUUID(),
                 articleName: t.articleName,
                 dueDate: t.dueDate,
                 status: 'draft',
                 contentUrl: '',
+                planPeriod: period?.label || '',
             }));
 
             // Keep completed items always; only keep pending items if clearPending is off
@@ -225,35 +263,34 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
                     {/* Phase: Config */}
                     {phase === 'config' && (
                         <div className="space-y-5">
-                            {/* Date range + Frequency in one row */}
+                            {/* Period */}
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">规划时间范围 / 发布频率</label>
-                                <div className="flex items-center gap-3 flex-wrap">
-                                    <Input
-                                        type="date"
-                                        value={startDate}
-                                        onChange={e => setStartDate(e.target.value)}
-                                        className="w-40 h-8 text-sm"
-                                    />
-                                    <span className="text-sm text-muted-foreground">至</span>
-                                    <Input
-                                        type="date"
-                                        value={endDate}
-                                        onChange={e => setEndDate(e.target.value)}
-                                        className="w-40 h-8 text-sm"
-                                    />
-                                    <span className="text-sm text-muted-foreground">·</span>
-                                    <Select value={frequency} onValueChange={setFrequency}>
-                                        <SelectTrigger className="w-36 h-8 text-sm">
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {FREQUENCY_OPTIONS.map(opt => (
-                                                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
+                                <label className="text-sm font-medium">规划周期</label>
+                                <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                                    <SelectTrigger className="w-72">
+                                        <SelectValue placeholder="选择规划周期" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {periodOptions.map(opt => (
+                                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            {/* Frequency */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">发布频率</label>
+                                <Select value={frequency} onValueChange={setFrequency}>
+                                    <SelectTrigger className="w-40">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {FREQUENCY_OPTIONS.map(opt => (
+                                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </div>
 
                             {/* Model */}
