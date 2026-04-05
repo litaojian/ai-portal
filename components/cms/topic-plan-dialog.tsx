@@ -21,7 +21,6 @@ import {
 } from '@/components/ui/select';
 import { Loader2, Sparkles, RotateCcw, Check } from 'lucide-react';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
 
 interface DetailItem {
     id: string;
@@ -52,14 +51,28 @@ interface TopicPlanDialogProps {
 
 type Phase = 'config' | 'loading' | 'preview' | 'saving';
 
-const TASK_COUNT_OPTIONS = [4, 8, 12];
+const FREQUENCY_OPTIONS = [
+    { value: '1', label: '每周 1 篇' },
+    { value: '2', label: '每周 2 篇' },
+    { value: '3', label: '每周 3 篇' },
+    { value: '5', label: '每周 5 篇' },
+];
+
+function today() {
+    return new Date().toISOString().slice(0, 10);
+}
+
+function daysFromNow(days: number) {
+    const d = new Date();
+    d.setDate(d.getDate() + days);
+    return d.toISOString().slice(0, 10);
+}
 
 export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicPlanDialogProps) {
     // Config form state
-    const [taskCount, setTaskCount] = useState(8);
-    const [customCount, setCustomCount] = useState('');
-    const [useCustomCount, setUseCustomCount] = useState(false);
-    const [timeRange, setTimeRange] = useState('本月');
+    const [startDate, setStartDate] = useState(today());
+    const [endDate, setEndDate] = useState(daysFromNow(30));
+    const [frequency, setFrequency] = useState('2');
     const [extraNotes, setExtraNotes] = useState('');
 
     // Phase state
@@ -69,9 +82,22 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
     const [planDocument, setPlanDocument] = useState('');
     const [tasks, setTasks] = useState<{ articleName: string; dueDate: string }[]>([]);
 
-    const effectiveTaskCount = useCustomCount ? (parseInt(customCount) || 8) : taskCount;
+    // Collect existing completed task names for the prompt
+    const existingItems: DetailItem[] = topic.detailItems || [];
+    const completedArticles = existingItems
+        .filter(i => i.status === 'closed')
+        .map(i => i.articleName);
 
     const handleGenerate = async () => {
+        if (!startDate || !endDate) {
+            toast.error('请选择开始和结束日期');
+            return;
+        }
+        if (startDate >= endDate) {
+            toast.error('结束日期必须晚于开始日期');
+            return;
+        }
+
         setPhase('loading');
 
         try {
@@ -87,8 +113,10 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
                         coreLabels: topic.coreLabels,
                         contentMatrix: topic.contentMatrix,
                     },
-                    taskCount: effectiveTaskCount,
-                    timeRange,
+                    startDate,
+                    endDate,
+                    frequency: parseInt(frequency),
+                    completedArticles,
                     extraNotes,
                 }),
             });
@@ -118,8 +146,6 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
         setPhase('saving');
 
         try {
-            const existingItems: DetailItem[] = topic.detailItems || [];
-
             const newItems: DetailItem[] = tasks.map(t => ({
                 id: crypto.randomUUID(),
                 articleName: t.articleName,
@@ -155,7 +181,6 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
 
     const handleClose = (openState: boolean) => {
         if (!openState && phase !== 'loading' && phase !== 'saving') {
-            // Reset state on close
             setPhase('config');
             setPlanDocument('');
             setTasks([]);
@@ -178,50 +203,53 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
                     {/* Phase: Config */}
                     {phase === 'config' && (
                         <div className="space-y-5">
-                            {/* Task count */}
+                            {/* Date range */}
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">任务数量</label>
-                                <div className="flex items-center gap-2">
-                                    {TASK_COUNT_OPTIONS.map(n => (
-                                        <Button
-                                            key={n}
-                                            variant={!useCustomCount && taskCount === n ? 'default' : 'outline'}
-                                            size="sm"
-                                            onClick={() => { setTaskCount(n); setUseCustomCount(false); }}
-                                        >
-                                            {n} 篇
-                                        </Button>
-                                    ))}
-                                    <div className="flex items-center gap-1">
-                                        <Input
-                                            type="number"
-                                            min={1}
-                                            max={30}
-                                            placeholder="自定义"
-                                            className={cn("w-24 h-8 text-sm", useCustomCount && "ring-2 ring-primary")}
-                                            value={customCount}
-                                            onChange={e => { setCustomCount(e.target.value); setUseCustomCount(true); }}
-                                            onFocus={() => setUseCustomCount(true)}
-                                        />
-                                        <span className="text-sm text-muted-foreground">篇</span>
-                                    </div>
+                                <label className="text-sm font-medium">规划时间范围</label>
+                                <div className="flex items-center gap-3">
+                                    <Input
+                                        type="date"
+                                        value={startDate}
+                                        onChange={e => setStartDate(e.target.value)}
+                                        className="w-40 h-8 text-sm"
+                                    />
+                                    <span className="text-sm text-muted-foreground">至</span>
+                                    <Input
+                                        type="date"
+                                        value={endDate}
+                                        onChange={e => setEndDate(e.target.value)}
+                                        className="w-40 h-8 text-sm"
+                                    />
                                 </div>
                             </div>
 
-                            {/* Time range */}
+                            {/* Frequency */}
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">时间范围</label>
-                                <Select value={timeRange} onValueChange={setTimeRange}>
+                                <label className="text-sm font-medium">发布频率</label>
+                                <Select value={frequency} onValueChange={setFrequency}>
                                     <SelectTrigger className="w-40">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="本周">本周</SelectItem>
-                                        <SelectItem value="本月">本月</SelectItem>
-                                        <SelectItem value="本季度">本季度</SelectItem>
+                                        {FREQUENCY_OPTIONS.map(opt => (
+                                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                             </div>
+
+                            {/* Existing completed articles hint */}
+                            {completedArticles.length > 0 && (
+                                <div className="rounded-md bg-muted/50 p-3 text-xs text-muted-foreground space-y-1">
+                                    <div className="font-medium text-foreground">已完成 {completedArticles.length} 篇文章（AI 将避免重复）：</div>
+                                    <ul className="list-disc list-inside">
+                                        {completedArticles.slice(0, 5).map((name, i) => (
+                                            <li key={i}>{name}</li>
+                                        ))}
+                                        {completedArticles.length > 5 && <li>...等共 {completedArticles.length} 篇</li>}
+                                    </ul>
+                                </div>
+                            )}
 
                             {/* Extra notes */}
                             <div className="space-y-2">

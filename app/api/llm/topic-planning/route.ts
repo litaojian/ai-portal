@@ -6,7 +6,12 @@ const SYSTEM_PROMPT = `你是一位专业的内容策划专家。根据用户提
 
 你必须以 JSON 格式回复，包含两个字段：
 1. "planDocument": Markdown 格式的规划文档，包含每篇文章的主题、类型、摘要和发布时间安排
-2. "tasks": 任务数组，每个任务包含 "articleName"（文章标题）和 "dueDate"（截止日期，YYYY-MM-DD 格式）`;
+2. "tasks": 任务数组，每个任务包含 "articleName"（文章标题）和 "dueDate"（截止日期，YYYY-MM-DD 格式）
+
+重要规则：
+- 任务的 dueDate 必须在用户指定的日期范围内
+- 按照用户指定的每周发布频率均匀分配任务
+- 不要生成与"已完成文章"列表中相同或高度相似的主题`;
 
 function buildUserPrompt(params: {
     topic: {
@@ -17,11 +22,14 @@ function buildUserPrompt(params: {
         coreLabels: string;
         contentMatrix: string;
     };
-    taskCount: number;
-    timeRange: string;
+    startDate: string;
+    endDate: string;
+    frequency: number;
+    completedArticles: string[];
     extraNotes: string;
 }) {
-    const { topic, taskCount, timeRange, extraNotes } = params;
+    const { topic, startDate, endDate, frequency, completedArticles, extraNotes } = params;
+
     let prompt = `请为以下专栏生成内容规划：
 
 【专栏名称】${topic.topicName}
@@ -32,11 +40,19 @@ function buildUserPrompt(params: {
 【内容矩阵】${topic.contentMatrix}
 
 要求：
-- 生成 ${taskCount} 篇文章的规划
-- 时间范围：${timeRange}`;
+- 时间范围：${startDate} 至 ${endDate}
+- 发布频率：每周 ${frequency} 篇
+- 根据时间范围和频率自动计算总篇数，均匀分布发布日期`;
+
+    if (completedArticles.length > 0) {
+        prompt += `\n\n以下是已完成的文章，请勿生成重复或高度相似的主题：\n`;
+        completedArticles.forEach((name, i) => {
+            prompt += `${i + 1}. ${name}\n`;
+        });
+    }
 
     if (extraNotes) {
-        prompt += `\n- 补充说明：${extraNotes}`;
+        prompt += `\n补充说明：${extraNotes}`;
     }
 
     return prompt;
@@ -46,25 +62,30 @@ export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
 
-        const { topic, taskCount, timeRange, extraNotes } = body;
+        const { topic, startDate, endDate, frequency, completedArticles, extraNotes } = body;
 
         if (!topic?.topicName) {
             return NextResponse.json({ error: "缺少专栏信息" }, { status: 400 });
         }
+        if (!startDate || !endDate) {
+            return NextResponse.json({ error: "缺少时间范围" }, { status: 400 });
+        }
 
         const baseUrl = process.env.NEW_API_URL?.replace(/\/+$/, '') || '';
-        const apiKey = process.env.NEW_API_KEY || '';
+        const apiKey = process.env.NEW_API_KEY_GPT || '';
 
         if (!baseUrl || !apiKey) {
-            return NextResponse.json({ error: "服务端配置缺失：NEW_API_URL 或 NEW_API_KEY" }, { status: 500 });
+            return NextResponse.json({ error: "服务端配置缺失：NEW_API_URL 或 NEW_API_KEY_GPT" }, { status: 500 });
         }
 
         const targetUrl = `${baseUrl}/v1/chat/completions`;
 
         const userPrompt = buildUserPrompt({
             topic,
-            taskCount: taskCount || 8,
-            timeRange: timeRange || '本月',
+            startDate,
+            endDate,
+            frequency: frequency || 2,
+            completedArticles: completedArticles || [],
             extraNotes: extraNotes || '',
         });
 
