@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
 
-        const { topic, startDate, endDate, frequency, completedArticles, extraNotes } = body;
+        const { topic, startDate, endDate, frequency, model, completedArticles, extraNotes } = body;
 
         if (!topic?.topicName) {
             return NextResponse.json({ error: "缺少专栏信息" }, { status: 400 });
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
         }
 
         const baseUrl = process.env.NEW_API_URL?.replace(/\/+$/, '') || '';
-        const apiKey = process.env.NEW_API_KEY_GPT || '';
+        const apiKey = process.env.NEW_API_KEY || '';
 
         if (!baseUrl || !apiKey) {
             return NextResponse.json({ error: "服务端配置缺失：NEW_API_URL 或 NEW_API_KEY_GPT" }, { status: 500 });
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                model: 'gpt-4.1',
+                model: model || 'gpt-4.1',
                 messages: [
                     { role: 'system', content: SYSTEM_PROMPT },
                     { role: 'user', content: userPrompt },

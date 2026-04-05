@@ -58,6 +58,15 @@ const FREQUENCY_OPTIONS = [
     { value: '5', label: '每周 5 篇' },
 ];
 
+const MODEL_OPTIONS = [
+    { value: 'gpt-4.1', label: 'GPT-4.1' },
+    { value: 'gpt-4.1-mini', label: 'GPT-4.1 Mini' },
+    { value: 'gpt-4.1-nano', label: 'GPT-4.1 Nano' },
+    { value: 'o4-mini', label: 'o4-mini' },
+    { value: 'gpt-4o', label: 'GPT-4o' },
+    { value: 'claude-sonnet-4-20250514', label: 'Claude Sonnet 4' },
+];
+
 function today() {
     return new Date().toISOString().slice(0, 10);
 }
@@ -73,6 +82,7 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
     const [startDate, setStartDate] = useState(today());
     const [endDate, setEndDate] = useState(daysFromNow(30));
     const [frequency, setFrequency] = useState('2');
+    const [model, setModel] = useState('gpt-4.1');
     const [clearPending, setClearPending] = useState(false);
     const [extraNotes, setExtraNotes] = useState('');
 
@@ -118,6 +128,7 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
                     startDate,
                     endDate,
                     frequency: parseInt(frequency),
+                    model,
                     completedArticles,
                     extraNotes,
                 }),
@@ -240,6 +251,21 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
                                     </SelectTrigger>
                                     <SelectContent>
                                         {FREQUENCY_OPTIONS.map(opt => (
+                                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            {/* Model */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">AI 模型</label>
+                                <Select value={model} onValueChange={setModel}>
+                                    <SelectTrigger className="w-52">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {MODEL_OPTIONS.map(opt => (
                                             <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
                                         ))}
                                     </SelectContent>
