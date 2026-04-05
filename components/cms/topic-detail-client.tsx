@@ -28,12 +28,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { ArrowLeft, Plus, Pencil, Trash2, ExternalLink, Sparkles } from 'lucide-react';
+import { ArrowLeft, Plus, Pencil, Trash2, ExternalLink, Sparkles, Upload, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { ArticleGenerateDialog } from '@/components/cms/article-generate-dialog';
 import { BatchGenerateDialog } from '@/components/cms/batch-generate-dialog';
 import { ArticlePreviewDialog } from '@/components/cms/article-preview-dialog';
 import { Checkbox } from '@/components/ui/checkbox';
+import { ZhihuLoginDialog } from '@/components/cms/zhihu-login-dialog';
 
 interface DetailItem {
     id: string;
@@ -91,6 +92,11 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
     const [previewDialogOpen, setPreviewDialogOpen] = useState(false);
     const [previewTaskId, setPreviewTaskId] = useState<string | null>(null);
     const [previewArticleName, setPreviewArticleName] = useState('');
+
+    // Zhihu publish state
+    const [publishingTaskId, setPublishingTaskId] = useState<string | null>(null);
+    const [loginDialogOpen, setLoginDialogOpen] = useState(false);
+    const [pendingPublishTask, setPendingPublishTask] = useState<{ id: string; articleName: string } | null>(null);
 
     const fetchTopic = useCallback(async () => {
         try {
@@ -270,6 +276,53 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
         .filter(i => selectedTaskIds.has(i.id))
         .map(i => ({ id: i.id, articleName: i.articleName })) || [];
 
+    // --- Zhihu publish handlers ---
+    const handlePublishToZhihu = async (task: DetailItem) => {
+        if (!topic) return;
+        setPublishingTaskId(task.id);
+
+        try {
+            const res = await fetch('/api/publish/zhihu', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ taskId: task.id, articleName: task.articleName }),
+            });
+
+            const data = await res.json();
+
+            if (data.needLogin) {
+                setPendingPublishTask({ id: task.id, articleName: task.articleName });
+                setLoginDialogOpen(true);
+                return;
+            }
+
+            if (!res.ok) {
+                throw new Error(data.error || '发布失败');
+            }
+
+            // Update task status to published with zhihu URL
+            const updatedItems = topic.detailItems.map(item =>
+                item.id === task.id
+                    ? { ...item, status: 'published', contentUrl: data.zhihuUrl }
+                    : item
+            );
+            await saveTopic(updatedItems);
+            toast.success('文章已发布到知乎');
+        } catch (error: any) {
+            toast.error(error.message || '发布失败');
+        } finally {
+            setPublishingTaskId(null);
+        }
+    };
+
+    const handleLoginSuccess = () => {
+        if (pendingPublishTask) {
+            const task = topic?.detailItems.find(i => i.id === pendingPublishTask.id);
+            if (task) handlePublishToZhihu(task);
+            setPendingPublishTask(null);
+        }
+    };
+
     if (loading) return <div className="p-8 text-center text-muted-foreground">加载中...</div>;
     if (!topic) return <div className="p-8 text-center text-muted-foreground">专栏不存在</div>;
 
@@ -413,6 +466,34 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
                                                         <Sparkles className="h-3.5 w-3.5" />
                                                     </Button>
                                                 )}
+                                                {item.status === 'reviewed' && (
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-7 w-7 text-muted-foreground hover:text-primary"
+                                                        title="发布到知乎"
+                                                        disabled={publishingTaskId === item.id}
+                                                        onClick={() => handlePublishToZhihu(item)}
+                                                    >
+                                                        {publishingTaskId === item.id
+                                                            ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                                            : <Upload className="h-3.5 w-3.5" />}
+                                                    </Button>
+                                                )}
+                                                {item.status === 'reviewed' && (
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-7 w-7 text-muted-foreground hover:text-primary"
+                                                        title="发布到知乎"
+                                                        disabled={publishingTaskId === item.id}
+                                                        onClick={() => handlePublishToZhihu(item)}
+                                                    >
+                                                        {publishingTaskId === item.id
+                                                            ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                                            : <Upload className="h-3.5 w-3.5" />}
+                                                    </Button>
+                                                )}
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
@@ -526,6 +607,7 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
                 onOpenChange={setPreviewDialogOpen}
                 taskId={previewTaskId}
                 articleName={previewArticleName}
+                taskStatus={topic?.detailItems.find(i => i.id === previewTaskId)?.status}
                 onRegenerate={() => {
                     setPreviewDialogOpen(false);
                     if (previewTaskId) {
@@ -533,6 +615,20 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
                         if (task) openGenerateDialog(task);
                     }
                 }}
+                onPublish={() => {
+                    setPreviewDialogOpen(false);
+                    if (previewTaskId) {
+                        const task = topic?.detailItems.find(i => i.id === previewTaskId);
+                        if (task) handlePublishToZhihu(task);
+                    }
+                }}
+            />
+
+            {/* Zhihu Login Dialog */}
+            <ZhihuLoginDialog
+                open={loginDialogOpen}
+                onOpenChange={setLoginDialogOpen}
+                onLoginSuccess={handleLoginSuccess}
             />
         </div>
     );

@@ -6,17 +6,19 @@ import { Button } from '@/components/ui/button';
 import {
     Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from '@/components/ui/dialog';
-import { Loader2, RotateCcw } from 'lucide-react';
+import { Loader2, RotateCcw, Upload } from 'lucide-react';
 
 interface ArticlePreviewDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     taskId: string | null;
     articleName: string;
+    taskStatus?: string;
     onRegenerate: () => void;
+    onPublish?: () => void;
 }
 
-export function ArticlePreviewDialog({ open, onOpenChange, taskId, articleName, onRegenerate }: ArticlePreviewDialogProps) {
+export function ArticlePreviewDialog({ open, onOpenChange, taskId, articleName, taskStatus, onRegenerate, onPublish }: ArticlePreviewDialogProps) {
     const [content, setContent] = useState('');
     const [wordCount, setWordCount] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -65,6 +67,12 @@ export function ArticlePreviewDialog({ open, onOpenChange, taskId, articleName, 
                         <RotateCcw className="h-4 w-4" />
                         重新生成
                     </Button>
+                    {taskStatus === 'reviewed' && onPublish && (
+                        <Button variant="outline" onClick={onPublish} className="gap-1">
+                            <Upload className="h-4 w-4" />
+                            发布到知乎
+                        </Button>
+                    )}
                     <Button onClick={() => onOpenChange(false)}>关闭</Button>
                 </DialogFooter>
             </DialogContent>
