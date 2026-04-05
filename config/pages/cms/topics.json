@@ -55,8 +55,9 @@
                         "url": "/portal/cms/topics/{id}"
                     },
                     {
-                        "action": "showPlanDialog",
-                        "title": "规划"
+                        "action": "showDialog",
+                        "title": "规划",
+                        "dialogConfig": "cms/topicPlanDialog"
                     },
                     {
                         "action": "delete",

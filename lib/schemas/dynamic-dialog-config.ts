@@ -41,7 +41,10 @@ export const ActionDialogButtonSchema = z.object({
 export const ActionDialogConfigSchema = z.object({
   title: z.string().optional(),
   width: z.string().optional(),
-  sections: z.array(ViewDialogSectionSchema),
+  // When set, renders a custom registered component instead of the default DynamicDialog.
+  // The component is looked up from the custom dialog registry by this name.
+  component: z.string().optional(),
+  sections: z.array(ViewDialogSectionSchema).optional().default([]),
   buttons: z.array(ActionDialogButtonSchema).optional(),
 });
 

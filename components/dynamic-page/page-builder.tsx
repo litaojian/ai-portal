@@ -30,7 +30,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { DynamicDialog } from './dynamic-dialog';
-import { TopicPlanDialog } from '@/components/cms/topic-plan-dialog';
+import { getCustomDialog } from '@/lib/custom-dialog-registry';
 import { ActionDialogConfig } from '@/lib/schemas/dynamic-dialog-config';
 
 
@@ -66,10 +66,6 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
   const [actionDialogOpen, setActionDialogOpen] = useState(false);
   const [actionDialogData, setActionDialogData] = useState<Record<string, any> | null>(null);
   const [actionDialogConfig, setActionDialogConfig] = useState<ActionDialogConfig | null>(null);
-
-  // Plan Dialog State
-  const [planDialogOpen, setPlanDialogOpen] = useState(false);
-  const [planDialogData, setPlanDialogData] = useState<Record<string, any> | null>(null);
 
   // Submit Result Dialog State (for standalone form pages)
   const [resultDialogOpen, setResultDialogOpen] = useState(false);
@@ -228,7 +224,7 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
     setCurrentAction(action);
     // Only set loading for async actions that might take time. 
     // Dialog openers are instant, so checking first.
-    if (['create', 'edit', 'showDialog', 'showPlanDialog', 'navigate'].includes(action)) {
+    if (['create', 'edit', 'showDialog', 'navigate'].includes(action)) {
       // Instant actions
     } else {
       setActionLoading(true);
@@ -246,11 +242,6 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
           setCurrentEntityId(data.id);
           setDialogOpen(true);
           break;
-        case 'showPlanDialog': {
-          setPlanDialogData(data);
-          setPlanDialogOpen(true);
-          break;
-        }
         case 'navigate': {
           let url = actionDef?.url as string | undefined;
           if (url && data) {
@@ -473,42 +464,49 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
         </DialogContent>
       </Dialog>
 
-      {/* Dialog for View/Detail */}
-      <Dialog open={actionDialogOpen} onOpenChange={setActionDialogOpen}>
-        <DialogContent className="p-0" style={dlgWidth(actionDialogConfig?.width)}>
-          <DialogHeader className="px-6 pt-6 pb-3 pr-12 border-b">
-            <DialogTitle>
-              {actionDialogConfig?.title ?? `${config.meta.title}详情`}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="overflow-y-auto px-6 py-4" style={{ maxHeight: 'calc(90vh - 5rem)' }}>
-            {actionDialogConfig && (
-              <DynamicDialog
-                formConfig={actionDialogConfig}
-                pageConfig={config}
-                data={actionDialogData ?? {}}
-                onSuccess={() => { setActionDialogOpen(false); loadListData(); }}
-              />
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Dialog for Plan */}
-      {planDialogOpen && planDialogData && (
-        <TopicPlanDialog
-          open={planDialogOpen}
-          onOpenChange={setPlanDialogOpen}
-          topic={planDialogData as any}
-          onSuccess={() => {
-            setPlanDialogOpen(false);
+      {/* Dialog for View/Detail (standard or custom component) */}
+      {actionDialogConfig?.component ? (
+        // Custom component from registry
+        (() => {
+          const CustomComp = getCustomDialog(actionDialogConfig.component!);
+          if (!CustomComp) return null;
+          const refreshList = () => {
+            setActionDialogOpen(false);
             if (config!.views.table.pagination?.mode === 'client') {
               loadFullData();
             } else {
               loadListData();
             }
-          }}
-        />
+          };
+          return (
+            <CustomComp
+              open={actionDialogOpen}
+              onOpenChange={setActionDialogOpen}
+              data={actionDialogData ?? {}}
+              onSuccess={refreshList}
+            />
+          );
+        })()
+      ) : (
+        <Dialog open={actionDialogOpen} onOpenChange={setActionDialogOpen}>
+          <DialogContent className="p-0" style={dlgWidth(actionDialogConfig?.width)}>
+            <DialogHeader className="px-6 pt-6 pb-3 pr-12 border-b">
+              <DialogTitle>
+                {actionDialogConfig?.title ?? `${config.meta.title}详情`}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="overflow-y-auto px-6 py-4" style={{ maxHeight: 'calc(90vh - 5rem)' }}>
+              {actionDialogConfig && (
+                <DynamicDialog
+                  formConfig={actionDialogConfig}
+                  pageConfig={config}
+                  data={actionDialogData ?? {}}
+                  onSuccess={() => { setActionDialogOpen(false); loadListData(); }}
+                />
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   );
