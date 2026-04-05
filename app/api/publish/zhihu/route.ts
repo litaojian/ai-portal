@@ -34,15 +34,11 @@ export async function POST(request: NextRequest) {
 
         const markdownContent = fs.readFileSync(filePath, "utf-8");
 
-        // Strip the first markdown heading (use as title if it exists)
-        const title = articleName;
-        const titleMatch = markdownContent.match(/^#\s+.+\n+/);
-        const content = titleMatch
-            ? markdownContent.replace(/^#\s+.+\n+/, '')
-            : markdownContent;
+        // Strip the first markdown heading (use articleName as title)
+        const content = markdownContent.replace(/^#\s+.+\n+/, '');
 
         isPublishing = true;
-        const result = await publishToZhihu(title, content);
+        const result = await publishToZhihu(articleName, content);
 
         return NextResponse.json({
             success: true,
