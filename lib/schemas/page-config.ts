@@ -39,6 +39,7 @@ export const FieldSchema = z.object({
   clearable: z.boolean().optional(),
   primaryKey: z.boolean().optional(),
   placeholder: z.string().optional(),
+  rows: z.number().optional(),         // for textarea: visible row count
   options: z.array(SelectOptionSchema).optional(),
   format: z.string().optional(),
   defaultValue: z.any().optional(),

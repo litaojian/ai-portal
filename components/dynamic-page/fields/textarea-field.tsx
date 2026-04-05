@@ -10,7 +10,6 @@ interface TextareaFieldProps {
 }
 
 export default function TextareaField({ field, value, onChange, disabled, placeholder }: TextareaFieldProps) {
-    // @ts-ignore - field.rows might not be in the base schema but we want to support it
     const rows = field.rows || 3;
 
     return (
