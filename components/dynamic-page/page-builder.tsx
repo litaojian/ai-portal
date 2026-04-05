@@ -30,6 +30,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { DynamicDialog } from './dynamic-dialog';
+import { TopicPlanDialog } from '@/components/cms/topic-plan-dialog';
 import { ActionDialogConfig } from '@/lib/schemas/dynamic-dialog-config';
 
 
@@ -65,6 +66,10 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
   const [actionDialogOpen, setActionDialogOpen] = useState(false);
   const [actionDialogData, setActionDialogData] = useState<Record<string, any> | null>(null);
   const [actionDialogConfig, setActionDialogConfig] = useState<ActionDialogConfig | null>(null);
+
+  // Plan Dialog State
+  const [planDialogOpen, setPlanDialogOpen] = useState(false);
+  const [planDialogData, setPlanDialogData] = useState<Record<string, any> | null>(null);
 
   // Submit Result Dialog State (for standalone form pages)
   const [resultDialogOpen, setResultDialogOpen] = useState(false);
@@ -223,7 +228,7 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
     setCurrentAction(action);
     // Only set loading for async actions that might take time. 
     // Dialog openers are instant, so checking first.
-    if (['create', 'edit', 'showDialog'].includes(action)) {
+    if (['create', 'edit', 'showDialog', 'showPlanDialog', 'navigate'].includes(action)) {
       // Instant actions
     } else {
       setActionLoading(true);
@@ -241,6 +246,11 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
           setCurrentEntityId(data.id);
           setDialogOpen(true);
           break;
+        case 'showPlanDialog': {
+          setPlanDialogData(data);
+          setPlanDialogOpen(true);
+          break;
+        }
         case 'navigate': {
           let url = actionDef?.url as string | undefined;
           if (url && data) {
@@ -483,6 +493,23 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Dialog for Plan */}
+      {planDialogOpen && planDialogData && (
+        <TopicPlanDialog
+          open={planDialogOpen}
+          onOpenChange={setPlanDialogOpen}
+          topic={planDialogData as any}
+          onSuccess={() => {
+            setPlanDialogOpen(false);
+            if (config!.views.table.pagination?.mode === 'client') {
+              loadFullData();
+            } else {
+              loadListData();
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
