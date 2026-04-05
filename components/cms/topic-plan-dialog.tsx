@@ -99,9 +99,9 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
     // Collect existing task info
     const existingItems: DetailItem[] = topic.detailItems || [];
     const completedArticles = existingItems
-        .filter(i => i.status === 'closed')
+        .filter(i => i.status === 'published')
         .map(i => i.articleName);
-    const pendingItems = existingItems.filter(i => i.status !== 'closed');
+    const pendingItems = existingItems.filter(i => i.status !== 'published');
 
     const handleGenerate = async () => {
         if (!startDate || !endDate) {
@@ -166,18 +166,18 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
                 id: crypto.randomUUID(),
                 articleName: t.articleName,
                 dueDate: t.dueDate,
-                status: 'open',
+                status: 'draft',
                 contentUrl: '',
             }));
 
             // Keep completed items always; only keep pending items if clearPending is off
             const keptItems = clearPending
-                ? existingItems.filter(i => i.status === 'closed')
+                ? existingItems.filter(i => i.status === 'published')
                 : existingItems;
 
             const mergedItems = [...keptItems, ...newItems];
             const planTasks = mergedItems.length;
-            const completedTasks = mergedItems.filter(i => i.status === 'closed').length;
+            const completedTasks = mergedItems.filter(i => i.status === 'published').length;
 
             const res = await fetch(`/api/rest/cms/topics/${topic.id}`, {
                 method: 'PUT',

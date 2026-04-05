@@ -1,65 +1,183 @@
 [
-    {
-        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567801",
-        "topicName": "技术型AI营销自动化顾问",
-        "topicDesc": "帮B2B企业用AI+自动化打通内容、线索和转化流程",
-        "ipPositioning": "极客风、中立冷静、前瞻性的行业观察者",
-        "targetAudience": "中小企业、科技服务、咨询培训公司",
-        "coreLabels": "AI, 大模型, 效率工具, 行业深度",
-        "contentMatrix": "60% 深度技术分析, 30% 应用测评, 10% 行业简评",
-        "status": "open",
-        "planTasks": 2,
-        "completedTasks": 2,
-        "detailItems": [
-            {
-                "id": "d1-1",
-                "articleName": "文章1",
-                "dueDate": "2026-04-03",
-                "status": "closed",
-                "contentUrl": ""
-            },
-            {
-                "id": "d1-2",
-                "articleName": "文章2",
-                "dueDate": "2026-04-04",
-                "status": "closed",
-                "contentUrl": ""
-            },
-            {
-                "id": "d1-3",
-                "articleName": "文章3",
-                "dueDate": "2026-04-08",
-                "status": "open",
-                "contentUrl": ""
-            }
-        ]
-    },
-    {
-        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567802",
-        "topicName": "职场效率手册",
-        "topicDesc": "利用 AI 构建下一代办公流程，告别由于低效带来的焦虑",
-        "ipPositioning": "亲和力十足、实战驱动的效率教练",
-        "targetAudience": "白领, 自由职业者, 管理层",
-        "coreLabels": "效率, 自动化, 职场成长, AI 实践",
-        "contentMatrix": "50% 教程实操, 30% 案例分享, 20% 工具推荐",
-        "status": "open",
-        "planTasks": 2,
-        "completedTasks": 2,
-        "detailItems": [
-            {
-                "id": "d2-1",
-                "articleName": "文章1",
-                "dueDate": "2026-04-03",
-                "status": "closed",
-                "contentUrl": ""
-            },
-            {
-                "id": "d2-2",
-                "articleName": "文章2",
-                "dueDate": "2026-04-04",
-                "status": "closed",
-                "contentUrl": ""
-            }
-        ]
-    }
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567801",
+    "topicName": "技术型AI营销自动化顾问",
+    "ipPositioning": "帮B2B企业用AI+自动化打通内容、线索和转化流程",
+    "targetAudience": "中小企业、科技服务、咨询培训公司",
+    "coreLabels": "AI, 大模型, 效率工具, 行业深度",
+    "contentMatrix": "60% 深度技术分析, 30% 应用测评, 10% 行业简评",
+    "status": "open",
+    "planTasks": 20,
+    "completedTasks": 6,
+    "detailItems": [
+      {
+        "id": "d1-2",
+        "articleName": "文章2",
+        "dueDate": "2026-04-04",
+        "status": "published",
+        "contentUrl": ""
+      },
+      {
+        "id": "d1-3",
+        "articleName": "文章3",
+        "dueDate": "2026-04-08",
+        "status": "published",
+        "contentUrl": ""
+      },
+      {
+        "id": "46815cfa-21d2-4c67-959c-e19d1e0a7d02",
+        "articleName": "AI赋能B2B营销自动化全流程剖析",
+        "dueDate": "2024-06-03",
+        "status": "published",
+        "contentUrl": ""
+      },
+      {
+        "id": "105056e2-247e-4488-97ff-c52c4746ffaa",
+        "articleName": "从线索到成交：基于大模型的线索分级与转化自动化实践",
+        "dueDate": "2024-06-07",
+        "status": "published",
+        "contentUrl": ""
+      },
+      {
+        "id": "e5b2db01-99f4-4f86-948e-866b18c933ed",
+        "articleName": "推荐10款提升B2B营销效率的AI工具",
+        "dueDate": "2024-06-10",
+        "status": "published",
+        "contentUrl": ""
+      },
+      {
+        "id": "aa0fe0f7-a488-492a-9b27-1d8f45bb1349",
+        "articleName": "大模型驱动内容个性化：主流解决方案解析",
+        "dueDate": "2024-06-13",
+        "status": "draft",
+        "contentUrl": ""
+      },
+      {
+        "id": "ee0f849c-1239-4969-984f-d130bf6ceb48",
+        "articleName": "SaaS与AI的结合：B2B营销自动化的创新案例测评",
+        "dueDate": "2024-06-16",
+        "status": "published",
+        "contentUrl": ""
+      },
+      {
+        "id": "e005dfb8-36f1-49c8-befe-fedc528ccb6c",
+        "articleName": "行业快评：2024上半年AI营销自动化趋势观察",
+        "dueDate": "2024-06-19",
+        "status": "draft",
+        "contentUrl": ""
+      },
+      {
+        "id": "e2041d71-563c-4fc6-8d9c-dc92909b454b",
+        "articleName": "构建标签体系：如何让AI理解你的用户与内容？",
+        "dueDate": "2024-06-23",
+        "status": "draft",
+        "contentUrl": ""
+      },
+      {
+        "id": "be1f213e-6dbd-4963-bc04-c07e886c4a39",
+        "articleName": "ChatGPT赋能企业咨询/培训业务的创新应用场景",
+        "dueDate": "2024-06-27",
+        "status": "draft",
+        "contentUrl": ""
+      },
+      {
+        "id": "deab9b9f-010e-42e6-95aa-b450d192ffea",
+        "articleName": "从CRM到CDP：B2B增长漏斗的事件驱动架构与AI编排实践",
+        "dueDate": "2026-04-07",
+        "status": "draft",
+        "contentUrl": ""
+      },
+      {
+        "id": "840e60af-827c-4265-8e69-1311132a383c",
+        "articleName": "应用测评：用HubSpot + Segment + LangChain搭建AI内容-线索一体化闭环",
+        "dueDate": "2026-04-10",
+        "status": "draft",
+        "contentUrl": ""
+      },
+      {
+        "id": "41b76f12-c70b-4ca9-9f0f-20c80449540a",
+        "articleName": "可控的生成式内容流水线：RAG + 模板化 + 审核环的工程化落地",
+        "dueDate": "2026-04-14",
+        "status": "draft",
+        "contentUrl": ""
+      },
+      {
+        "id": "39d00132-04b6-4919-8d8a-2440a0037983",
+        "articleName": "工具横评：B2B常用AI文案工具在长链路内容中的一致性与品牌对齐",
+        "dueDate": "2026-04-17",
+        "status": "draft",
+        "contentUrl": ""
+      },
+      {
+        "id": "3ca42f73-52ef-499b-8506-628fe80a2cd9",
+        "articleName": "线索评分2.0：用大模型+图谱构建可解释的意向识别",
+        "dueDate": "2026-04-21",
+        "status": "draft",
+        "contentUrl": ""
+      },
+      {
+        "id": "edcaefee-6ce6-411a-9c2f-48ec4cf099c2",
+        "articleName": "流程自动化平台对比：Make vs Zapier vs n8n在可观测性与可扩展性上的差异",
+        "dueDate": "2026-04-24",
+        "status": "draft",
+        "contentUrl": ""
+      },
+      {
+        "id": "f0d84a62-98f2-4c28-ab47-58ea75d8cc0d",
+        "articleName": "多触点旅程自动化：LLM函数调用驱动的多渠道触发与节流策略",
+        "dueDate": "2026-04-28",
+        "status": "draft",
+        "contentUrl": ""
+      },
+      {
+        "id": "1914fe96-0470-437f-8273-dcda6db71f46",
+        "articleName": "营销A/B到多臂老虎机：在小样本B2B场景做在线学习实验",
+        "dueDate": "2026-05-01",
+        "status": "draft",
+        "contentUrl": ""
+      },
+      {
+        "id": "b6248a0d-3926-48c8-90c9-a9e648ef63c2",
+        "articleName": "安全与合规内建：私有化大模型、数据脱敏与审计在营销自动化中的落地",
+        "dueDate": "2026-05-03",
+        "status": "draft",
+        "contentUrl": ""
+      },
+      {
+        "id": "924cce0b-9fe8-4464-9997-63a0af781262",
+        "articleName": "行业简评：2026年B2B AI营销自动化的三条确定性路线与落地门槛",
+        "dueDate": "2026-05-05",
+        "status": "draft",
+        "contentUrl": ""
+      }
+    ],
+    "updatedAt": "2026-04-05T02:22:29.177Z"
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567802",
+    "topicName": "职场效率手册",
+    "ipPositioning": "利用 AI 构建下一代办公流程，告别由于低效带来的焦虑",
+    "targetAudience": "白领, 自由职业者, 管理层",
+    "coreLabels": "效率, 自动化, 职场成长, AI 实践",
+    "contentMatrix": "50% 教程实操, 30% 案例分享, 20% 工具推荐",
+    "status": "open",
+    "planTasks": 2,
+    "completedTasks": 2,
+    "detailItems": [
+      {
+        "id": "d2-1",
+        "articleName": "文章1",
+        "dueDate": "2026-04-03",
+        "status": "published",
+        "contentUrl": ""
+      },
+      {
+        "id": "d2-2",
+        "articleName": "文章2",
+        "dueDate": "2026-04-04",
+        "status": "published",
+        "contentUrl": ""
+      }
+    ]
+  }
 ]

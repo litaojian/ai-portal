@@ -58,8 +58,9 @@ interface TopicDetailClientProps {
 }
 
 const STATUS_CONFIG: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
-    open: { label: '进行中', variant: 'default' },
-    closed: { label: '已完成', variant: 'secondary' },
+    draft: { label: '草稿', variant: 'outline' },
+    reviewed: { label: '已审核', variant: 'default' },
+    published: { label: '已发布', variant: 'secondary' },
 };
 
 export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
@@ -75,7 +76,7 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
     // Task form state
     const [formArticleName, setFormArticleName] = useState('');
     const [formDueDate, setFormDueDate] = useState('');
-    const [formStatus, setFormStatus] = useState('open');
+    const [formStatus, setFormStatus] = useState('draft');
     const [formContentUrl, setFormContentUrl] = useState('');
 
     const fetchTopic = useCallback(async () => {
@@ -99,7 +100,7 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
     const saveTopic = async (updatedItems: DetailItem[]) => {
         if (!topic) return;
         const planTasks = updatedItems.length;
-        const completedTasks = updatedItems.filter(i => i.status === 'closed').length;
+        const completedTasks = updatedItems.filter(i => i.status === 'published').length;
 
         const res = await fetch(`/api/rest/cms/topics/${topicId}`, {
             method: 'PUT',
@@ -230,7 +231,7 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
                         <div className="flex gap-2">
                             <span className="text-muted-foreground w-20 shrink-0">状态</span>
                             <Badge variant={topic.status === 'open' ? 'default' : 'secondary'}>
-                                {topic.status === 'open' ? '进行中' : topic.status === 'closed' ? '已关闭' : '草稿'}
+                                {topic.status === 'open' ? '进行中' : topic.status === 'closed' ? '已关闭' : topic.status === 'draft' ? '草稿' : topic.status}
                             </Badge>
                         </div>
                         <div className="flex gap-2">
@@ -356,8 +357,9 @@ export function TopicDetailClient({ topicId }: TopicDetailClientProps) {
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="open">进行中</SelectItem>
-                                    <SelectItem value="closed">已完成</SelectItem>
+                                    <SelectItem value="draft">草稿</SelectItem>
+                                    <SelectItem value="reviewed">已审核</SelectItem>
+                                    <SelectItem value="published">已发布</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
