@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -58,15 +58,6 @@ const FREQUENCY_OPTIONS = [
     { value: '5', label: '每周 5 篇' },
 ];
 
-const MODEL_OPTIONS = [
-    { value: 'gpt-4.1', label: 'GPT-4.1' },
-    { value: 'gpt-4.1-mini', label: 'GPT-4.1 Mini' },
-    { value: 'gpt-4.1-nano', label: 'GPT-4.1 Nano' },
-    { value: 'o4-mini', label: 'o4-mini' },
-    { value: 'gpt-4o', label: 'GPT-4o' },
-    { value: 'claude-sonnet-4-20250514', label: 'Claude Sonnet 4' },
-];
-
 function today() {
     return new Date().toISOString().slice(0, 10);
 }
@@ -82,9 +73,21 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
     const [startDate, setStartDate] = useState(today());
     const [endDate, setEndDate] = useState(daysFromNow(30));
     const [frequency, setFrequency] = useState('2');
-    const [model, setModel] = useState('gpt-4.1');
+    const [model, setModel] = useState('');
+    const [modelOptions, setModelOptions] = useState<{ label: string; value: string }[]>([]);
     const [clearPending, setClearPending] = useState(false);
     const [extraNotes, setExtraNotes] = useState('');
+
+    // Load model options from API
+    useEffect(() => {
+        fetch('/api/data/valuelist/llm_models_cms')
+            .then(res => res.json())
+            .then((data: { label: string; value: string }[]) => {
+                setModelOptions(data);
+                if (data.length > 0 && !model) setModel(data[0].value);
+            })
+            .catch(() => {});
+    }, []);
 
     // Phase state
     const [phase, setPhase] = useState<Phase>('config');
@@ -222,10 +225,10 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
                     {/* Phase: Config */}
                     {phase === 'config' && (
                         <div className="space-y-5">
-                            {/* Date range */}
+                            {/* Date range + Frequency in one row */}
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">规划时间范围</label>
-                                <div className="flex items-center gap-3">
+                                <label className="text-sm font-medium">规划时间范围 / 发布频率</label>
+                                <div className="flex items-center gap-3 flex-wrap">
                                     <Input
                                         type="date"
                                         value={startDate}
@@ -239,22 +242,18 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
                                         onChange={e => setEndDate(e.target.value)}
                                         className="w-40 h-8 text-sm"
                                     />
+                                    <span className="text-sm text-muted-foreground">·</span>
+                                    <Select value={frequency} onValueChange={setFrequency}>
+                                        <SelectTrigger className="w-36 h-8 text-sm">
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {FREQUENCY_OPTIONS.map(opt => (
+                                                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
-                            </div>
-
-                            {/* Frequency */}
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">发布频率</label>
-                                <Select value={frequency} onValueChange={setFrequency}>
-                                    <SelectTrigger className="w-40">
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {FREQUENCY_OPTIONS.map(opt => (
-                                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
                             </div>
 
                             {/* Model */}
@@ -262,10 +261,10 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
                                 <label className="text-sm font-medium">AI 模型</label>
                                 <Select value={model} onValueChange={setModel}>
                                     <SelectTrigger className="w-52">
-                                        <SelectValue />
+                                        <SelectValue placeholder="选择模型" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {MODEL_OPTIONS.map(opt => (
+                                        {modelOptions.map(opt => (
                                             <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
                                         ))}
                                     </SelectContent>
