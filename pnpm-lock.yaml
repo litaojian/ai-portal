@@ -119,6 +119,9 @@ importers:
       oidc-provider:
         specifier: ^9.6.0
         version: 9.6.0
+      playwright-core:
+        specifier: ^1.59.1
+        version: 1.59.1
       radix-ui:
         specifier: ^1.4.3
         version: 1.4.3(@types/react-dom@19.2.3(@types/react@19.2.9))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -5183,6 +5186,11 @@ packages:
 
   playwright-core@1.58.1:
     resolution: {integrity: sha512-bcWzOaTxcW+VOOGBCQgnaKToLJ65d6AqfLVKEWvexyS3AS6rbXl+xdpYRMGSRBClPvyj44njOWoxjNdL/H9UNg==}
+    engines: {node: '>=18'}
+    hasBin: true
+
+  playwright-core@1.59.1:
+    resolution: {integrity: sha512-HBV/RJg81z5BiiZ9yPzIiClYV/QMsDCKUyogwH9p3MCP6IYjUFu/MActgYAvK0oWyV9NlwM3GLBjADyWgydVyg==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -11797,6 +11805,8 @@ snapshots:
   pinkie@2.0.4: {}
 
   playwright-core@1.58.1: {}
+
+  playwright-core@1.59.1: {}
 
   playwright@1.58.1:
     dependencies:

@@ -42,3 +42,6 @@ yarn-error.log*
 next-env.d.ts
 
 /lib/generated/prisma
+
+# Zhihu login cookies (sensitive)
+config/data/zhihu-cookies.json

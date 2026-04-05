@@ -47,6 +47,7 @@
     "next-auth": "^4.24.13",
     "next-themes": "^0.4.6",
     "oidc-provider": "^9.6.0",
+    "playwright-core": "^1.59.1",
     "radix-ui": "^1.4.3",
     "react": "19.2.3",
     "react-day-picker": "^9.13.0",
