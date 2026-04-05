@@ -14,7 +14,9 @@ import {
 import {
     Select,
     SelectContent,
+    SelectGroup,
     SelectItem,
+    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
@@ -58,12 +60,25 @@ const FREQUENCY_OPTIONS = [
     { value: '5', label: '每周 5 篇' },
 ];
 
-// Generate period options: current + next few weeks/months/quarters
-function getPeriodOptions() {
+interface PeriodOption {
+    value: string;
+    label: string;
+    startDate: string;
+    endDate: string;
+}
+
+interface PeriodGroup {
+    groupLabel: string;
+    options: PeriodOption[];
+}
+
+// Generate period options grouped by week/month/quarter
+function getPeriodGroups(): PeriodGroup[] {
     const now = new Date();
-    const options: { value: string; label: string; startDate: string; endDate: string }[] = [];
+    const groups: PeriodGroup[] = [];
 
     // Weeks: current week + next 3 weeks
+    const weeks: PeriodOption[] = [];
     for (let i = 0; i < 4; i++) {
         const d = new Date(now);
         d.setDate(d.getDate() + i * 7);
@@ -71,18 +86,22 @@ function getPeriodOptions() {
         const mon = new Date(d); mon.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
         const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
         const label = `第${getWeekNumber(mon)}周（${fmt(mon)} ~ ${fmt(sun)}）`;
-        options.push({ value: `W-${fmt(mon)}`, label, startDate: fmt(mon), endDate: fmt(sun) });
+        weeks.push({ value: `W-${fmt(mon)}`, label, startDate: fmt(mon), endDate: fmt(sun) });
     }
+    groups.push({ groupLabel: '按周', options: weeks });
 
     // Months: current month + next 2 months
+    const months: PeriodOption[] = [];
     for (let i = 0; i < 3; i++) {
         const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
         const last = new Date(d.getFullYear(), d.getMonth() + 1, 0);
         const label = `${d.getFullYear()}年${d.getMonth() + 1}月`;
-        options.push({ value: `M-${fmt(d)}`, label, startDate: fmt(d), endDate: fmt(last) });
+        months.push({ value: `M-${fmt(d)}`, label, startDate: fmt(d), endDate: fmt(last) });
     }
+    groups.push({ groupLabel: '按月', options: months });
 
     // Quarters: current quarter + next quarter
+    const quarters: PeriodOption[] = [];
     for (let i = 0; i < 2; i++) {
         const q = Math.floor(now.getMonth() / 3) + i;
         const year = now.getFullYear() + Math.floor(q / 4);
@@ -90,10 +109,11 @@ function getPeriodOptions() {
         const start = new Date(year, qIdx * 3, 1);
         const end = new Date(year, qIdx * 3 + 3, 0);
         const label = `${year}年Q${qIdx + 1}`;
-        options.push({ value: `Q-${fmt(start)}`, label, startDate: fmt(start), endDate: fmt(end) });
+        quarters.push({ value: `Q-${fmt(start)}`, label, startDate: fmt(start), endDate: fmt(end) });
     }
+    groups.push({ groupLabel: '按季度', options: quarters });
 
-    return options;
+    return groups;
 }
 
 function fmt(d: Date) {
@@ -108,8 +128,9 @@ function getWeekNumber(d: Date) {
 
 export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicPlanDialogProps) {
     // Config form state
-    const periodOptions = getPeriodOptions();
-    const [selectedPeriod, setSelectedPeriod] = useState(periodOptions[0]?.value || '');
+    const periodGroups = getPeriodGroups();
+    const allPeriods = periodGroups.flatMap(g => g.options);
+    const [selectedPeriod, setSelectedPeriod] = useState(allPeriods[0]?.value || '');
     const [frequency, setFrequency] = useState('2');
     const [model, setModel] = useState('');
     const [modelOptions, setModelOptions] = useState<{ label: string; value: string }[]>([]);
@@ -142,7 +163,7 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
     const pendingItems = existingItems.filter(i => i.status !== 'published');
 
     const handleGenerate = async () => {
-        const period = periodOptions.find(p => p.value === selectedPeriod);
+        const period = allPeriods.find((p: PeriodOption) => p.value === selectedPeriod);
         if (!period) {
             toast.error('请选择规划时间范围');
             return;
@@ -198,7 +219,7 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
         setPhase('saving');
 
         try {
-            const period = periodOptions.find(p => p.value === selectedPeriod);
+            const period = allPeriods.find((p: PeriodOption) => p.value === selectedPeriod);
             const newItems: DetailItem[] = tasks.map(t => ({
                 id: crypto.randomUUID(),
                 articleName: t.articleName,
@@ -271,8 +292,13 @@ export function TopicPlanDialog({ open, onOpenChange, topic, onSuccess }: TopicP
                                         <SelectValue placeholder="选择规划周期" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {periodOptions.map(opt => (
-                                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                                        {periodGroups.map((group: PeriodGroup) => (
+                                            <SelectGroup key={group.groupLabel}>
+                                                <SelectLabel>{group.groupLabel}</SelectLabel>
+                                                {group.options.map((opt: PeriodOption) => (
+                                                    <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                                                ))}
+                                            </SelectGroup>
                                         ))}
                                     </SelectContent>
                                 </Select>
