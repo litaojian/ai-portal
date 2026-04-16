@@ -12,7 +12,6 @@ import {
   RowSelectionState,
   PaginationState,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -32,9 +31,25 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Pencil, Trash2, Eye } from "lucide-react";
-import { PageConfig, FieldDefinition } from "@/lib/schemas/page-config";
+import { PageConfig, FieldDefinition, TableColumnDefinition } from "@/lib/schemas/page-config";
 import { getCellRenderer } from "./registry";
 import { cn } from "@/lib/utils";
+
+// Helper function to get nested value by path (e.g., 'contract.quoteAmount')
+function getNestedValue(row: any, path: string): any {
+  const parts = path.split('.');
+  let value: any = row;
+  for (const part of parts) {
+    if (value && typeof value === 'object' && part in value) {
+      value = value[part];
+    } else if (value && typeof value === 'object' && value[part] !== undefined) {
+      value = value[part];
+    } else {
+      return undefined;
+    }
+  }
+  return value;
+}
 
 interface DynamicTableProps {
   config: PageConfig;
@@ -144,14 +159,24 @@ export function DynamicTable({
       const defaultAlign = fieldDef?.type === 'number' ? 'right' : 'left';
       const align = colConfig.align || defaultAlign;
 
+      // Support nested path (e.g., 'contract.quoteAmount')
+      const accessorPath = (colConfig as TableColumnDefinition).path || colConfig.key;
+      const hasNestedPath = accessorPath && accessorPath !== colConfig.key;
+
       return {
-        accessorKey: colConfig.key,
+        accessorKey: hasNestedPath ? '__nested__' + accessorPath : colConfig.key,
         header: () => colConfig.label || fieldDef?.label || colConfig.key,
         size: typeof colConfig.width === 'number' ? colConfig.width : undefined,
         minSize: typeof colConfig.minWidth === 'number' ? colConfig.minWidth : undefined,
         maxSize: typeof colConfig.maxWidth === 'number' ? colConfig.maxWidth : undefined,
         cell: ({ row }: any) => {
-          const value = row.getValue(colConfig.key);
+          // Use nested path access if path is specified
+          const accessorPath = (colConfig as TableColumnDefinition).path || colConfig.key;
+          const hasNestedPath = accessorPath && accessorPath !== colConfig.key;
+
+          const value = hasNestedPath
+            ? getNestedValue(row, accessorPath)
+            : row.getValue(colConfig.key);
           return (
             <Renderer
               value={value}
@@ -166,8 +191,8 @@ export function DynamicTable({
           summaryType: colConfig.summaryType,
           summaryText: colConfig.summaryText,
           rawWidth: typeof colConfig.width === 'string' ? colConfig.width : undefined,
-          rawMinWidth: typeof colConfig.minWidth === 'string' ? colConfig.minWidth : undefined,
-          rawMaxWidth: typeof colConfig.maxWidth === 'string' ? colConfig.maxWidth : undefined,
+          rawMinWidth: typeof colConfig.minWidth === 'number' ? colConfig.minWidth : undefined,
+          rawMaxWidth: typeof colConfig.maxWidth === 'number' ? colConfig.maxWidth : undefined,
         }
       };
     });
@@ -215,11 +240,8 @@ export function DynamicTable({
           };
 
           return (
-
             <div className="flex items-center justify-end gap-1">
-
               {config.views.table.actions?.row?.map((item, idx) => {
-
                 const action = typeof item === 'string' ? item : item.action;
                 const title = typeof item === 'string' ? undefined : item.title;
                 const conditions = typeof item === 'string' ? undefined : item.conditions;
@@ -263,22 +285,16 @@ export function DynamicTable({
                     <Icon className="h-3.5 w-3.5" />
                   </Button>
                 );
-
               })}
-
             </div>
-
           );
-
         },
-
         meta: { align: 'right' }
-
       });
-
     }
+
     return dynamicColumns;
-  }, [config, onAction, data]);
+  }, [config, onAction]);
 
   const table = useReactTable({
     data,
@@ -298,172 +314,91 @@ export function DynamicTable({
   });
 
   return (
-
-    <div className="h-full flex flex-col min-w-0 w-full">
-
-      <div className="flex-1 overflow-auto min-h-0 border-b relative">
-
-        <Table containerClassName="overflow-visible" className="min-w-[480px] sm:min-w-[640px]">
-
-          <TableHeader className="bg-muted/50 sticky top-0 z-10 shadow-[0_1px_0_rgba(0,0,0,0.05)]">
-
-            {table.getHeaderGroups().map((headerGroup) => (
-
-              <TableRow key={headerGroup.id}>
-
-                {headerGroup.headers.map((header) => {
-
-                  const meta = (header.column.columnDef.meta as Record<string, unknown>) || {};
-                  const align = (meta.align as string) || 'left';
-
-                  const style: React.CSSProperties = {
-
-                    width: (meta.rawWidth as string | undefined) ?? (header.getSize() !== 150 ? `${header.getSize()}px` : 'auto'),
-
-                    minWidth: (meta.rawMinWidth as string | undefined) ?? (header.column.columnDef.minSize ? `${header.column.columnDef.minSize}px` : undefined),
-
-                    maxWidth: (meta.rawMaxWidth as string | undefined) ?? (header.column.columnDef.maxSize ? `${header.column.columnDef.maxSize}px` : undefined),
-
-                  };
-
-
-
-                  return (
-
-                    <TableHead
-
-                      key={header.id}
-
-                      style={style}
-
-                      className={cn(
-
-                        isSmall ? "h-8 py-1" : "h-10",
-
-                        align === 'center' && "text-center",
-
-                        align === 'right' && "text-right"
-
-                      )}
-
-                    >
-
-                      {header.isPlaceholder
-
-                        ? null
-
-                        : flexRender(
-
-                          header.column.columnDef.header,
-
-                          header.getContext()
-
-                        )}
-
-                    </TableHead>
-
-                  );
-
-                })}
-
-              </TableRow>
-
-            ))}
-
-          </TableHeader>
-
-          <TableBody>
-
-            {table.getRowModel().rows?.length ? (
-
-              table.getRowModel().rows.map((row) => (
-
-                <TableRow
-
-                  key={row.id}
-
-                  data-state={row.getIsSelected() && "selected"}
-
-                  className="hover:bg-muted/30 transition-colors"
-
-                >
-
-                  {row.getVisibleCells().map((cell) => {
-
-                    const cellMeta = (cell.column.columnDef.meta as Record<string, unknown>) || {};
-                    const align = (cellMeta.align as string) || 'left';
-
+      <div className="h-full flex flex-col min-w-0 w-full">
+        <div className="flex-1 overflow-auto min-h-0 border-b relative">
+          <Table containerClassName="overflow-visible" className="min-w-[480px] sm:min-w-[640px]">
+            <TableHeader className="bg-muted/50 sticky top-0 z-10 shadow-[0_1px_0_rgba(0,0,0,0.05)]">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    const meta = (header.column.columnDef.meta as Record<string, unknown>) || {};
+                    const align = (meta.align as string) || 'left';
                     const style: React.CSSProperties = {
-
-                      width: (cellMeta.rawWidth as string | undefined) ?? (cell.column.getSize() !== 150 ? `${cell.column.getSize()}px` : 'auto'),
-
-                      minWidth: (cellMeta.rawMinWidth as string | undefined) ?? (cell.column.columnDef.minSize ? `${cell.column.columnDef.minSize}px` : undefined),
-
-                      maxWidth: (cellMeta.rawMaxWidth as string | undefined) ?? (cell.column.columnDef.maxSize ? `${cell.column.columnDef.maxSize}px` : undefined),
-
+                      width: (meta.rawWidth as string | undefined) ?? (header.getSize() !== 150 ? `${header.getSize()}px` : 'auto'),
+                      minWidth: (meta.rawMinWidth as string | undefined) ?? (header.column.columnDef.minSize ? `${header.column.columnDef.minSize}px` : undefined),
+                      maxWidth: (meta.rawMaxWidth as string | undefined) ?? (header.column.columnDef.maxSize ? `${header.column.columnDef.maxSize}px` : undefined),
                     };
 
-
+                    return (
+                      <TableHead
+                        key={header.id}
+                        style={style}
+                        className={cn(
+                          isSmall ? "h-8 py-1" : "h-10",
+                          align === 'center' && "text-center",
+                          align === 'right' && "text-right"
+                        )}
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                      </TableHead>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  className="hover:bg-muted/30 transition-colors"
+                >
+                  {row.getVisibleCells().map((cell) => {
+                    const cellMeta = (cell.column.columnDef.meta as Record<string, unknown>) || {};
+                    const align = (cellMeta.align as string) || 'left';
+                    const style: React.CSSProperties = {
+                      width: (cellMeta.rawWidth as string | undefined) ?? (cell.column.getSize() !== 150 ? `${cell.column.getSize()}px` : 'auto'),
+                      minWidth: (cellMeta.rawMinWidth as string | undefined) ?? (cell.column.columnDef.minSize ? `${cell.column.columnDef.minSize}px` : undefined),
+                      maxWidth: (cellMeta.rawMaxWidth as string | undefined) ?? (cell.column.columnDef.maxSize ? `${cell.column.columnDef.maxSize}px` : undefined),
+                    };
 
                     return (
-
                       <TableCell
-
                         key={cell.id}
-
                         style={style}
-
                         className={cn(
-
                           isSmall ? "py-1 px-2 text-xs" : "py-3",
-
                           align === 'center' && "text-center",
-
                           align === 'right' && "text-right font-tabular-nums"
-
                         )}
-
                       >
-
                         {flexRender(
-
                           cell.column.columnDef.cell,
-
                           cell.getContext()
-
                         )}
-
                       </TableCell>
-
                     );
-
                   })}
-
                 </TableRow>
-
               ))
-
             ) : (
-
               <TableRow>
-
                 <TableCell
-
                   colSpan={columns.length}
-
                   className="h-24 text-center"
-
                 >
-
                   暂无数据
-
                 </TableCell>
-
               </TableRow>
-
             )}
-
           </TableBody>
+
           {config.views.table.summary && data.length > 0 && (
             <TableFooter className="border-t-2 border-primary/20 bg-muted/30 sticky bottom-0 z-10 shadow-[0_-1px_0_rgba(0,0,0,0.05)]">
               <TableRow className="hover:bg-transparent">
@@ -492,80 +427,86 @@ export function DynamicTable({
             </TableFooter>
           )}
         </Table>
-      </div>
-      <div className="flex items-center justify-between px-2 py-2 border-t shrink-0">
-        <div className="text-xs text-muted-foreground">
-          共 <strong>{total}</strong> 条
         </div>
-        <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-2">
-            <Select
-              value={`${table.getState().pagination.pageSize}`}
-              onValueChange={(value) => {
-                table.setPageSize(Number(value));
-              }}
-            >
-              <SelectTrigger className="h-7 w-[100px] text-xs">
-                <SelectValue placeholder={table.getState().pagination.pageSize} />
-              </SelectTrigger>
-              <SelectContent side="top">
-                {[10, 20, 50, 100, 500, 1000].map((pageSize) => (
-                  <SelectItem key={pageSize} value={`${pageSize}`} className="text-xs">
-                    {pageSize} 条/页
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+
+        <div className="flex items-center justify-between px-2 py-2 border-t shrink-0">
+          <div className="text-xs text-muted-foreground">
+            共 <strong>{total}</strong> 条
           </div>
-          <div className="text-xs text-muted-foreground whitespace-nowrap">
-            {table.getState().pagination.pageIndex + 1} / {table.getPageCount()} 页
-          </div>
-          <div className="flex items-center space-x-1">
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-7 w-7"
-              onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
-            >
-              <span className="sr-only">Go to first page</span>
-              <ChevronsLeft className="h-3.5 w-3.5" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-7 w-7"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              <span className="sr-only">Go to previous page</span>
-              <ChevronLeft className="h-3.5 w-3.5" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-7 w-7"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              <span className="sr-only">Go to next page</span>
-              <ChevronRight className="h-3.5 w-3.5" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-7 w-7"
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage()}
-            >
-              <span className="sr-only">Go to last page</span>
-              <ChevronsRight className="h-3.5 w-3.5" />
-            </Button>
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
+              <Select
+                value={`${table.getState().pagination.pageSize}`}
+                onValueChange={(value) => {
+                  table.setPageSize(Number(value));
+                }}
+              >
+                <SelectTrigger className="h-7 w-[100px] text-xs">
+                  <SelectValue placeholder={table.getState().pagination.pageSize} />
+                </SelectTrigger>
+                <SelectContent side="top">
+                  {[10, 20, 50, 100, 500, 1000].map((pageSize) => (
+                    <SelectItem key={pageSize} value={`${pageSize}`} className="text-xs">
+                      {pageSize} 条/页
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="text-xs text-muted-foreground whitespace-nowrap">
+              {table.getState().pagination.pageIndex + 1} / {table.getPageCount()} 页
+            </div>
+
+            <div className="flex items-center space-x-1">
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-7 w-7"
+                onClick={() => table.setPageIndex(0)}
+                disabled={!table.getCanPreviousPage()}
+              >
+                <span className="sr-only">Go to first page</span>
+                <ChevronsLeft className="h-3.5 w-3.5" />
+              </Button>
+
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-7 w-7"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+              >
+                <span className="sr-only">Go to previous page</span>
+                <ChevronLeft className="h-3.5 w-3.5" />
+              </Button>
+
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-7 w-7"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+              >
+                <span className="sr-only">Go to next page</span>
+                <ChevronRight className="h-3.5 w-3.5" />
+              </Button>
+
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-7 w-7"
+                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                disabled={!table.getCanNextPage()}
+              >
+                <span className="sr-only">Go to last page</span>
+                <ChevronsRight className="h-3.5 w-3.5" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
 }
 
 // Helper for badge colors (simplified mapping)

@@ -6,21 +6,21 @@ import {
     SidebarProvider,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import ApiCasesClient from "@/components/cms/api-cases-client";
-import fs from "fs/promises";
-import path from "path";
+import { TopicDetailClient } from "@/components/cms/topic-detail-client";
 
-export default async function ApiCasesPage() {
+interface PageProps {
+    params: Promise<{ id: string }>;
+}
+
+export default async function TopicDetailPage({ params }: PageProps) {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
-
-    const filePath = path.join(process.cwd(), "data", "cms", "api-cases.json");
-    const raw = await fs.readFile(filePath, "utf-8");
-    const data = JSON.parse(raw);
 
     const breadcrumbs = [
         { label: "首页", href: "/" },
-        { label: "AI内容生产线", href: "#" },
-        { label: "AI应用场景测试", href: "#" },
+        { label: "工作台", href: "#" },
+        { label: "新开专栏", href: "/portal/cms/topics" },
+        { label: "专栏详情", href: "#" },
     ];
 
     return (
@@ -34,9 +34,12 @@ export default async function ApiCasesPage() {
         >
             <AppSidebar variant="inset" />
             <SidebarInset>
-                <SiteHeader user={session?.user} breadcrumbs={breadcrumbs} />
-                <div className="flex flex-1 flex-col p-4 md:p-6">
-                    <ApiCasesClient data={data} />
+                <SiteHeader
+                    user={session?.user}
+                    breadcrumbs={breadcrumbs}
+                />
+                <div className="flex flex-1 flex-col gap-4 p-2 md:p-4">
+                    <TopicDetailClient topicId={id} />
                 </div>
             </SidebarInset>
         </SidebarProvider>

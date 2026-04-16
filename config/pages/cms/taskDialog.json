@@ -1,0 +1,17 @@
+{
+  "title": "专栏详情",
+  "width": "max-w-2xl",
+  "sections": [
+    {
+      "title": "",
+      "columns": 1,
+      "fields": [
+        {
+          "key": "topicName",
+          "type": "text",
+          "editable": false
+        }
+      ]
+    }
+  ]
+}

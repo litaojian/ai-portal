@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { ConfigService } from '@/lib/config-service';
 import { PageConfig } from '@/lib/schemas/page-config';
 import { DynamicTable } from './dynamic-table';
@@ -41,6 +42,7 @@ interface PageBuilderProps {
 // Custom action handler is now processed within the component switch
 
 export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps) {
+  const router = useRouter();
   const [config, setConfig] = useState<PageConfig | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -239,6 +241,14 @@ export default function PageBuilder({ pageId, mode = 'list' }: PageBuilderProps)
           setCurrentEntityId(data.id);
           setDialogOpen(true);
           break;
+        case 'navigate': {
+          let url = actionDef?.url as string | undefined;
+          if (url && data) {
+            url = url.replace(/\{(\w+)\}/g, (_, key) => encodeURIComponent(String(data[key] ?? '')));
+            router.push(url);
+          }
+          break;
+        }
         case 'showDialog': {
           const dialogConfigPath = actionDef?.dialogConfig as string | undefined;
           if (dialogConfigPath) {

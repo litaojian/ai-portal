@@ -1,0 +1,51 @@
+{
+    "title": "工作台",
+    "icon": "IconDeviceDesktop",
+    "order": 1,
+    "isActive": true,
+    "items": [
+        {
+            "title": "新开账号",
+            "url": "/portal/llm/accounts",
+            "icon": "IconUsers"
+        },
+        {
+            "title": "模型广场",
+            "url": "/portal/llm/models",
+            "icon": "IconApps"
+        },
+        {
+            "title": "模型测试",
+            "icon": "IconBolt",
+            "items": [
+                {
+                    "title": "AI文本",
+                    "url": "/portal/llm/testcases/text"
+                },
+                {
+                    "title": "AI图片",
+                    "url": "/portal/llm/testcases/image"
+                },
+                {
+                    "title": "AI视频",
+                    "url": "/portal/llm/ai-tasks"
+                }
+            ]
+        },
+        {
+            "title": "交易日报",
+            "url": "/portal/accbook/daily-reports",
+            "icon": "IconChartBar"
+        },
+        {
+            "title": "投标看板",
+            "url": "/portal/bidding/bidding-board",
+            "icon": "IconFileSpreadsheet"
+        },
+        {
+            "title": "监控中心",
+            "url": "#",
+            "icon": "IconActivityHeartbeat"
+        }
+    ]
+}
