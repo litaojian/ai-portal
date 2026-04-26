@@ -2,36 +2,7 @@
   "permissions": {
     "allow": [
       "WebSearch",
-      "Bash(pip list:*)",
-      "Bash(python:*)",
-      "Bash(pnpm build:*)",
-      "Bash(curl -s http://localhost:3000/api/data/menus)",
-      "Bash(node -e \":*)",
-      "Bash(curl -s -w \"\\\\nHTTP_CODE:%{http_code}\\\\n\" http://localhost:3000/api/data/menus)",
-      "Bash(python3 -m json.tool)",
-      "Bash(curl -s \"http://localhost:3000/portal/bidding/bidding-board\")",
-      "Bash(npx tsc:*)",
-      "Bash(NODE_OPTIONS='--max-old-space-size=8192' pnpm build)",
-      "Bash(git commit -m ':*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(ls -la d:/AI-2026/ai-portal/app/*workflow*/)",
-      "WebFetch(domain:open.zhihu.com)",
-      "Bash(npx shadcn@latest add progress --yes)",
-      "mcp__plugin_playwright_playwright__browser_navigate",
-      "mcp__plugin_playwright_playwright__browser_snapshot",
-      "mcp__plugin_playwright_playwright__browser_click",
-      "mcp__plugin_playwright_playwright__browser_close",
-      "Bash(npx playwright:*)",
-      "Bash(pnpm add:*)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
-      "Bash(break)",
-      "Bash(curl -s -X POST http://localhost:3000/api/publish/zhihu -H 'Content-Type: application/json' -d '{\"taskId\":\"46815cfa-21d2-4c67-959c-e19d1e0a7d02\",\"articleName\":\"AI赋能B2B营销自动化全流程剖析\"}')",
-      "Bash(node -e \"const c=JSON.parse\\(require\\('fs'\\).readFileSync\\('config/data/zhihu-cookies.json','utf-8'\\)\\); const names=c.map\\(x=>x.name\\); console.log\\(names.join\\(', '\\)\\); const zc0=c.find\\(x=>x.name==='z_c0'\\); console.log\\('z_c0:', zc0?zc0.value.substring\\(0,30\\)+'...':'NOT FOUND'\\);\")",
-      "Bash(node -e ':*)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://zhuanlan.zhihu.com/p/2024258077952672630\" -H \"User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36\")",
-      "WebFetch(domain:zhuanlan.zhihu.com)",
-      "mcp__plugin_playwright_playwright__browser_take_screenshot"
+      "Bash(ls -la .env*)"
     ]
   }
 }
