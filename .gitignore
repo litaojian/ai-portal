@@ -45,3 +45,7 @@ next-env.d.ts
 
 # Zhihu login cookies (sensitive)
 config/data/zhihu-cookies.json
+
+.superpowers
+.playwright-mcp
+

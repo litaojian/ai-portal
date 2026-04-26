@@ -1,10 +1,7 @@
-import { chromium, type BrowserContext, type Cookie } from 'playwright-core';
 import fs from 'fs';
 import path from 'path';
 
 const COOKIES_PATH = path.join(process.cwd(), 'config', 'data', 'zhihu-cookies.json');
-const ZHIHU_WRITE_URL = 'https://zhuanlan.zhihu.com/write';
-const ZHIHU_SIGNIN_URL = 'https://www.zhihu.com/signin';
 
 export class NeedLoginError extends Error {
     constructor() {
@@ -13,18 +10,20 @@ export class NeedLoginError extends Error {
     }
 }
 
-// --- Cookie helpers ---
-
-async function saveCookies(context: BrowserContext): Promise<void> {
-    const cookies = await context.cookies();
-    const dir = path.dirname(COOKIES_PATH);
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-    }
-    fs.writeFileSync(COOKIES_PATH, JSON.stringify(cookies, null, 2), 'utf-8');
+interface ZhihuCookie {
+    name: string;
+    value: string;
+    domain: string;
+    path: string;
+    expires: number;
+    httpOnly: boolean;
+    secure: boolean;
+    sameSite: string;
 }
 
-function loadCookies(): Cookie[] | null {
+// --- Cookie helpers ---
+
+function loadCookies(): ZhihuCookie[] | null {
     try {
         if (!fs.existsSync(COOKIES_PATH)) return null;
         const raw = fs.readFileSync(COOKIES_PATH, 'utf-8');
@@ -35,10 +34,154 @@ function loadCookies(): Cookie[] | null {
     }
 }
 
-// --- Find Chromium executable ---
+function buildCookieString(cookies: ZhihuCookie[]): string {
+    return cookies
+        .filter(c => c.domain && c.domain.includes('zhihu.com'))
+        .map(c => `${c.name}=${c.value}`)
+        .join('; ');
+}
+
+function getXsrfToken(cookies: ZhihuCookie[]): string {
+    const xsrf = cookies.find(c => c.name === '_xsrf');
+    return xsrf?.value ?? '';
+}
+
+function buildHeaders(cookies: ZhihuCookie[]): Record<string, string> {
+    return {
+        'Content-Type': 'application/json',
+        'Cookie': buildCookieString(cookies),
+        'x-xsrftoken': getXsrfToken(cookies),
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Referer': 'https://zhuanlan.zhihu.com/write',
+        'Origin': 'https://zhuanlan.zhihu.com',
+    };
+}
+
+// --- Markdown to HTML (basic) ---
+
+function markdownToHtml(md: string): string {
+    return md
+        .split('\n')
+        .map(line => {
+            // Headings
+            if (line.startsWith('### ')) return `<h3>${line.slice(4)}</h3>`;
+            if (line.startsWith('## ')) return `<h2>${line.slice(3)}</h2>`;
+            if (line.startsWith('# ')) return `<h1>${line.slice(2)}</h1>`;
+            // Bold
+            line = line.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+            // Empty line
+            if (line.trim() === '') return '';
+            // Paragraph
+            return `<p>${line}</p>`;
+        })
+        .filter(Boolean)
+        .join('\n');
+}
+
+// --- Publish via Zhihu API ---
+
+export async function publishToZhihu(
+    title: string,
+    markdownContent: string
+): Promise<{ zhihuUrl: string }> {
+    const cookies = loadCookies();
+    if (!cookies) throw new NeedLoginError();
+
+    const headers = buildHeaders(cookies);
+    const htmlContent = markdownToHtml(markdownContent);
+
+    // Step 1: Create draft
+    const createRes = await fetch('https://zhuanlan.zhihu.com/api/articles/drafts', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({}),
+    });
+
+    if (createRes.status === 401 || createRes.status === 403) {
+        throw new NeedLoginError();
+    }
+    if (!createRes.ok) {
+        throw new Error(`创建草稿失败: ${createRes.status}`);
+    }
+
+    const draft = await createRes.json();
+    const draftId = draft.id;
+
+    // Step 2: Update draft with title and content
+    const patchRes = await fetch(`https://zhuanlan.zhihu.com/api/articles/${draftId}/draft`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ title, content: htmlContent }),
+    });
+
+    if (!patchRes.ok) {
+        throw new Error(`更新草稿失败: ${patchRes.status}`);
+    }
+
+    // Step 3: Publish
+    const publishRes = await fetch(`https://zhuanlan.zhihu.com/api/articles/${draftId}/publish`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({ column: null, topic_url: '' }),
+    });
+
+    if (publishRes.status === 401 || publishRes.status === 403) {
+        throw new NeedLoginError();
+    }
+    if (!publishRes.ok) {
+        const errText = await publishRes.text();
+        throw new Error(`发布失败: ${publishRes.status} ${errText}`);
+    }
+
+    const zhihuUrl = `https://zhuanlan.zhihu.com/p/${draftId}`;
+    return { zhihuUrl };
+}
+
+// --- Login (still uses Playwright for interactive browser login) ---
+
+export async function loginToZhihu(): Promise<void> {
+    // Dynamic import to avoid requiring playwright-core at module level
+    const { chromium } = await import('playwright-core');
+
+    const executablePath = findChromiumPath();
+    const browser = await chromium.launch({
+        headless: false,
+        executablePath,
+    });
+
+    try {
+        const context = await browser.newContext();
+        const page = await context.newPage();
+        await page.goto('https://www.zhihu.com/signin', { waitUntil: 'domcontentloaded' });
+
+        const maxWait = 5 * 60 * 1000;
+        const pollInterval = 2000;
+        let elapsed = 0;
+
+        while (elapsed < maxWait) {
+            await page.waitForTimeout(pollInterval);
+            elapsed += pollInterval;
+
+            const currentUrl = page.url();
+            if (!currentUrl.includes('signin') && !currentUrl.includes('sign_in')) {
+                // Login successful — save cookies
+                const cookies = await context.cookies();
+                const dir = path.dirname(COOKIES_PATH);
+                if (!fs.existsSync(dir)) {
+                    fs.mkdirSync(dir, { recursive: true });
+                }
+                fs.writeFileSync(COOKIES_PATH, JSON.stringify(cookies, null, 2), 'utf-8');
+                return;
+            }
+        }
+
+        throw new Error('登录超时（5分钟），请重试');
+    } finally {
+        await browser.close();
+    }
+}
 
 function findChromiumPath(): string | undefined {
-    // Common Chromium/Chrome paths on Windows
     const candidates = [
         process.env.CHROME_PATH,
         'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
@@ -51,112 +194,4 @@ function findChromiumPath(): string | undefined {
         if (fs.existsSync(p)) return p;
     }
     return undefined;
-}
-
-// --- Publish ---
-
-export async function publishToZhihu(
-    title: string,
-    markdownContent: string
-): Promise<{ zhihuUrl: string }> {
-    const cookies = loadCookies();
-    if (!cookies) throw new NeedLoginError();
-
-    const executablePath = findChromiumPath();
-    const browser = await chromium.launch({
-        headless: true,
-        executablePath,
-    });
-
-    try {
-        const context = await browser.newContext();
-        await context.addCookies(cookies);
-
-        const page = await context.newPage();
-        await page.goto(ZHIHU_WRITE_URL, { waitUntil: 'domcontentloaded', timeout: 30000 });
-
-        // Check if redirected to login page
-        if (page.url().includes('signin')) {
-            throw new NeedLoginError();
-        }
-
-        // Wait for title input
-        const titleInput = page.locator('textarea[placeholder*="请输入标题"], input[placeholder*="请输入标题"]');
-        await titleInput.waitFor({ state: 'visible', timeout: 15000 });
-
-        // Fill title
-        await titleInput.click();
-        await titleInput.fill(title);
-
-        // Fill content via clipboard paste (faster and more reliable for long text)
-        const contentEditor = page.locator('.public-DraftEditor-content, [contenteditable="true"]').first();
-        await contentEditor.click();
-
-        await page.evaluate(async (text) => {
-            await navigator.clipboard.writeText(text);
-        }, markdownContent);
-        await page.keyboard.press('Control+A');
-        await page.keyboard.press('Control+V');
-
-        // Wait for publish button to become enabled
-        const publishBtn = page.locator('button:has-text("发布")').last();
-        await publishBtn.waitFor({ state: 'visible', timeout: 10000 });
-
-        // Wait a moment for content to be processed
-        await page.waitForTimeout(2000);
-
-        // Click publish
-        await publishBtn.click();
-
-        // Wait for navigation or success indicator
-        await page.waitForURL((url) => !url.toString().includes('/write'), { timeout: 30000 }).catch(() => {});
-
-        // Try to get the published article URL
-        await page.waitForTimeout(3000);
-        const zhihuUrl = page.url();
-
-        // Save refreshed cookies
-        await saveCookies(context);
-
-        return { zhihuUrl };
-    } finally {
-        await browser.close();
-    }
-}
-
-// --- Login ---
-
-export async function loginToZhihu(): Promise<void> {
-    const executablePath = findChromiumPath();
-    const browser = await chromium.launch({
-        headless: false,
-        executablePath,
-    });
-
-    try {
-        const context = await browser.newContext();
-        const page = await context.newPage();
-        await page.goto(ZHIHU_SIGNIN_URL, { waitUntil: 'domcontentloaded' });
-
-        // Poll until user completes login (URL leaves signin page)
-        const maxWait = 5 * 60 * 1000; // 5 minutes
-        const pollInterval = 2000;
-        let elapsed = 0;
-
-        while (elapsed < maxWait) {
-            await page.waitForTimeout(pollInterval);
-            elapsed += pollInterval;
-
-            const currentUrl = page.url();
-            if (!currentUrl.includes('signin') && !currentUrl.includes('sign_in')) {
-                // Login successful
-                await saveCookies(context);
-                return;
-            }
-        }
-
-        throw new Error('登录超时（5分钟），请重试');
-    } finally {
-        await browser.close();
-    }
 }
